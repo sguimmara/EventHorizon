@@ -9,8 +9,14 @@ public abstract class Mobile : MonoBehaviour
 {
     public string Name { get; protected set; }
 
-    protected Vector3 Velocity;
-    protected float Speed = 1f;
+    protected Vector3 Velocity = Vector3.zero;
+    protected float MaxSpeed = 10f;
+    protected float Acceleration = 0.9F;
+    protected bool isAccelerating = false;
+    protected float Inertia = 0.9F;
+    float currentSpeed = 0;
+
+    Vector3 lastPos;
 
     public GameObject Model { get; protected set; }
 
@@ -28,9 +34,10 @@ public abstract class Mobile : MonoBehaviour
         Model.gameObject.GetComponent<CollisionTester>().parent = this;
     }
 
-    public void Move(Vector3 offset)
+    public void Move(Vector3 normalizedDirection)
     {
-        Velocity += offset;
+        Velocity += (normalizedDirection * Time.deltaTime * Acceleration);
+        Mathf.Clamp(Velocity.magnitude, 0, MaxSpeed);
     }
 
     public void Stop()
@@ -38,29 +45,13 @@ public abstract class Mobile : MonoBehaviour
         Velocity = Vector3.zero;
     }
 
-    public void SetSpeed(float speed)
+    void Update()
     {
-        this.Speed = speed;
-    }
-
-    public void SetSpeed(float speed, float time)
-    {
-        StartCoroutine(Accelerate(speed, time));
-    }
-
-    IEnumerator Accelerate(float newSpeed, float duration)
-    {
-        StopCoroutine("Accelerate");
-        float f = 0;
-        float originalSpeed = this.Speed;
-
-        while (this.Speed <= newSpeed && f <= duration)
-        {
-            f += Time.deltaTime;
-
-            this.Speed = Mathf.Lerp(originalSpeed, newSpeed, f / duration);
-            yield return new WaitForEndOfFrame();
-        }
+        Velocity *= Inertia;
+        //if (!isAccelerating)
+        //    Velocity.Scale( += (normalizedDirection * Time.deltaTime * Acceleration);
+        Model.transform.Translate(Velocity, Space.World);
+        lastPos = Model.transform.position;
     }
 
     public override string ToString()

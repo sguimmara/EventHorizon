@@ -24,13 +24,14 @@ public class Player : MonoBehaviour {
         SetShip<PlayerShip>();
         
         eventHorizon.AddMobile(ship);
-        ship.SetSpeed(5, 3);
 	}
+	
+
 	
 	// Update is called once per frame
 	void Update ()
     {
-        ship.Stop();
+        //ship.Stop();
 
         if (Input.GetKey(KeyCode.DownArrow))
         {

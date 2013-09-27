@@ -23,5 +23,10 @@ public class EventHorizon : MonoBehaviour
 
         else mobiles.Add(m);
     }
+	
+		void Update()
+	{
+		
+	}
 }
 
