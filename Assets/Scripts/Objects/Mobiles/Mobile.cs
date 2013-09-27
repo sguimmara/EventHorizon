@@ -45,7 +45,7 @@ public abstract class Mobile : MonoBehaviour
         Velocity = Vector3.zero;
     }
 
-    void Update()
+    protected virtual void Update()
     {
         Velocity *= Inertia;
         //if (!isAccelerating)

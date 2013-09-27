@@ -18,8 +18,19 @@ public class PlayerShip : Ship
         primary.SetShip(this);
     }
 
+    void LimitShipPositionWithinBoundaries()
+    {
+
+    }
+
     public override string ToString()
     {
         return "PlayerShip";
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        LimitShipPositionWithinBoundaries();
     }
 }
