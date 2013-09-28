@@ -10,6 +10,7 @@ public abstract class Mobile : MonoBehaviour
 {
     public string Name { get; protected set; }
     protected Rect Size;
+    public int Depth;
 
     public MotionParameters motionParams;
 
@@ -44,7 +45,7 @@ public abstract class Mobile : MonoBehaviour
             Model = (GameObject)GameObject.Instantiate(g);
 
         else Model = g;
-
+        position.z = Depth;
         Model.transform.position = position;
         Model.gameObject.GetComponent<CollisionTester>().parent = this;
         Size = GetRectSize(Model);
@@ -74,8 +75,15 @@ public abstract class Mobile : MonoBehaviour
             Model.transform.Translate(motionParams.Velocity, Space.World);
 
             lastPos = Model.transform.position;
+            EnforceDepth();
             DestroyWhenOutOfSpawnArea();
         }
+    }
+
+    void EnforceDepth()
+    {
+        Vector3 p = Model.transform.position;
+        Model.transform.position.Set(p.x, p.y, Depth);
     }
 
     public override string ToString()
