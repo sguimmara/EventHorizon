@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EventHorizonGame.AI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -77,17 +78,19 @@ namespace EventHorizonGame
 
         void Awake()
         {
-           
+
         }
 
         void Start()
         {
             Instance = this;
             player = gameObject.AddComponent<Player>();
+            gameObject.AddComponent<EnemyAI>();
+            gameObject.AddComponent<Pool>();
 
             InitializeAreaRects();
             InitializeDebugSettings();
-            
+
             OnUserRequestExit += Quit;
         }
 
