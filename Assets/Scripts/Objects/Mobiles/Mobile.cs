@@ -54,12 +54,18 @@ public abstract class Mobile : MonoBehaviour
     {
         if (Model != null)
         {
-            motionParams.Velocity *= motionParams.Inertia;
+            if (motionParams.Velocity.magnitude <= motionParams.MaxSpeed)
+            {
+                motionParams.Velocity *= motionParams.Inertia;
+            }
+
+            else motionParams.Velocity *= (motionParams.MaxSpeed / motionParams.Velocity.magnitude);
+
             Model.transform.Translate(motionParams.Velocity, Space.World);
 
             lastPos = Model.transform.position;
             EnforceDepth();
-            DestroyWhenOutOfSpawnArea();
+            DestroyWhenOutOfVoidArea();
 
             if (data.hp <= 0)
                 Destroy(Model);
@@ -92,12 +98,12 @@ public abstract class Mobile : MonoBehaviour
     }
 
     // Destroy the mobile when its rectangle is *totally* out of Spawn area.
-    private void DestroyWhenOutOfSpawnArea()
+    private void DestroyWhenOutOfVoidArea()
     {
-        if (Model.transform.position.x < Globals.SpawnArea.x - Size.width / 2
-            || Model.transform.position.x > Globals.SpawnArea.x + Globals.SpawnArea.width + Size.width / 2
-            || Model.transform.position.y < Globals.SpawnArea.y - Size.height / 2
-            || Model.transform.position.y > Globals.SpawnArea.y + Globals.SpawnArea.height + Size.height / 2)
+        if (Model.transform.position.x < Globals.VoidArea.x - Size.width / 2
+            || Model.transform.position.x > Globals.VoidArea.x + Globals.VoidArea.width + Size.width / 2
+            || Model.transform.position.y < Globals.VoidArea.y - Size.height / 2
+            || Model.transform.position.y > Globals.VoidArea.y + Globals.VoidArea.height + Size.height / 2)
         {
             Destroy(Model);
             Destroy(this);
