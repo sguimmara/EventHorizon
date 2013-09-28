@@ -5,8 +5,6 @@ public abstract class Ship : Mobile
 {
     protected Weapon primary;
 
-    protected float HitPoints;
-
     public void FirePrimary(Vector3 startingPosition)
     {
         if (primary != null)
@@ -19,5 +17,11 @@ public abstract class Ship : Mobile
     public override string ToString()
     {
         return "Ship";
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        Depth = 0;
     }
 }
