@@ -18,10 +18,4 @@ public abstract class Ship : Mobile
     {
         return "Ship";
     }
-
-    protected override void Start()
-    {
-        base.Start();
-        Depth = 0;
-    }
 }
