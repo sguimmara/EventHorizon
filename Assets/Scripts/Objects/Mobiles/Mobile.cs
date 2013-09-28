@@ -8,20 +8,17 @@ using EventHorizonGame;
 
 public abstract class Mobile : MonoBehaviour
 {
-    public string Name { get; protected set; }
+    public string Name;
     protected Rect Size;
     public int Depth;
+
+    public MobileData data;
 
     public MotionParameters motionParams;
 
     Vector3 lastPos;
 
     public GameObject Model { get; protected set; }
-
-    public virtual void LoadDefaultModel()
-    {
-        SetModel(Utils.Load<GameObject>("DefaultMobile"), Vector3.zero);
-    }
 
     public static Rect GetRectSize(GameObject model)
     {
@@ -31,23 +28,9 @@ public abstract class Mobile : MonoBehaviour
         return size;
     }
 
-    public void SetModel(GameObject g, Vector3 position)
+    public void SetModel(GameObject g)
     {
-        SetModel(g, position, true);
-    }
-
-    public void SetModel(GameObject g, Vector3 position, bool instantiate)
-    {
-        if (Model != null)
-            GameObject.DestroyImmediate(Model);
-
-        if (instantiate)
-            Model = (GameObject)GameObject.Instantiate(g);
-
-        else Model = g;
-        position.z = Depth;
-        Model.transform.position = position;
-        Model.gameObject.GetComponent<CollisionTester>().parent = this;
+        Model = g;
         Size = GetRectSize(Model);
 
         if (EventHorizon.Instance.USE_PLACEHOLDERS)
@@ -77,7 +60,11 @@ public abstract class Mobile : MonoBehaviour
             lastPos = Model.transform.position;
             EnforceDepth();
             DestroyWhenOutOfSpawnArea();
+
+            if (data.hp == 0)
+                Destroy(Model);
         }
+        else Debug.LogWarning("Mobile - Update() - Model is null");
     }
 
     void EnforceDepth()
@@ -93,7 +80,10 @@ public abstract class Mobile : MonoBehaviour
 
     public virtual void Collide(Mobile other)
     {
-        Debug.Break();
+        if (data.isDestroyable)
+        {
+            data.hp -= (other.data.hp);
+        }
     }
 
     void Awake()
@@ -114,6 +104,9 @@ public abstract class Mobile : MonoBehaviour
         }
     }
 
-
+    protected virtual void Start()
+    {
+        Depth = 0;
+    }
 }
 
