@@ -3,20 +3,11 @@ using System.Collections;
 
 public class CollisionTester : MonoBehaviour
 {
-
     public Mobile parent;
 
-    void OnCollisionEnter(Collision collider)
+    void OnTriggerEnter(Collider other)
     {
-        CollisionTester otherCollider = collider.gameObject.GetComponent<CollisionTester>();
-
-        if (otherCollider == null)
-            Debug.LogError("Other collider doesn't have CollisionTester Behaviour");
-        else if (otherCollider.parent == null)
-            Debug.LogWarning("Other collider.parent is null");
-        else
-            parent.Collide(otherCollider.parent);
-
+        CollisionTester otherCollider = other.gameObject.GetComponent<CollisionTester>();
+        parent.Collide(otherCollider.parent);
     }
-
 }
