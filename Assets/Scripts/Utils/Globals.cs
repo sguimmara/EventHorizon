@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public enum DebuggerTolerance { NoTolerance, LowTolerance, Ignore };
-
 static class Globals
 {
-    public static DebuggerTolerance debuggerLevel = DebuggerTolerance.NoTolerance;
+    public static Rect SpawnArea = new Rect(0, 0, 20, 10);
+    public static Rect GameArea = new Rect(0, 0, 17.77778F, 10);
 }
 
