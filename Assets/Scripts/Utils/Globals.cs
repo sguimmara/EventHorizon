@@ -6,7 +6,8 @@ using UnityEngine;
 
 static class Globals
 {
-    public static Rect SpawnArea = new Rect(0, 0, 20, 10);
-    public static Rect GameArea = new Rect(0, 0, 17.77778F, 10);
+    public static Rect SpawnArea;
+    public static Rect GameArea;
+    public static Rect VoidArea;
 }
 
