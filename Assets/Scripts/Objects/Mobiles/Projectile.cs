@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EventHorizonGame;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +14,8 @@ public class Projectile : Mobile
 
     public override void Collide(Mobile other)
     {
-        Destroy(this.gameObject);
+        Pool.Instance.CreateDecal("Explosion", Model.transform.position, 0.1F);
+        Destroy(this.gameObject);        
     }
-
 }
 
