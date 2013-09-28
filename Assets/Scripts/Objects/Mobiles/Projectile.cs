@@ -6,6 +6,15 @@ using UnityEngine;
 
 public class Projectile : Mobile
 {
-    float Damage;
+    protected override void Start()
+    {
+        Depth = 2;
+    }
+
+    public override void Collide(Mobile other)
+    {
+        Destroy(this.gameObject);
+    }
+
 }
 
