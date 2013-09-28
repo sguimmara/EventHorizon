@@ -21,6 +21,7 @@ namespace EventHorizonGame
             Vector3 p = new Vector3(position.x + 0.5F, position.y, -0.1F);
 
             GameObject g = (GameObject)GameObject.Instantiate(Utils.Load<GameObject>(string.Concat("FX/", name)), p, Quaternion.identity);
+            g.transform.parent = EventHorizon.Instance.mobileParent;
             float s = UnityEngine.Random.Range(0.5F, 1.5F);
             g.transform.localScale = new Vector3(s, s, 1);
             StartCoroutine(InstantiateDecal(g , duration));
@@ -35,6 +36,7 @@ namespace EventHorizonGame
         public T Create<T>(string name, Vector3 position, string path) where T : Mobile
         {
             GameObject g = (GameObject)GameObject.Instantiate(Utils.Load<GameObject>(path));
+            g.transform.parent = EventHorizon.Instance.mobileParent;
             T[] comp = g.GetComponents<T>();
 
             foreach (T obj in comp)
