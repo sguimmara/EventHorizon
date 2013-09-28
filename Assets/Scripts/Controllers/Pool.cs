@@ -39,9 +39,6 @@ namespace EventHorizonGame
             g.transform.parent = EventHorizon.Instance.mobileParent;
             T[] comp = g.GetComponents<T>();
 
-            foreach (T obj in comp)
-                Destroy(obj);
-
             g.transform.position = position;
 
             T mobile = g.AddComponent<T>();
@@ -70,16 +67,6 @@ namespace EventHorizonGame
         void Awake()
         {
             Instance = this;
-        }
-
-        void Start()
-        {
-            for (int i = 0; i < 8; i++)
-            {
-                Vector3 pos = new Vector3(UnityEngine.Random.Range(12f, 17F), UnityEngine.Random.Range(2, 8), 0);
-                EnemyShip s = Create<EnemyShip>("Testaros", pos, "Mobiles/Ships/Enemy/Testaros");
-                s.data = new MobileData { damage = 0, hp = 5, isDestroyable = true };
-            }
         }
     }
 }
