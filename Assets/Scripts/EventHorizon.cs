@@ -6,14 +6,14 @@ using UnityEngine;
 
 namespace EventHorizonGame
 {
+    public delegate void Event();
+
     public class EventHorizon : MonoBehaviour
     {
         Player player;
 
         [NonSerialized]
         public static EventHorizon Instance;
-
-        List<Mobile> mobiles;
 
         public GameObject SpawnArea;
         public GameObject GameArea;
@@ -22,6 +22,14 @@ namespace EventHorizonGame
         public Material PLACEHOLDER;
 
         public Vector3 STARTING_POSITION;
+
+        private event Event OnUserRequestExit;
+
+        private void ListenToKeyboard()
+        {
+            if (Input.GetKeyUp(KeyCode.Escape))
+                OnUserRequestExit();
+        }
 
         void InitializeAreaRects()
         {
@@ -62,6 +70,11 @@ namespace EventHorizonGame
             }
         }
 
+        void Quit()
+        {
+            Application.Quit();
+        }
+
         void Awake()
         {
            
@@ -70,24 +83,17 @@ namespace EventHorizonGame
         void Start()
         {
             Instance = this;
-            mobiles = new List<Mobile>();
             player = gameObject.AddComponent<Player>();
 
             InitializeAreaRects();
             InitializeDebugSettings();
-        }
-
-        public void AddMobile(Mobile m)
-        {
-            if (mobiles.Contains(m))
-                Debug.LogWarning("EventHorizon - Le mobile " + m + " est déjà présent dans la liste");
-
-            else mobiles.Add(m);
+            
+            OnUserRequestExit += Quit;
         }
 
         void Update()
         {
-
+            ListenToKeyboard();
         }
     }
 }
