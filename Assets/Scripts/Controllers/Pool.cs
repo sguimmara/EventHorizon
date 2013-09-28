@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,22 @@ namespace EventHorizonGame
         {
             return Create<T>("Default", position, "Mobiles/DefaultMobile");
         }
+
+        public void CreateDecal(string name, Vector3 position, float duration)
+        {
+            Vector3 p = new Vector3(position.x + 0.5F, position.y, -0.1F);
+
+            GameObject g = (GameObject)GameObject.Instantiate(Utils.Load<GameObject>(string.Concat("FX/", name)), p, Quaternion.identity);
+            float s = UnityEngine.Random.Range(0.5F, 1.5F);
+            g.transform.localScale = new Vector3(s, s, 1);
+            StartCoroutine(InstantiateDecal(g , duration));
+        }
+
+        IEnumerator InstantiateDecal(GameObject decal, float duration)
+        {            
+            yield return new WaitForSeconds(duration);
+            Destroy(decal);
+        }        
 
         public T Create<T>(string name, Vector3 position, string path) where T : Mobile
         {
@@ -55,7 +72,7 @@ namespace EventHorizonGame
 
         void Start()
         {
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 8; i++)
             {
                 Vector3 pos = new Vector3(UnityEngine.Random.Range(12f, 17F), UnityEngine.Random.Range(2, 8), 0);
                 EnemyShip s = Create<EnemyShip>("Testaros", pos, "Mobiles/Ships/Enemy/Testaros");
