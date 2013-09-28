@@ -10,10 +10,11 @@ public class Gun : Weapon
 {
     protected override void TriggerWeapon(Vector3 startingPosition)
     {
-        GameObject projectile = (GameObject) GameObject.Instantiate((GameObject)Resources.Load("Mobiles/Projectiles/Shell"));
-        Projectile m = projectile.AddComponent<Projectile>();
-        m.motionParams = new MotionParameters { Velocity = new Vector3(1, 0, 0), Acceleration = 1, Inertia = 1F, MaxSpeed = 1, CurrentSpeed = 0 };
-        m.SetModel(projectile, startingPosition, false);
+        int depth = 2;
+        Projectile p = Pool.Instance.Create<Projectile>("Shell", new Vector3(startingPosition.x, startingPosition.y, depth), "Mobiles/Projectiles/Shell");
+        p.motionParams = new MotionParameters { Velocity = new Vector3(1, 0, 0), Acceleration = 1, Inertia = 1F, MaxSpeed = 1, CurrentSpeed = 0 };
+        p.data = new MobileData { damage = 0, hp = 1, isDestroyable = false };
+        p.Depth = depth;
     }
 }
 
