@@ -12,7 +12,7 @@ public class Gun : Weapon
     {
         int depth = 2;
         Projectile p = Pool.Instance.Create<Projectile>("Shell", new Vector3(startingPosition.x, startingPosition.y, depth), "Mobiles/Projectiles/Shell");
-        p.motionParams = new MotionParameters { Velocity = new Vector3(1, 0, 0), Acceleration = 1, Inertia = 1F, MaxSpeed = 1, CurrentSpeed = 0 };
+        p.motionParams = new MotionParameters { Velocity = new Vector3(0.5F, 0, 0), Acceleration = 1F, Inertia = 1F, MaxSpeed = 1F, CurrentSpeed = 0 };
         p.data = new MobileData { damage = 0, hp = 1, isDestroyable = false };
         p.Depth = depth;
     }
