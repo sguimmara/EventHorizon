@@ -7,11 +7,11 @@ public abstract class Ship : Mobile
 
     protected float HitPoints;
 
-    public void FirePrimary()
+    public void FirePrimary(Vector3 startingPosition)
     {
         if (primary != null)
         {
-            primary.Fire();
+            primary.Fire(startingPosition);
         }
         else Debug.LogWarning("Primary is null");
     }
