@@ -16,6 +16,8 @@ namespace EventHorizonGame.UserInterface
 
         public Texture2D background;
 
+
+
         protected virtual void ComputeUIRectangles()
         {
 
