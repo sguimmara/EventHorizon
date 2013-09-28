@@ -69,7 +69,7 @@ public abstract class Mobile : MonoBehaviour
 
             if (data.hp <= 0)
             {
-                Pool.Instance.CreateDecal("Explosion", Model.transform.position, 0.2F, 2F, 3F);
+                Pool.Instance.CreateDecal("Explosion", Model.transform.position, 0.1F, 2F, 3F);
                 Destroy(Model);
             }
         }

@@ -14,7 +14,7 @@ public class Projectile : Mobile
 
     public override void Collide(Mobile other)
     {
-        Pool.Instance.CreateDecal("Explosion", Model.transform.position, 0.1F, 0.5F, 1.5F);
+        Pool.Instance.CreateDecal("Explosion", Model.transform.position, 0.25F, 0.5F, 1.5F);
         Destroy(this.gameObject);        
     }
 }

@@ -24,12 +24,13 @@ namespace EventHorizonGame
             g.transform.parent = EventHorizon.Instance.mobileParent;
             float s = UnityEngine.Random.Range(scaleMin, scaleMax);
             g.transform.localScale = new Vector3(s, s, 1);
-            StartCoroutine(InstantiateDecal(g , duration));
+            
 
             SpriteAnimator sprite = g.GetComponent<SpriteAnimator>();
             if (sprite != null)
-                sprite.Play(duration, false);
+                sprite.Play(duration, false, true);
 
+            else StartCoroutine(InstantiateDecal(g, duration));
         }
 
         IEnumerator InstantiateDecal(GameObject decal, float duration)
