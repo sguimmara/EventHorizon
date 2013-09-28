@@ -16,15 +16,20 @@ namespace EventHorizonGame
             return Create<T>("Default", position, "Mobiles/DefaultMobile");
         }
 
-        public void CreateDecal(string name, Vector3 position, float duration)
+        public void CreateDecal(string name, Vector3 position, float duration, float scaleMin, float scaleMax)
         {
             Vector3 p = new Vector3(position.x + 0.5F, position.y, -0.1F);
 
             GameObject g = (GameObject)GameObject.Instantiate(Utils.Load<GameObject>(string.Concat("FX/", name)), p, Quaternion.identity);
             g.transform.parent = EventHorizon.Instance.mobileParent;
-            float s = UnityEngine.Random.Range(0.5F, 1.5F);
+            float s = UnityEngine.Random.Range(scaleMin, scaleMax);
             g.transform.localScale = new Vector3(s, s, 1);
             StartCoroutine(InstantiateDecal(g , duration));
+
+            SpriteAnimator sprite = g.GetComponent<SpriteAnimator>();
+            if (sprite != null)
+                sprite.Play(duration, false);
+
         }
 
         IEnumerator InstantiateDecal(GameObject decal, float duration)
