@@ -61,7 +61,7 @@ public abstract class Mobile : MonoBehaviour
             EnforceDepth();
             DestroyWhenOutOfSpawnArea();
 
-            if (data.hp == 0)
+            if (data.hp <= 0)
                 Destroy(Model);
         }
         else Debug.LogWarning("Mobile - Update() - Model is null");
@@ -70,7 +70,7 @@ public abstract class Mobile : MonoBehaviour
     void EnforceDepth()
     {
         Vector3 p = Model.transform.position;
-        Model.transform.position.Set(p.x, p.y, Depth);
+        Model.transform.position = new Vector3(p.x, p.y, (float)Depth);
     }
 
     public override string ToString()
