@@ -10,10 +10,10 @@ static class Utils
 {
    static void Break()
     {
-        if (Globals.debuggerLevel == DebuggerTolerance.LowTolerance)
+        if (DebuggerGlobals.debuggerLevel == DebuggerTolerance.LowTolerance)
             Debug.Break();
 
-        else if (Globals.debuggerLevel == DebuggerTolerance.NoTolerance)
+        else if (DebuggerGlobals.debuggerLevel == DebuggerTolerance.NoTolerance)
             Debug.DebugBreak();
     }
  
