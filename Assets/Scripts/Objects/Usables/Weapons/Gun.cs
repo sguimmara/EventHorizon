@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EventHorizonGame;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,24 +8,12 @@ using UnityEngine;
 
 public class Gun : Weapon
 {
-    protected override void TriggerWeapon()
+    protected override void TriggerWeapon(Vector3 startingPosition)
     {
-        GameObject projectile = (GameObject)GameObject.Instantiate((GameObject) Resources.Load("Mobiles/Projectiles/Shell"), ship.Model.transform.position, new Quaternion());
-        (projectile.AddComponent<ProjectileBehaviour>()).info.damage = 5F;
-        StartCoroutine(moveObject(projectile, Vector3.right * speed, 20));
-    }
-
-    IEnumerator moveObject(GameObject o, Vector3 velocity, float distance)
-    {
-        Vector3 originalPosition = o.transform.position;
-
-        while (Vector3.Distance(o.transform.position, originalPosition) <= distance)
-        {
-            o.transform.Translate(velocity * Time.deltaTime);
-            yield return new WaitForEndOfFrame();
-        }
-
-        Destroy(o);
+        GameObject projectile = (GameObject) GameObject.Instantiate((GameObject)Resources.Load("Mobiles/Projectiles/Shell"));
+        Projectile m = projectile.AddComponent<Projectile>();
+        m.motionParams = new MotionParameters { Velocity = new Vector3(1, 0, 0), Acceleration = 1, Inertia = 1F, MaxSpeed = 1, CurrentSpeed = 0 };
+        m.SetModel(projectile, startingPosition, false);
     }
 }
 

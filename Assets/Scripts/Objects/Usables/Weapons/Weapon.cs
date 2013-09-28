@@ -11,16 +11,16 @@ public abstract class Weapon : Usable
     protected float lastShot;
     protected float speed = 50;
 
-    public void Fire()
+    public void Fire(Vector3 startingPosition)
     {
         if (Time.time - lastShot >= rateOfFire)
         {
-            TriggerWeapon();
+            TriggerWeapon(startingPosition);
             lastShot = Time.time;
         }
     }
 
-    protected virtual void TriggerWeapon()
+    protected virtual void TriggerWeapon(Vector3 startingPosition)
     {
     }
 
