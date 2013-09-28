@@ -7,18 +7,6 @@ public class PlayerShip : Ship
 {
     Weapon secondary;
 
-    public override void LoadDefaultModel()
-    {
-        GameObject model = Utils.Load<GameObject>("Mobiles/Ships/Player/HarbingerOfDeath");
-
-        if (model == null)
-            Debug.LogWarning("HarbingerOfDeath - LoadDefaultModel() - Null");
-
-        SetModel(model, EventHorizon.Instance.STARTING_POSITION);
-        primary = gameObject.AddComponent<Gun>();
-        primary.SetShip(this);
-    }
-
     void LimitShipPositionWithinBoundaries()
     {
         if (Model != null)
@@ -30,6 +18,13 @@ public class PlayerShip : Ship
             float newY = Mathf.Clamp(pos.y, wb.y + Size.height / 2, wb.y + wb.height - Size.height / 2);
             Model.transform.position = new Vector3(newX, newY, 0);
         }
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        primary = gameObject.AddComponent<Gun>();
+        primary.SetShip(this);
     }
 
     public override string ToString()

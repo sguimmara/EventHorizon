@@ -4,28 +4,63 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-class Pool : ScriptableObject
+namespace EventHorizonGame
 {
-    Pool instance
+    public sealed class Pool : MonoBehaviour
     {
-        get
+        public static Pool Instance { get; private set; }
+
+        public T Create<T>(Vector3 position) where T : Mobile
         {
-            if (instance == null)
-                return new Pool();
-            else return instance;
+            return Create<T>("Default", position, "Mobiles/DefaultMobile");
+        }
+
+        public T Create<T>(string name, Vector3 position, string path) where T : Mobile
+        {
+            GameObject g = (GameObject)GameObject.Instantiate(Utils.Load<GameObject>(path));
+            T[] comp = g.GetComponents<T>();
+
+            foreach (T obj in comp)
+                Destroy(obj);
+
+            g.transform.position = position;
+
+            T mobile = g.AddComponent<T>();
+            mobile.SetModel(g);
+
+            BoxCollider col = g.AddComponent<BoxCollider>();
+            col.center = new Vector3(0, 0, 4);
+            col.size = new Vector3(1, 1, 12);
+            col.isTrigger = true;
+
+            Rigidbody bod = g.AddComponent<Rigidbody>();
+            bod.isKinematic = true;
+            bod.freezeRotation = true;
+            bod.useGravity = false;
+
+            CollisionTester collisionTester = g.GetComponent<CollisionTester>();
+
+            if (collisionTester == null)
+                collisionTester = g.AddComponent<CollisionTester>();
+
+            collisionTester.parent = mobile;
+
+            return mobile;
+        }
+
+        void Awake()
+        {
+            Instance = this;
+        }
+
+        void Start()
+        {
+            for (int i = 0; i < 1; i++)
+            {
+                Vector3 pos = new Vector3(UnityEngine.Random.Range(12f, 17F), UnityEngine.Random.Range(2, 8), 0);
+                EnemyShip s = Create<EnemyShip>("Testaros", pos, "Mobiles/Ships/Enemy/Testaros");
+                s.data = new MobileData { damage = 0, hp = 5, isDestroyable = true };
+            }
         }
     }
-
-//    public Dictionary<string, GameElement> projectiles { get; private set; }
-//    public Dictionary<string, GameElement> enemyShips { get; private set; }
-//    public Dictionary<string, GameElement> playerShips { get; private set; }
-//
-//
-//    private Pool()
-//    {
-//        projectiles = new Dictionary<string, GameElement>();
-//        enemyShips = new Dictionary<string, GameElement>();
-//        playerShips = new Dictionary<string, GameElement>();
-//    }
 }
-
