@@ -35,7 +35,7 @@ public class SpriteAnimator : MonoBehaviour
         {
             Vector2[] result = new Vector2[originalSet.Length];
 
-            int row = i % columnSize;
+            int row = i % rowSize;
             int column = columnSize - i / columnSize;
 
             for (int j = 0; j < originalSet.Length; j++)
