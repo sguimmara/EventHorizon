@@ -36,7 +36,6 @@ namespace EventHorizonGame.UserInterface
 
         IEnumerator FadeGUI(float newValue, float duration)
         {
-            Debug.Log("fade");
             float f = 0;
             float origValue = visibility;
 
