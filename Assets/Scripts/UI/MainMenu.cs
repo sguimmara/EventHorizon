@@ -5,7 +5,12 @@ namespace EventHorizonGame.UserInterface
 {
     public class MainMenu : GuiRenderer
     {
-        public event Event OnLevelLoaded;
+        public event Event OnUserRequestLeave;
+        public event Event OnUserRequestEnterGame;
+        public event Event OnRequestPlay;
+        public event Event OnRequestPause;
+
+        bool UIEnabled = true;
 
         bool firstTime = true;
 
@@ -18,20 +23,23 @@ namespace EventHorizonGame.UserInterface
         // Use this for initialization
         void Start()
         {
-            OnLevelLoaded += delegate { StartCoroutine(FadeGUI(0F, 1F)); };
-            EventHorizon.Instance.OnUserRequestMainMenu += delegate { visibility = 1; };
+            EventHorizon.Instance.OnUserRequestHideMainMenu += Hide;
+            EventHorizon.Instance.OnUserRequestShowMainMenu += Show;
             ComputeUIRectangles();
         }
 
-        IEnumerator LoadLevel()
+        void Show()
         {
-            Application.LoadLevelAdditive("Main");
+            //UIEnabled = true;
+            OnRequestPause();
+            StartCoroutine(FadeGUI(1F, 0.2F));
+        }
 
-            yield return new WaitForEndOfFrame();
-            yield return new WaitForEndOfFrame();
-            yield return new WaitForEndOfFrame();
-
-            OnLevelLoaded();
+        void Hide()
+        {
+            //UIEnabled = false;
+            OnRequestPlay();
+            StartCoroutine(FadeGUI(0F, 0.1F));
         }
 
         IEnumerator FadeGUI(float newValue, float duration)
@@ -61,33 +69,42 @@ namespace EventHorizonGame.UserInterface
 
         void OnGUI()
         {
-            GUI.skin = EventHorizon.Instance.MainSkin;
-            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, visibility);
-
-            GUI.DrawTexture(container, background);
-            GUI.DrawTexture(titleRect, title);
-
-            GUI.BeginGroup(menuRect);
-
-            if (firstTime)
+            if (UIEnabled)
             {
-                if (GUI.Button(buttons[0], "Start"))
+                GUI.skin = EventHorizon.Instance.MainSkin;
+                GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, visibility);
+
+                GUI.DrawTexture(container, background);
+                GUI.DrawTexture(titleRect, title);
+
+                GUI.BeginGroup(menuRect);
+
+                if (firstTime)
                 {
-                    firstTime = false;
-                    StartCoroutine(LoadLevel());
+                    if (GUI.Button(buttons[0], "Start"))
+                    {
+                        firstTime = false;
+                        OnUserRequestEnterGame();
+                        visibility = 0;
+                    }
                 }
+
+                else
+                {
+                    if (GUI.Button(buttons[0], "Resume"))
+                    {
+                        Hide();
+                    }
+                }
+
+                if (GUI.Button(buttons[1], "Quit"))
+                {
+                    Hide();
+                    OnUserRequestLeave();
+                }
+
+                GUI.EndGroup();
             }
-
-            else
-            {
-                if (GUI.Button(buttons[0], "Resume"))
-                    StartCoroutine(FadeGUI(0F, 0.1F));
-            }
-
-            if (GUI.Button(buttons[1], "Quit"))
-                Application.Quit();
-
-            GUI.EndGroup();
         }
     }
 }
