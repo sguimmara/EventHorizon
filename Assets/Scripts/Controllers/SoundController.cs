@@ -28,14 +28,13 @@ namespace EventHorizonGame.Sound
         {
             EventHorizon.Instance.OnEnterScene += PlayMusic;
             EventHorizon.Instance.OnPoolLoaded += Initialize;
-
             PlayMusic(0);
         }
 
         void Initialize()
         {
             Instance = this;
-            Pool.Instance.OnMobileCreated += HookToNewMobile;          
+            Pool.Instance.OnMobileCreated += HookToNewMobile;  
         }
 
         void HookToNewMobile(object sender, MobileArgs args)
@@ -51,9 +50,17 @@ namespace EventHorizonGame.Sound
 
         void PlayMusic(int level)
         {
-            Debug.Log(level);
+            if (musicSource == null)
+				Debug.LogWarning("musicsource null");
+			
+
+			
             musicSource.Stop();
             musicSource.clip = musicTracks[level];
+			
+						if (musicSource.clip == null)
+				Debug.Log("clip null");
+			
             musicSource.loop = true;
             musicSource.Play();
         }

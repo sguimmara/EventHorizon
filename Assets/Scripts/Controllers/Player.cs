@@ -39,6 +39,7 @@ namespace EventHorizonGame
 
             if (Input.GetKey(KeyCode.Space))
             {
+                if (ship != null) 
                 ship.FirePrimary(ship.Model.transform.position);
             }
         }
