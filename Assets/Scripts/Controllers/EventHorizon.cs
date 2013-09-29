@@ -1,4 +1,5 @@
 ﻿using EventHorizonGame.AI;
+using EventHorizonGame.Sound;
 using EventHorizonGame.UserInterface;
 using System;
 using System.Collections.Generic;
@@ -9,11 +10,13 @@ using UnityEngine;
 namespace EventHorizonGame
 {
     public delegate void Event();
+    public delegate void EventLevel(int level);
+    public delegate void EventMobile(object sender, MobileArgs args);
 
     public class EventHorizon : MonoBehaviour
     {
         Player player;
-        
+
         [NonSerialized]
         public static EventHorizon Instance;
 
@@ -33,6 +36,8 @@ namespace EventHorizonGame
         public GUISkin MainSkin;
 
         public event Event OnUserRequestMainMenu;
+        public event Event OnPoolLoaded;
+        public event EventLevel OnEnterScene;
 
         private void ListenToKeyboard()
         {
@@ -98,7 +103,7 @@ namespace EventHorizonGame
             Application.Quit();
         }
 
-        void Start()
+        void Awake()
         {
             Instance = this;
             mainMenu = GetComponent<MainMenu>();
@@ -111,10 +116,17 @@ namespace EventHorizonGame
             gameObject.AddComponent<EnemyAI>();
             gameObject.AddComponent<Pool>();
 
+            if (OnPoolLoaded != null)
+                OnPoolLoaded();
+
+            gameObject.AddComponent<SoundController>();
+
             InitializeAreaRects();
             InitializeDebugSettings();
 
             EnemyAI.Instance.Run();
+            if (OnEnterScene != null)
+                OnEnterScene(1);
         }
 
         void Update()
