@@ -4,14 +4,17 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace EventHorizonGame
+namespace EventHorizonGame.Data
 {
-    public struct MotionParameters
+    [Serializable]
+    public class Movement
     {
+        //[HideInInspector]
         public Vector3 Velocity;
         public float MaxSpeed;
         public float Acceleration;
         public float Inertia;
+        [HideInInspector]
         public float CurrentSpeed;
     }
 }
