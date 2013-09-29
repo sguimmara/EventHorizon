@@ -19,7 +19,7 @@ namespace EventHorizonGame.UserInterface
         void Start()
         {
             OnLevelLoaded += delegate { StartCoroutine(FadeGUI(0F, 1F)); };
-            EventHorizon.Instance.OnUserRequestMainMenu += delegate { StartCoroutine(FadeGUI(1F, 0.1F)); };
+            EventHorizon.Instance.OnUserRequestMainMenu += delegate { visibility = 1; };
             ComputeUIRectangles();
         }
 
