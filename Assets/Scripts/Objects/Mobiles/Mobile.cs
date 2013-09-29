@@ -85,7 +85,7 @@ public abstract class Mobile : MonoBehaviour
             EnforceDepth();
             DestroyWhenOutOfVoidArea();
 
-            if (data.hp <= 0)
+            if (data.currentHP <= 0)
             {
                 TriggerEvent(this, EventType.Explosion, null);
                 Pool.Instance.CreateDecal("Explosion3", Model.transform.position,1F, 4F, 5F);
@@ -110,7 +110,7 @@ public abstract class Mobile : MonoBehaviour
     {
         if (data.isDestroyable)
         {
-            data.hp -= (other.data.hp);
+            data.currentHP -= (other.data.currentHP);
         }
     }
 

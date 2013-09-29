@@ -11,7 +11,7 @@ namespace EventHorizonGame
         {
             ship = Pool.Instance.Create<PlayerShip>("Player", EventHorizon.Instance.STARTING_POSITION, "Mobiles/Ships/Player/Omen");
             ship.motionParams = new MotionParameters { Acceleration = 1F, CurrentSpeed = 0f, Velocity = Vector3.zero, MaxSpeed = 10F, Inertia = 0.9F };
-            ship.data = new MobileData { damage = 0, hp = 5, isDestroyable = true };
+            ship.data = new MobileData { damage = 0, currentHP = 25, isDestroyable = true , maxHP = 25};
         }
 
         // Update is called once per frame
@@ -42,6 +42,11 @@ namespace EventHorizonGame
                 if (ship != null) 
                 ship.FirePrimary(ship.Model.transform.position);
             }
+        }
+
+        public MobileData GetMobileData()
+        {
+            return ship.data;
         }
     }
 }
