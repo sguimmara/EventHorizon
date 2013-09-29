@@ -15,20 +15,30 @@ namespace EventHorizonGame.Sound
         AudioSource effectSource;
 
         public List<AudioClip> effects;
-        public List<AudioClip> musicTracks;
-        //public Dictionary<string, AudioClip> effects;
+        //public List<AudioClip> musicTracks;
+        public Dictionary<string, AudioClip> musicTracks;
+
+        void LoadMusics()
+        {
+            musicTracks.Add("Menu", Utils.Load<AudioClip>("Music/POL-evangelian-short"));
+            musicTracks.Add("Main", Utils.Load<AudioClip>("Music/POL-impulses-short"));
+            musicTracks.Add("EndCredits", musicTracks["Menu"]);
+        }
 
         void Awake()
         {
+            musicTracks = new Dictionary<string, AudioClip>();
             musicSource = gameObject.AddComponent<AudioSource>();
-            effectSource = gameObject.AddComponent<AudioSource>();  
+            effectSource = gameObject.AddComponent<AudioSource>();
+
+            LoadMusics();
+            EventHorizon.Instance.OnLevelLoaded += PlayMusic;
         }
 
         void Start()
         {
-            EventHorizon.Instance.OnEnterScene += PlayMusic;
+
             EventHorizon.Instance.OnPoolLoaded += Initialize;
-            PlayMusic(0);
         }
 
         void Initialize()
@@ -48,18 +58,10 @@ namespace EventHorizonGame.Sound
             effectSource.PlayOneShot(effects[1], masterVolume * 1F);
         }
 
-        void PlayMusic(int level)
+        void PlayMusic(string name)
         {
-            if (musicSource == null)
-				Debug.LogWarning("musicsource null");
-			
-
-			
             musicSource.Stop();
-            musicSource.clip = musicTracks[level];
-			
-						if (musicSource.clip == null)
-				Debug.Log("clip null");
+            musicSource.clip = musicTracks[name];
 			
             musicSource.loop = true;
             musicSource.Play();
