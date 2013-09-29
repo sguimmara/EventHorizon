@@ -43,7 +43,7 @@ namespace EventHorizonGame
 
             SpriteAnimator sprite = g.GetComponent<SpriteAnimator>();
             if (sprite != null)
-                sprite.Play(duration, false, true);
+                sprite.Play();
 
             else StartCoroutine(InstantiateDecal(g, duration));
         }
