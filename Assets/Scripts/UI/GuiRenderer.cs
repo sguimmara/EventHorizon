@@ -39,6 +39,11 @@ namespace EventHorizonGame.UserInterface
 
             return result;
         }
+
+        public virtual void OnGUI()
+        {
+            GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), background);
+        }
     }
 }
 
