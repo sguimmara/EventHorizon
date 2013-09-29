@@ -3,13 +3,14 @@ using System.Collections;
 
 public abstract class Ship : Mobile
 {
-    protected Weapon primary;
+    public Weapon primaryWeapon;
+    public Weapon secondaryWeapon;
 
     public void FirePrimary(Vector3 startingPosition)
     {
-        if (primary != null)
+        if (primaryWeapon != null)
         {
-            primary.Fire(startingPosition);
+            primaryWeapon.Fire(startingPosition);
         }
         else Debug.LogWarning("Primary is null");
     }

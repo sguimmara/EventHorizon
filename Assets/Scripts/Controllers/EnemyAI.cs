@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EventHorizonGame.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,15 +35,13 @@ namespace EventHorizonGame.AI
         public IEnumerator AddRandomEnemies(int number)
         {
             int i = 0;
-            MobileData d = new MobileData { damage = 0, currentHP = 5, isDestroyable = true };
+
             IsRunning = true;
             while (i < number || number == -1)
             {
-                MotionParameters p = new MotionParameters { Acceleration = 1, CurrentSpeed = 0, Velocity = Vector3.left, Inertia = 1F, MaxSpeed = UnityEngine.Random.Range(0.05F, 0.1F) };
                 yield return new WaitForSeconds(UnityEngine.Random.Range(0.5F, 1F));
                 EnemyShip ship = Pool.Instance.Create<EnemyShip>("Enemy", RandomSpawnPosition(), "Mobiles/Ships/Enemy/Phantasm");
-                ship.motionParams = p;
-                ship.data = d;
+                ship.motionParams.MaxSpeed = UnityEngine.Random.Range(0.05F, 0.1F);
                 i++;
             }
             IsRunning = false;

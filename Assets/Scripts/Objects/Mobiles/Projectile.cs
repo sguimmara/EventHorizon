@@ -9,7 +9,7 @@ public class Projectile : Mobile
 {
     protected override void Start()
     {
-        Depth = 2;
+        ScreenDepth = 2;
     }
 
     public override void Collide(Mobile other)

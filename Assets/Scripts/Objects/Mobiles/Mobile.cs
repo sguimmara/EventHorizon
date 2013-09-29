@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using EventHorizonGame;
+using EventHorizonGame.Data;
 
 public enum EventType { Explosion, Shoot };
 
@@ -12,13 +13,11 @@ public abstract class Mobile : MonoBehaviour
 {
     public string Name;
     protected Rect Size;
-    public int Depth;
+    public int ScreenDepth;
 
-    public MobileData data;
-
-    public MotionParameters motionParams;
-
-    Vector3 lastPos;
+    public Properties data;
+    public Movement motionParams;
+    public GameObject ExplosionSprite;
 
     public GameObject Model { get; protected set; }
 
@@ -46,17 +45,6 @@ public abstract class Mobile : MonoBehaviour
         return size;
     }
 
-    public void SetModel(GameObject g)
-    {
-        Model = g;
-        Size = GetRectSize(Model);
-
-        if (EventHorizon.Instance.USE_PLACEHOLDERS)
-        {
-            Model.renderer.sharedMaterial = EventHorizon.Instance.PLACEHOLDER;
-        }
-    }
-
     public void Move(Vector3 normalizedDirection)
     {
         motionParams.Velocity += (normalizedDirection * Time.deltaTime * motionParams.Acceleration);
@@ -81,14 +69,13 @@ public abstract class Mobile : MonoBehaviour
 
             Model.transform.Translate(motionParams.Velocity, Space.World);
 
-            lastPos = Model.transform.position;
             EnforceDepth();
             DestroyWhenOutOfVoidArea();
 
-            if (data.currentHP <= 0)
+            if (data.currentHP <= 0 && !data.Indestructible) 
             {
-                TriggerEvent(this, EventType.Explosion, null);
-                Pool.Instance.CreateDecal("Explosion2", Model.transform.position,1F, 4F, 5F);
+                TriggerEvent(this, EventType.Explosion, new MobileArgs { mobile = this, explosionEffect = "", shootEffect = "" });
+                Pool.Instance.CreateDecal("Explosion2", Model.transform.position, 1F, 4F, 5F);
                 Destroy(Model);
             }
         }
@@ -98,7 +85,7 @@ public abstract class Mobile : MonoBehaviour
     void EnforceDepth()
     {
         Vector3 p = Model.transform.position;
-        Model.transform.position = new Vector3(p.x, p.y, (float)Depth);
+        Model.transform.position = new Vector3(p.x, p.y, (float)ScreenDepth);
     }
 
     public override string ToString()
@@ -108,7 +95,7 @@ public abstract class Mobile : MonoBehaviour
 
     public virtual void Collide(Mobile other)
     {
-        if (data.isDestroyable)
+        if (!data.Indestructible)
         {
             data.currentHP -= (other.data.currentHP);
         }
@@ -116,7 +103,8 @@ public abstract class Mobile : MonoBehaviour
 
     void Awake()
     {
-        motionParams = new MotionParameters { MaxSpeed = 0, Inertia = 0F, Acceleration = 0F, Velocity = Vector3.zero, CurrentSpeed = 0 };
+        Model = gameObject;
+        data.currentHP = data.maxHP;
     }
 
     // Destroy the mobile when its rectangle is *totally* out of Spawn area.
@@ -128,13 +116,21 @@ public abstract class Mobile : MonoBehaviour
             || Model.transform.position.y > Globals.VoidArea.y + Globals.VoidArea.height + Size.height / 2)
         {
             Destroy(Model);
-            Destroy(this);
         }
     }
 
     protected virtual void Start()
     {
-        Depth = 0;
+        ScreenDepth = 0;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (this.tag != other.tag)
+        {
+            Debug.Log("collide");
+            Collide(other.GetComponent<Mobile>());
+        }
     }
 }
 

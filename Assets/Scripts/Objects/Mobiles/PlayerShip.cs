@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using EventHorizonGame;
+using EventHorizonGame.Graphics;
 
 public class PlayerShip : Ship
 {
-    Weapon secondary;
+    //Weapon secondary;
 
     void LimitShipPositionWithinBoundaries()
     {
@@ -23,8 +24,8 @@ public class PlayerShip : Ship
     protected override void Start()
     {
         base.Start();
-        primary = gameObject.AddComponent<Gun>();
-        primary.SetShip(this);
+        primaryWeapon = Model.AddComponent<Gun>();
+        primaryWeapon.SetShip(this);
     }
 
     public override string ToString()

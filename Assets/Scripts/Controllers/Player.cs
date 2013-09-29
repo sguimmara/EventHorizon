@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using EventHorizonGame.Data;
+using UnityEngine;
 
 namespace EventHorizonGame
 {
@@ -10,13 +11,16 @@ namespace EventHorizonGame
         void Start()
         {
             ship = Pool.Instance.Create<PlayerShip>("Player", EventHorizon.Instance.STARTING_POSITION, "Mobiles/Ships/Player/Abaddon");
-            ship.motionParams = new MotionParameters { Acceleration = 1F, CurrentSpeed = 0f, Velocity = Vector3.zero, MaxSpeed = 10F, Inertia = 0.9F };
-            ship.data = new MobileData { damage = 0, currentHP = 25, isDestroyable = true , maxHP = 25};
+            //ship.motionParams = new Movement { Acceleration = 1F, CurrentSpeed = 0f, Velocity = Vector3.zero, MaxSpeed = 10F, Inertia = 0.9F };
+            //ship.data = new Properties { damage = 0, currentHP = 25, isDestroyable = true , maxHP = 25};
         }
 
         // Update is called once per frame
         void Update()
         {
+			if (ship == null)
+				Debug.LogWarning("Ship null");
+			
             if (Input.GetKey(KeyCode.DownArrow))
             {
                 ship.Move(Vector3.down);
@@ -44,7 +48,7 @@ namespace EventHorizonGame
             }
         }
 
-        public MobileData GetMobileData()
+        public Properties GetMobileData()
         {
             return ship.data;
         }

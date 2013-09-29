@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EventHorizonGame.Graphics;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,10 @@ namespace EventHorizonGame
         public string explosionEffect;
         public string shootEffect;
 
-        public MobileArgs(Mobile m)
-        {
-            this.mobile = m;
-        }
+        //public MobileArgs(Mobile m)
+        //{
+        //    this.mobile = m;
+        //}
     }
 
     public sealed class Pool : MonoBehaviour
@@ -40,9 +41,9 @@ namespace EventHorizonGame
             g.transform.parent = EventHorizon.Instance.mobileParent;
             float s = UnityEngine.Random.Range(scaleMin, scaleMax);
             g.transform.localScale = new Vector3(s, s, 1);
-            
 
-            SpriteAnimator sprite = g.GetComponent<SpriteAnimator>();
+
+            Sprite sprite = g.GetComponent<Sprite>();
             if (sprite != null)
                 sprite.Play();
 
@@ -50,44 +51,37 @@ namespace EventHorizonGame
         }
 
         IEnumerator InstantiateDecal(GameObject decal, float duration)
-        {            
+        {
             yield return new WaitForSeconds(duration);
             Destroy(decal);
-        }        
+        }
 
         public T Create<T>(string name, Vector3 position, string path) where T : Mobile
         {
-            GameObject g = (GameObject)GameObject.Instantiate(Utils.Load<GameObject>(path));
-            g.transform.parent = EventHorizon.Instance.mobileParent;
-            T[] comp = g.GetComponents<T>();
+            GameObject prefab = (GameObject)GameObject.Instantiate(Utils.Load<GameObject>(path));
+            prefab.transform.parent = EventHorizon.Instance.mobileParent;
 
-            g.transform.position = position;
+            prefab.transform.position = position;
 
-            T mobile = g.AddComponent<T>();
-            mobile.SetModel(g);
+            T mobile = prefab.GetComponent<T>();
+
+            if (EventHorizon.Instance.USE_PLACEHOLDERS)
+                prefab.renderer.material = EventHorizon.Instance.PLACEHOLDER;
 
             mobiles.Add(mobile);
 
-            BoxCollider col = g.AddComponent<BoxCollider>();
+            BoxCollider col = prefab.AddComponent<BoxCollider>();
             col.center = new Vector3(0, 0, 4);
             col.size = new Vector3(1, 1, 12);
             col.isTrigger = true;
 
-            Rigidbody bod = g.AddComponent<Rigidbody>();
+            Rigidbody bod = prefab.AddComponent<Rigidbody>();
             bod.isKinematic = true;
             bod.freezeRotation = true;
             bod.useGravity = false;
 
-            CollisionTester collisionTester = g.GetComponent<CollisionTester>();
-
-            if (collisionTester == null)
-                collisionTester = g.AddComponent<CollisionTester>();
-
-            collisionTester.parent = mobile;
-
-            EventArgs args = new EventArgs();
-
-            OnMobileCreated(this, new MobileArgs(mobile));
+            if (OnMobileCreated != null)
+                OnMobileCreated(this, new MobileArgs { mobile = mobile, shootEffect = "", explosionEffect = "" });
 
             return mobile;
         }
