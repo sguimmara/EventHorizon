@@ -88,7 +88,7 @@ public abstract class Mobile : MonoBehaviour
             if (data.currentHP <= 0)
             {
                 TriggerEvent(this, EventType.Explosion, null);
-                Pool.Instance.CreateDecal("Explosion3", Model.transform.position,1F, 4F, 5F);
+                Pool.Instance.CreateDecal("Explosion2", Model.transform.position,1F, 4F, 5F);
                 Destroy(Model);
             }
         }
