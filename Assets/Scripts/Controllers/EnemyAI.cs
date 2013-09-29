@@ -11,24 +11,31 @@ namespace EventHorizonGame.AI
     {
         public static EnemyAI Instance { get; private set; }
 
+        public bool IsRunning;
+
         Vector3 RandomSpawnPosition()
         {
-           float y = UnityEngine.Random.Range(Globals.SpawnArea.y, Globals.SpawnArea.y + Globals.SpawnArea.height);
-           float x = Globals.SpawnArea.x;
+            float y = UnityEngine.Random.Range(Globals.SpawnArea.y, Globals.SpawnArea.y + Globals.SpawnArea.height);
+            float x = Globals.SpawnArea.x;
 
-           return new Vector3(x, y, 0);
+            return new Vector3(x, y, 0);
         }
 
         public void Run()
         {
-            StartCoroutine(AddRandomEnemies(-1));
+                StartCoroutine(AddRandomEnemies(-1));
+        }
+
+        public void Stop()
+        {
+            StopAllCoroutines();
         }
 
         public IEnumerator AddRandomEnemies(int number)
         {
             int i = 0;
-            MobileData d = new MobileData { damage = 0, hp = 5, isDestroyable = true };
-
+            MobileData d = new MobileData { damage = 0, currentHP = 5, isDestroyable = true };
+            IsRunning = true;
             while (i < number || number == -1)
             {
                 MotionParameters p = new MotionParameters { Acceleration = 1, CurrentSpeed = 0, Velocity = Vector3.left, Inertia = 1F, MaxSpeed = UnityEngine.Random.Range(0.05F, 0.1F) };
@@ -38,10 +45,12 @@ namespace EventHorizonGame.AI
                 ship.data = d;
                 i++;
             }
+            IsRunning = false;
         }
 
         void Awake()
         {
+            IsRunning = false;
             Instance = this;
         }
     }
