@@ -6,6 +6,8 @@ using System.Text;
 using UnityEngine;
 using EventHorizonGame;
 
+public enum EventType { Explosion, Shoot };
+
 public abstract class Mobile : MonoBehaviour
 {
     public string Name;
@@ -19,6 +21,22 @@ public abstract class Mobile : MonoBehaviour
     Vector3 lastPos;
 
     public GameObject Model { get; protected set; }
+
+    public event EventHandler OnMobileExplosion;
+    public event EventHandler OnMobileShoot;
+
+    protected void TriggerEvent(Mobile sender, EventType type, MobileArgs args)
+    {
+        switch (type)
+        {
+            case EventType.Explosion: OnMobileExplosion(sender, args);
+                break;
+            case EventType.Shoot: OnMobileShoot(sender, args);
+                break;
+            default:
+                break;
+        }
+    }
 
     public static Rect GetRectSize(GameObject model)
     {
@@ -69,7 +87,8 @@ public abstract class Mobile : MonoBehaviour
 
             if (data.hp <= 0)
             {
-                Pool.Instance.CreateDecal("Explosion", Model.transform.position, 0.1F, 2F, 3F);
+                TriggerEvent(this, EventType.Explosion, null);
+                Pool.Instance.CreateDecal("Explosion3", Model.transform.position,1F, 4F, 5F);
                 Destroy(Model);
             }
         }
