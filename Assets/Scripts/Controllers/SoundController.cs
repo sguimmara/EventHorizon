@@ -37,7 +37,6 @@ namespace EventHorizonGame.Sound
 
         void Start()
         {
-
             EventHorizon.Instance.OnPoolLoaded += Initialize;
         }
 
