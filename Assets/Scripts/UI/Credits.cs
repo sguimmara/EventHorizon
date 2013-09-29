@@ -5,16 +5,14 @@ namespace EventHorizonGame.UserInterface
 {
     public class Credits : GuiRenderer
     {
-        public event Event OnLevelLoaded;
-
-        bool firstTime = true;
-
         Rect menuRect;
         Rect titleRect;
+        Rect textZone;
+        Rect titleZone;
         Rect[] buttons;
         string credits;
         float creditsY;
-        float speed = 10;
+        public float speed = 10;
         public GUISkin skin;
 
         public Texture2D title;
@@ -24,7 +22,6 @@ namespace EventHorizonGame.UserInterface
         {
             credits = LoadCredits("credits");
             creditsY = Screen.height;
-            //credits = "afijeijgpaiae\neajfiefjâpifeaf\nfepfjeaoafijeijgpaiae\neajfiefjâpifeaf\nfepfjeaoafijeijgpaiae\neajfiefjâpifeaf\nfepfjeaoafijeijgpaiae\neajfiefjâpifeaf\nfepfjeaoafijeijgpaiae\neajfiefjâpifeaf\nfepfjeaoafijeijgpaiae\neajfiefjâpifeaf\nfepfjeaoafijeijgpaiae\neajfiefjâpifeaf\nfepfjeaoafijeijgpaiae\neajfiefjâpifeaf\nfepfjeao";
             ComputeUIRectangles();
         }
 
@@ -39,19 +36,31 @@ namespace EventHorizonGame.UserInterface
         {
             base.ComputeUIRectangles();
             GUIContent content = new GUIContent(credits);
-            Vector2 size = skin.GetStyle("credits").CalcSize(content);            
-            container = new Rect(Screen.width /2 - size.x /2, creditsY, size.x, size.y);
+            Vector2 size = skin.GetStyle("credits").CalcSize(content);
+            container = new Rect(Screen.width / 2 - size.x / 2, creditsY, size.x, size.y);        
+            titleZone = new Rect(0, 0, container.width, title.height * container.width / title.width);
+
+            textZone = new Rect(0, titleZone.height, container.width, size.y);
+            container.height = titleZone.height + textZone.height;
         }
 
         public override void OnGUI()
         {
             base.OnGUI();
             creditsY -= Time.deltaTime * speed;
+            GUI.BeginGroup(container);
             container.y = creditsY;
             //ComputeUIRectangles();
             GUI.skin = skin;
-            GUI.Label(container, credits, "credits");
-            //GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, visibility);            
+            GUI.DrawTexture(titleZone, title);
+            GUI.Label(textZone, credits, "credits");
+            GUI.EndGroup();          
+        }
+
+        void Update() 
+        {
+            if (creditsY + container.height < -100)
+                Application.Quit();
         }
     }
 }
