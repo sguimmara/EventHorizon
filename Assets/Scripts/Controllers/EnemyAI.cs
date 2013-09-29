@@ -21,20 +21,22 @@ namespace EventHorizonGame.AI
 
         public void Run()
         {
-            StartCoroutine(AddRandomEnemies());
+            StartCoroutine(AddRandomEnemies(-1));
         }
 
-        public IEnumerator AddRandomEnemies()
+        public IEnumerator AddRandomEnemies(int number)
         {
-            MotionParameters p = new MotionParameters { Acceleration = 1, CurrentSpeed = 0, Velocity = Vector3.left, Inertia = 1F, MaxSpeed = 0.05F };
+            int i = 0;
             MobileData d = new MobileData { damage = 0, hp = 5, isDestroyable = true };
 
-            while (true)
+            while (i < number || number == -1)
             {
+                MotionParameters p = new MotionParameters { Acceleration = 1, CurrentSpeed = 0, Velocity = Vector3.left, Inertia = 1F, MaxSpeed = UnityEngine.Random.Range(0.05F, 0.1F) };
                 yield return new WaitForSeconds(UnityEngine.Random.Range(0.5F, 1F));
                 EnemyShip ship = Pool.Instance.Create<EnemyShip>("Enemy", RandomSpawnPosition(), "Mobiles/Ships/Enemy/Testaros");
                 ship.motionParams = p;
                 ship.data = d;
+                i++;
             }
         }
 
