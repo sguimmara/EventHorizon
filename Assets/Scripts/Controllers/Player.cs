@@ -9,7 +9,7 @@ namespace EventHorizonGame
         // Use this for initialization
         void Start()
         {
-            ship = Pool.Instance.Create<PlayerShip>("Player", EventHorizon.Instance.STARTING_POSITION, "Mobiles/Ships/Player/Omen");
+            ship = Pool.Instance.Create<PlayerShip>("Player", EventHorizon.Instance.STARTING_POSITION, "Mobiles/Ships/Player/Abaddon");
             ship.motionParams = new MotionParameters { Acceleration = 1F, CurrentSpeed = 0f, Velocity = Vector3.zero, MaxSpeed = 10F, Inertia = 0.9F };
             ship.data = new MobileData { damage = 0, currentHP = 25, isDestroyable = true , maxHP = 25};
         }

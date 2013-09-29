@@ -40,7 +40,7 @@ namespace EventHorizonGame.AI
             {
                 MotionParameters p = new MotionParameters { Acceleration = 1, CurrentSpeed = 0, Velocity = Vector3.left, Inertia = 1F, MaxSpeed = UnityEngine.Random.Range(0.05F, 0.1F) };
                 yield return new WaitForSeconds(UnityEngine.Random.Range(0.5F, 1F));
-                EnemyShip ship = Pool.Instance.Create<EnemyShip>("Enemy", RandomSpawnPosition(), "Mobiles/Ships/Enemy/Testaros");
+                EnemyShip ship = Pool.Instance.Create<EnemyShip>("Enemy", RandomSpawnPosition(), "Mobiles/Ships/Enemy/Phantasm");
                 ship.motionParams = p;
                 ship.data = d;
                 i++;
