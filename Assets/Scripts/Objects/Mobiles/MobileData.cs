@@ -9,8 +9,8 @@ namespace EventHorizonGame
     public struct MobileData
     {
         public bool isDestroyable;
-        public uint hp;
-        public uint damage;
+        public int hp;
+        public int damage;
         public Color trailColor;
         public float trailSize;
     }
