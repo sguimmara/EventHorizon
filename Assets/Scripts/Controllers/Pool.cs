@@ -23,11 +23,12 @@ namespace EventHorizonGame
     {
         public static Pool Instance { get; private set; }
 
+        List<Mobile> mobiles;
+
         public event EventMobile OnMobileCreated;
 
         public T Create<T>(Vector3 position) where T : Mobile
         {
-
             return Create<T>("Default", position, "Mobiles/DefaultMobile");
         }
 
@@ -65,6 +66,8 @@ namespace EventHorizonGame
             T mobile = g.AddComponent<T>();
             mobile.SetModel(g);
 
+            mobiles.Add(mobile);
+
             BoxCollider col = g.AddComponent<BoxCollider>();
             col.center = new Vector3(0, 0, 4);
             col.size = new Vector3(1, 1, 12);
@@ -89,9 +92,20 @@ namespace EventHorizonGame
             return mobile;
         }
 
+        public void Stop()
+        {
+            for (int i = 0; i < mobiles.Count; i++)
+            {
+                if (mobiles[i] != null)
+                    Destroy(mobiles[i].Model);
+            }
+            mobiles.Clear();
+        }
+
         void Awake()
         {
             Instance = this;
+            mobiles = new List<Mobile>();
         }
     }
 }
