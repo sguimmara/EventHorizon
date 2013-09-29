@@ -7,12 +7,27 @@ using UnityEngine;
 
 namespace EventHorizonGame
 {
+    public class MobileArgs : EventArgs
+    {
+        public Mobile mobile;
+        public string explosionEffect;
+        public string shootEffect;
+
+        public MobileArgs(Mobile m)
+        {
+            this.mobile = m;
+        }
+    }
+
     public sealed class Pool : MonoBehaviour
     {
         public static Pool Instance { get; private set; }
 
+        public event EventMobile OnMobileCreated;
+
         public T Create<T>(Vector3 position) where T : Mobile
         {
+
             return Create<T>("Default", position, "Mobiles/DefaultMobile");
         }
 
@@ -66,6 +81,10 @@ namespace EventHorizonGame
                 collisionTester = g.AddComponent<CollisionTester>();
 
             collisionTester.parent = mobile;
+
+            EventArgs args = new EventArgs();
+
+            OnMobileCreated(this, new MobileArgs(mobile));
 
             return mobile;
         }
