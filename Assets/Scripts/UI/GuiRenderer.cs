@@ -32,7 +32,7 @@ namespace EventHorizonGame.UserInterface
                 float x = area.x;
                 float y = i * (area.height / number);
                 float width = area.width;
-                float height = area.height / number - space /2;
+                float height = area.height / number - space / 2;
 
                 result[i] = new Rect(x, y, width, height);
             }
@@ -42,7 +42,8 @@ namespace EventHorizonGame.UserInterface
 
         public virtual void OnGUI()
         {
-            GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), background);
+            if (background != null)
+                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), background);
         }
     }
 }
