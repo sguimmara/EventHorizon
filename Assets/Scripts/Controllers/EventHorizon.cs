@@ -16,8 +16,6 @@ namespace EventHorizonGame
 
     public class EventHorizon : MonoBehaviour
     {
-        public Player player;
-
         [NonSerialized]
         public static EventHorizon Instance;
 
@@ -132,7 +130,6 @@ namespace EventHorizonGame
 
         void Initialize()
         {
-            player = gameObject.AddComponent<Player>();
             gameObject.AddComponent<EnemyAI>();
             gameObject.AddComponent<Pool>();
             gameObject.AddComponent<HUD>();
