@@ -10,7 +10,7 @@ namespace EventHorizonGame.Items
     public class Weapon : Usable
     {
         public bool AutoFire;
-        WeaponElement[] weapons;
+        WeaponPart[] weapons;
         public Texture2D Icon;
 
         public override void Trigger()
@@ -23,7 +23,7 @@ namespace EventHorizonGame.Items
 
         public override void Initialize()
         {
-            weapons = GetComponentsInChildren<WeaponElement>();
+            weapons = GetComponentsInChildren<WeaponPart>();
             if (weapons == null || weapons.Length == 0)
                 Debug.LogWarning(gameObject.name + " WeaponGroup empty");
 

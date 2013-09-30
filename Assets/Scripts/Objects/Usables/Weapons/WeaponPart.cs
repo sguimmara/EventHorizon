@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace EventHorizonGame.Items
 {
-    public class WeaponElement : Usable
+    public class WeaponPart : Usable
     {
         public float rateOfFire = 5;
         public Ammunition Ammunition;
