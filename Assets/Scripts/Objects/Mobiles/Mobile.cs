@@ -6,6 +6,8 @@ using System.Text;
 using UnityEngine;
 using EventHorizonGame;
 using EventHorizonGame.Data;
+using EventHorizonGame.Graphics;
+using EventHorizonGame.FX;
 
 public enum EventType { Explosion, Shoot };
 
@@ -14,10 +16,12 @@ public abstract class Mobile : MonoBehaviour
     public string Name;
     protected Rect Size;
     public int ScreenDepth;
+    public bool NoCollision;
+    public bool AutoTrigger;
 
     public Properties data;
     public Movement motionParams;
-    public GameObject ExplosionSprite;
+    public SpriteSlots Sprites;
 
     public GameObject Model { get; protected set; }
 
@@ -26,29 +30,29 @@ public abstract class Mobile : MonoBehaviour
 
     protected void TriggerEvent(Mobile sender, EventType type, MobileArgs args)
     {
-        switch (type)
-        {
-            case EventType.Explosion: OnMobileExplosion(sender, args);
-                break;
-            case EventType.Shoot: OnMobileShoot(sender, args);
-                break;
-            default:
-                break;
-        }
+        //        switch (type)
+        //        {
+        //            case EventType.Explosion: OnMobileExplosion(sender, args);
+        //                break;
+        //            case EventType.Shoot: OnMobileShoot(sender, args);
+        //                break;
+        //            default:
+        //                break;
+        //        }
     }
 
-    public static Rect GetRectSize(GameObject model)
+    public Rect GetRectSize()
     {
-        Bounds b = model.GetComponent<MeshRenderer>().bounds;
+        Bounds b = gameObject.GetComponent<MeshRenderer>().bounds;
         Rect size = new Rect(b.min.x, b.min.y, b.size.x, b.size.y);
 
         return size;
     }
 
-    public void Move(Vector3 normalizedDirection)
+    public void Move(Vector3 direction)
     {
-        motionParams.Velocity += (normalizedDirection * Time.deltaTime * motionParams.Acceleration);
-        Mathf.Clamp(motionParams.Velocity.magnitude, 0, motionParams.MaxSpeed);
+        motionParams.Direction = Vector3.Normalize (motionParams.Direction += direction);
+        Accelerate();
     }
 
     public void Stop()
@@ -58,34 +62,40 @@ public abstract class Mobile : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (Model != null)
+        UpdatePosition();
+
+        EnforceDepth();
+        DestroyWhenOutOfVoidArea();
+
+        if (data.currentHP <= 0 && !data.Indestructible)
         {
-            if (motionParams.Velocity.magnitude <= motionParams.MaxSpeed)
-            {
-                motionParams.Velocity *= motionParams.Inertia;
-            }
-
-            else motionParams.Velocity *= (motionParams.MaxSpeed / motionParams.Velocity.magnitude);
-
-            Model.transform.Translate(motionParams.Velocity, Space.World);
-
-            EnforceDepth();
-            DestroyWhenOutOfVoidArea();
-
-            if (data.currentHP <= 0 && !data.Indestructible) 
-            {
-                TriggerEvent(this, EventType.Explosion, new MobileArgs { mobile = this, explosionEffect = "", shootEffect = "" });
-                Pool.Instance.CreateDecal("Explosion2", Model.transform.position, 1F, 4F, 5F);
-                Destroy(Model);
-            }
+            //                TriggerEvent(this, EventType.Explosion, new MobileArgs { mobile = this, explosionEffect = "", shootEffect = "" });
+            //                Pool.Instance.CreateDecal("Explosion2", Model.transform.position, 1F, 4F, 5F);
+            //                Destroy(Model);
         }
-        else Debug.LogWarning("Mobile - Update() - Model is null");
+    }
+
+    public void Accelerate()
+    {
+        motionParams.CurrentSpeed += motionParams.Acceleration * Time.deltaTime;
+    }
+
+    protected void UpdatePosition()
+    {
+        motionParams.CurrentSpeed = Mathf.Clamp(motionParams.CurrentSpeed, 0, motionParams.MaxSpeed);
+        motionParams.Inertia = motionParams.Inertia <= 0 ? 0.1F : motionParams.Inertia;
+        
+        motionParams.CurrentSpeed *= (1 / motionParams.Inertia);
+        motionParams.Velocity = motionParams.Direction * motionParams.CurrentSpeed;
+
+        //transform.position = new Vector3(transform.position.x + motionParams.Velocity.x, transform.position.y + motionParams.Velocity.y, transform.position.z);
+        transform.Translate(motionParams.Velocity.x, motionParams.Velocity.y, 0);
     }
 
     void EnforceDepth()
     {
-        Vector3 p = Model.transform.position;
-        Model.transform.position = new Vector3(p.x, p.y, (float)ScreenDepth);
+        Vector3 p = transform.position;
+        transform.position = new Vector3(p.x, p.y, (float)ScreenDepth);
     }
 
     public override string ToString()
@@ -101,36 +111,52 @@ public abstract class Mobile : MonoBehaviour
         }
     }
 
-    void Awake()
+    protected virtual void Awake()
     {
-        Model = gameObject;
         data.currentHP = data.maxHP;
+        Size = GetRectSize();
     }
 
     // Destroy the mobile when its rectangle is *totally* out of Spawn area.
     private void DestroyWhenOutOfVoidArea()
     {
-        if (Model.transform.position.x < Globals.VoidArea.x - Size.width / 2
-            || Model.transform.position.x > Globals.VoidArea.x + Globals.VoidArea.width + Size.width / 2
-            || Model.transform.position.y < Globals.VoidArea.y - Size.height / 2
-            || Model.transform.position.y > Globals.VoidArea.y + Globals.VoidArea.height + Size.height / 2)
+        if (this.transform.position.x < Globals.VoidArea.x - Size.width / 2
+            || this.transform.position.x > Globals.VoidArea.x + Globals.VoidArea.width + Size.width / 2
+            || this.transform.position.y < Globals.VoidArea.y - Size.height / 2
+            || this.transform.position.y > Globals.VoidArea.y + Globals.VoidArea.height + Size.height / 2)
         {
-            Destroy(Model);
+            Destroy(this.gameObject);
         }
     }
 
     protected virtual void Start()
     {
         ScreenDepth = 0;
+        motionParams.Direction = transform.right;
+        motionParams.CurrentSpeed = motionParams.MaxSpeed; 
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (this.tag != other.tag)
+        if (!NoCollision)
         {
-            Debug.Log("collide");
-            Collide(other.GetComponent<Mobile>());
+            if (this.tag != other.tag)
+            {
+                Debug.Log("collide");
+                Collide(other.GetComponent<Mobile>());
+            }
         }
+    }
+
+    void OnGUI()
+    {
+        string s = string.Concat(
+            "Speed: ", motionParams.CurrentSpeed,
+            " Acc: ", motionParams.Acceleration,
+            " X: ", motionParams.Direction.x,
+            " Y: ", motionParams.Direction.y);
+
+        GUI.Label(new Rect(0, 0, 200, 20), s);
     }
 }
 
