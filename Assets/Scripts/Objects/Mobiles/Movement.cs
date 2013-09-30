@@ -10,11 +10,13 @@ namespace EventHorizonGame.Data
     public class Movement
     {
         //[HideInInspector]
+        //[NonSerialized]
         public Vector3 Velocity;
+        public Vector3 Direction;
         public float MaxSpeed;
         public float Acceleration;
         public float Inertia;
-        [HideInInspector]
+        //[HideInInspector]
         public float CurrentSpeed;
     }
 }
