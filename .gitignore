@@ -23,6 +23,7 @@ local.properties
 [Ll]ibrary/
 [Tt]emp/
 [Bb]uilds/
+[Ss]ources/
 obj/
 *.pidb
 *.userprefs
