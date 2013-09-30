@@ -3,10 +3,7 @@ using System.Collections;
 
 public abstract class Usable : MonoBehaviour
 {
-    protected Ship ship;
-
-    public void SetShip(Ship ship)
-    {
-        this.ship = ship;
-    }
+    public abstract void Trigger();
+    public abstract void Initialize();
+    public bool Active;
 }

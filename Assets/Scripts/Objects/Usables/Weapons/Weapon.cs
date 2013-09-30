@@ -1,32 +1,44 @@
-﻿using System;
+﻿using EventHorizonGame.Items;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public abstract class Weapon : Usable
+namespace EventHorizonGame.Items
 {
-    protected float rateOfFire = 0.05F;
-    protected float damage = 1F;
-    protected float lastShot;
-    protected float speed = 50;
-
-    public void Fire(Vector3 startingPosition)
+    public class Weapon : Usable
     {
-        if (Time.time - lastShot >= rateOfFire)
+        public bool AutoFire;
+        WeaponElement[] weapons;
+        public Texture2D Icon;
+
+        public override void Trigger()
+        {           
+            for (int i = 0; i < weapons.Length; i++)
+            {
+                weapons[i].Trigger();
+            }
+        }
+
+        public override void Initialize()
         {
-            TriggerWeapon(startingPosition);
-            lastShot = Time.time;
+            weapons = GetComponentsInChildren<WeaponElement>();
+            if (weapons == null || weapons.Length == 0)
+                Debug.LogWarning(gameObject.name + " WeaponGroup empty");
+
+            else
+            {
+                for (int i = 0; i < weapons.Length; i++)
+                    weapons[i].Initialize();
+            }
+        }
+
+        void Update()
+        {
+
+            if (AutoFire)
+                Trigger();
         }
     }
-
-    protected virtual void TriggerWeapon(Vector3 startingPosition)
-    {
-    }
-
-    void Start()
-    {
-        lastShot = Time.time;
-    }
 }
-
