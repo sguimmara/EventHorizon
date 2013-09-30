@@ -54,43 +54,6 @@ namespace EventHorizonGame
             }
         }
 
-        void InitializeAreaRects()
-        {
-            SpawnArea = GameObject.Find("SpawnArea");
-            GameArea = GameObject.Find("GameArea");
-            VoidArea = GameObject.Find("VoidArea");
-
-            if (SpawnArea != null)
-            {
-                Bounds b = SpawnArea.GetComponent<MeshRenderer>().bounds;
-                Globals.SpawnArea.x = b.min.x;
-                Globals.SpawnArea.y = b.min.y;
-                Globals.SpawnArea.width = b.max.x - b.min.x;
-                Globals.SpawnArea.height = b.max.y - b.min.y;
-            }
-            else Debug.LogError("SpawnArea null");
-
-            if (VoidArea != null)
-            {
-                Bounds b = VoidArea.GetComponent<MeshRenderer>().bounds;
-                Globals.VoidArea.x = b.min.x;
-                Globals.VoidArea.y = b.min.y;
-                Globals.VoidArea.width = b.max.x - b.min.x;
-                Globals.VoidArea.height = b.max.y - b.min.y;
-            }
-            else Debug.LogError("VoidArea null");
-
-            if (GameArea)
-            {
-                Bounds b = GameArea.GetComponent<MeshRenderer>().bounds;
-                Globals.GameArea.x = b.min.x;
-                Globals.GameArea.y = b.min.y;
-                Globals.GameArea.width = b.max.x - b.min.x;
-                Globals.GameArea.height = b.max.y - b.min.y;
-            }
-            else Debug.LogError("GameArea null");
-        }
-
         void InitializeDebugSettings()
         {
             if (USE_PLACEHOLDERS)
@@ -177,7 +140,6 @@ namespace EventHorizonGame
             if (OnPoolLoaded != null)
                 OnPoolLoaded();
 
-            InitializeAreaRects();
             InitializeDebugSettings();
 
             EnemyAI.Instance.Run();
