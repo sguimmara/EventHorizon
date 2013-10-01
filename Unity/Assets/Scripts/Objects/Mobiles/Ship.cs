@@ -31,9 +31,9 @@ public abstract class Ship : Mobile
         }
     }
 
-    void Update()
+    protected override void  Update()
     {
-
+        base.Update();
         if (AutoTrigger)
             Trigger();
     }
