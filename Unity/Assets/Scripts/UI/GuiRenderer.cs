@@ -11,6 +11,8 @@ namespace EventHorizonGame.UserInterface
 
     public abstract class GuiRenderer : MonoBehaviour
     {
+        public GUISkin skin;
+        public Color guiColor;
         protected float visibility = 1F;
         protected Rect container;
 
