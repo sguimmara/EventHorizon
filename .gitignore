@@ -19,6 +19,9 @@ local.properties
 .classpath
 .project
 
+#Documents
+*~*
+
 #Unity3D
 [Ll]ibrary/
 [Tt]emp/
