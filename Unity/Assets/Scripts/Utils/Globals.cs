@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace EventHorizonGame
+namespace EventHorizon
 {
     public class Globals : MonoBehaviour
     {
@@ -15,6 +15,11 @@ namespace EventHorizonGame
         void Awake()
         {
             Globals.InitializeAreaRects();
+
+            Debug.Log(VoidArea.x);
+            Debug.Log(VoidArea.y);
+            Debug.Log(VoidArea.width);
+            Debug.Log(VoidArea.height);
         }
 
         public static void InitializeAreaRects()
