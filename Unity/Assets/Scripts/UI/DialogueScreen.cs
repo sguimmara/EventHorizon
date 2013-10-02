@@ -5,30 +5,55 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using System.IO;
 
 namespace EventHorizonGame.UI
 {
-    [RequireComponent(typeof(AudioSource))]
+    struct DialogueLine
+    {
+        public Actor actor;
+        public string line;
+    }
+
     public class DialogueScreen : GuiRenderer
     {
+        public event Event OnDialogueFinished;
+
+        public TextAsset DialogueFile;
+
         string[] originals;
-        string newString;
+        string currentDialogueLine;
         public AudioClip beep;
 
-        IEnumerator BuildStringOverTime(string[] originals, float timePerCharacter, float timeBetweenStrings, bool ponderate)
+        public Texture2D marshallTexture;
+        public Texture2D taeresaTexture;
+        public Texture2D nobodyTexture;
+
+        private Actor[] actors;
+
+        List<DialogueLine> lines;
+        DialogueLine currentLine;
+
+        Rect actorPortraitRect;
+        Rect textRect;
+        Rect actorNameRect;
+
+        IEnumerator RunDialogueSequence(DialogueLine[] lines, float timePerCharacter, float timeBetweeLines)
         {
-            for (int j = 0; j < originals.Length; j++)
+            for (int j = 0; j < lines.Length; j++)
             {
-                string original = originals[j];
-                newString = "";
+                currentLine = lines[j];
+                string original = currentLine.line;
+                currentDialogueLine = "";
+
                 for (int i = 0; i < original.Length; i++)
                 {
-                    newString = string.Concat(newString, original[i]);
+                    currentDialogueLine = string.Concat(currentDialogueLine, original[i]);
                     audio.PlayOneShot(beep);
                     yield return new WaitForSeconds(timePerCharacter);
                 }
 
-                yield return new WaitForSeconds(timeBetweenStrings + 0.03F * newString.Length);
+                yield return new WaitForSeconds(timeBetweeLines + 0.03F * original.Length);
             }
 
             float f = 0;
@@ -39,29 +64,114 @@ namespace EventHorizonGame.UI
                 f += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }
+
+            if (OnDialogueFinished != null)
+                OnDialogueFinished();
+        }
+
+        // Find an actor by its ID
+        Actor Find(string ID)
+        {
+            for (int i = 0; i < actors.Length; i++)
+                if (actors[i].ID == ID)
+                    return actors[i];
+
+            return null;
+        }
+
+        protected override void ComputeUIRectangles()
+        {
+            float containerWidth = Screen.width / 2;
+            float containerHeight = Screen.height * 0.2F;
+            container = new Rect(Screen.width / 2 - containerWidth / 2, Screen.height - containerHeight, containerWidth, containerHeight);
+            actorPortraitRect = new Rect(0, 0, containerHeight, containerHeight);
+            textRect = new Rect(actorPortraitRect.width, 0, containerWidth - actorPortraitRect.width, containerHeight);
+            actorNameRect = new Rect(0, 0, 100, 20);
+        }
+
+        void ExtractDialogueData()
+        {
+            string text = DialogueFile.text;
+
+            string[] list = text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < list.Length; i++)
+                list[i] = list[i].Trim();
+
+            lines = new List<DialogueLine>();
+
+            for (int i = 0; i < list.Length - 1; i = i + 2)
+            {
+                string s = list[i].Trim();
+
+                if (!s.StartsWith("#"))
+                {
+                    if (s.StartsWith("["))
+                    {
+                        s = s.Substring(1, s.Length - 2);
+                        Actor a = Find(s);
+                        string l = list[i + 1];
+                        lines.Add(new DialogueLine { actor = a, line = l });
+                    }
+                }
+            }
+        }
+
+        void Awake()
+        {
+            CREATE_TEST_ACTORS();
+
+            if (!audio)
+                gameObject.AddComponent<AudioSource>();
+
+            if (DialogueFile == null)
+                Debug.LogWarning(String.Concat(Application.loadedLevelName, " error : there is no dialogue file in ", name));
+
+            else if (DialogueFile.text == "")
+                Debug.LogWarning(String.Concat(Application.loadedLevelName, " error : there is no text in the dialogue file in ", name));
+
+            else ExtractDialogueData();
+        }
+
+        void Play()
+        {
+            StartCoroutine(RunDialogueSequence(lines.ToArray(), 0.03F, 1F));
         }
 
         void Start()
         {
-            originals = new string[8];
-            originals[0] = "Command, this is LMS Matsuri, do you copy ?";
-            originals[1] = "...";
-            originals[2] = "Command, this is Teraesa Niemeyer from LMS Matsuri, do you receive me ? ";
-            originals[3] = "They don't reply. This wormhole must have thrown us damn far from home...";
-            originals[4] = "Captain !";
-            originals[5] = "What is it, Marshall ?";
-            originals[6] = "I'm picking up strange signatures on the radar.";
-            originals[7] = "Let's have a look...";
-            StartCoroutine(BuildStringOverTime(originals, 0.03F, 1F, true));
+            ComputeUIRectangles();
+            Play();
+        }
+
+        void CREATE_TEST_ACTORS()
+        {
+            Actor taeresa = new Actor { ID = "Taeresa", Name = "Taeresa", Portrait = taeresaTexture };
+            Actor marshall = new Actor { ID = "Marshall", Name = "Marshall", Portrait = marshallTexture };
+            Actor nobody = new Actor { ID = "Nobody", Name = "", Portrait = nobodyTexture };
+
+            actors = new Actor[3] { taeresa, marshall, nobody };
         }
 
         public override void OnGUI()
         {
-         	 base.OnGUI();
+            base.OnGUI();
+            GUI.BeginGroup(container);
             GUI.color = guiColor;
             GUI.skin = skin;
-            //GUI.Label(new Rect(0, 0, 400, 30), originalString);
-            GUI.Label(new Rect(50, Screen.height - 600, 700, 200), newString);
+
+            GUI.Box(new Rect(0, 0, container.width, container.height), "");
+
+            GUI.Label(actorNameRect, currentLine.actor.Name);
+            GUI.DrawTexture(actorPortraitRect, currentLine.actor.Portrait);
+            GUI.Label(textRect, currentDialogueLine);
+            GUI.EndGroup();
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (DialogueFile != null && other.tag == "Player")
+                Play();
         }
     }
 }

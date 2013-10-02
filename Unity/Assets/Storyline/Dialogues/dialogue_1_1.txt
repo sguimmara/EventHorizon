@@ -1,0 +1,26 @@
+# Dialogues for level 1 - Deep Space
+# Section 1 (Intro screen)
+
+[Taeresa]
+This is an emergency call from LMS Matsuri, we have received damage after crossing Wormhole WH-227 XA 474, please respond.
+
+[Nobody] 
+...
+
+[Taeresa]
+Mayday, mayday, we need assistance. This is captain Taresa Niemeyer, in charge of LMS Matsuri, is anybody there ?
+
+[Nobody]
+...
+
+[Marshall]
+Captain !
+
+[Taeresa]
+What is it Marshall ?
+
+[Marshall]
+I'm picking up strange signatures on the radar, it seems they are coming toward us !
+
+[Taeresa]
+I don't like that. I don't like that at all. Everyone be ready. Overload the Phase analyzer !
