@@ -2,7 +2,7 @@
 using System.Collections;
 
 
-namespace EventHorizonGame.Graphics
+namespace EventHorizon.Graphics
 {
     public enum SpriteMode { DestroyAtEnd, Loop, Once }
 

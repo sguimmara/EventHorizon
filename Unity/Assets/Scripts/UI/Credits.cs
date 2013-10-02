@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace EventHorizonGame.UserInterface
+namespace EventHorizon.UserInterface
 {
     public class Credits : GuiRenderer
     {

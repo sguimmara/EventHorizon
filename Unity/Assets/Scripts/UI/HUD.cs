@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityExtended;
+using EventHorizon.Objects;
 
-namespace EventHorizonGame.UserInterface
+namespace EventHorizon.UserInterface
 {
     public class HUD : GuiRenderer
     {
@@ -50,7 +51,7 @@ namespace EventHorizonGame.UserInterface
 
         void DrawShipUI()
         {
-            float hp = Mathf.Clamp01(((float) player.properties.currentHP / player.properties.maxHP));
+            float hp = Mathf.Clamp01(((float) player.CurrentHp / player.MaxHp));
             GUI.color = UnityExtended.Interp.Lerp(shipGradient,1 - hp);
             GUI.Box(shipRect, shipIcon);
             GUI.Box(moduleArea, "");

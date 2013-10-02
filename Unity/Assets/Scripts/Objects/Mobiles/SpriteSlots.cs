@@ -1,10 +1,10 @@
-﻿using EventHorizonGame.Graphics;
+﻿using EventHorizon.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace EventHorizonGame.FX
+namespace EventHorizon.FX
 {
     [Serializable]
     public class SpriteSlots
