@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace EventHorizonGame
+namespace EventHorizon
 {
-    public interface IControlable
+    public interface IPlayable
     {
-        void UserControl();
+        void Control();
     }
 }
