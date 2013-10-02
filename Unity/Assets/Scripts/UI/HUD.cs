@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityExtended;
 
 namespace EventHorizonGame.UserInterface
 {
@@ -7,57 +8,64 @@ namespace EventHorizonGame.UserInterface
     {
         Rect shipRect;
         Rect HUDZone;
-        public Texture2D ship;
+        public Texture2D shipIcon;
         float t;
         float resultInterp;
 
         public Texture2D title;
         Color[] shipGradient;
         const int numberOfColors = 4;
-        GUISkin skin;
+
+        Rect moduleArea;
+        Rect[] moduleRects;
+
+        Player player;
 
         // Use this for initialization
         void Start()
         {
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
             ComputeUIRectangles();
             shipGradient = new Color[numberOfColors] { Color.green, Color.yellow, Color.red, Color.black };
-            ship = Utils.Load<Texture2D>("ship_representation");
-            skin = EventHorizon.Instance.MainSkin;
+            shipIcon = Utils.Load<Texture2D>("ship_representation");
         }
 
 
         protected override void ComputeUIRectangles()
         {
-            //base.ComputeUIRectangles();
-            float height = 60;
-            container = new Rect(0, Screen.height - height, Screen.width, height);
-            HUDZone = new Rect(0, 0, container.width, container.height);
-            shipRect = new Rect(HUDZone.width / 2 - 50, 0, 100, container.height);
+            float height = 100;
+            float width = 200;
+            container = new Rect(Screen.width / 2 - width / 2, Screen.height - height, width, height);
+
+            shipRect = new Rect(0, 0, container.width, container.height * 0.7F);
+
+            moduleArea = new Rect(0, container.height * 0.7F, container.width, container.height * 0.3F);
+            moduleRects = new Rect[4];
+
+            for (int i = 0; i < moduleRects.Length; i++)
+            {
+                moduleRects[i] = new Rect(i * moduleArea.width / 4F, 0, moduleArea.width / 4, moduleArea.height);
+            }
         }
 
-        Color GetGradientColor(float t)
+        void DrawShipUI()
         {
-            float stepSize = 1F / (shipGradient.Length - 1);
-
-            int currentStep = Mathf.FloorToInt(t / stepSize);
-            float lowThreshold = currentStep * stepSize;
-            resultInterp = Mathf.Clamp01((t - lowThreshold) / stepSize);
-
-            if (currentStep < shipGradient.Length - 1)
-                return Color.Lerp(shipGradient[currentStep], shipGradient[currentStep + 1], resultInterp);
-            else return (shipGradient[shipGradient.Length - 1]);
+            float hp = Mathf.Clamp01(((float) player.properties.currentHP / player.properties.maxHP));
+            GUI.color = UnityExtended.Interp.Lerp(shipGradient,1 - hp);
+            GUI.Box(shipRect, shipIcon);
+            GUI.Box(moduleArea, "");
+            GUI.color = Color.white;
+            GUI.BeginGroup(moduleArea);
+            for (int i = 0; i < moduleRects.Length; i++)
+                GUI.Box(moduleRects[i], player.Slots[i].Icon);  
+            GUI.EndGroup();
         }
 
-        public override void OnGUI()
+        protected override void Draw()
         {
             GUI.skin = skin;
-            float hp = ((float)EventHorizon.Instance.player.GetMobileData().currentHP / EventHorizon.Instance.player.GetMobileData().maxHP);
-            base.OnGUI();
             GUI.BeginGroup(container);
-            GUI.Box(HUDZone, "", "HudBox");
-            GUI.color = GetGradientColor(1-hp);
-            GUI.Box(shipRect, ship, "HudBox");
-            GUI.color = Color.white;
+            DrawShipUI();
             GUI.EndGroup();
         }
     }

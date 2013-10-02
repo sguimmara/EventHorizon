@@ -13,7 +13,6 @@ namespace EventHorizonGame.UserInterface
         string credits;
         float creditsY;
         public float speed = 10;
-        public GUISkin skin;
 
         public Texture2D title;
 
@@ -34,7 +33,6 @@ namespace EventHorizonGame.UserInterface
 
         protected override void ComputeUIRectangles()
         {
-            base.ComputeUIRectangles();
             GUIContent content = new GUIContent(credits);
             Vector2 size = skin.GetStyle("credits").CalcSize(content);
             container = new Rect(Screen.width / 2 - size.x / 2, creditsY, size.x, size.y);        
@@ -44,9 +42,8 @@ namespace EventHorizonGame.UserInterface
             container.height = titleZone.height + textZone.height;
         }
 
-        public override void OnGUI()
+        protected override void Draw()
         {
-            base.OnGUI();
             creditsY -= Time.deltaTime * speed;
             GUI.BeginGroup(container);
             container.y = creditsY;
