@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace EventHorizonGame.UI
+namespace EventHorizon.UserInterface
 {
     // Class for storing data about plot characters
     public class Actor
