@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace EventHorizonGame.UserInterface
+namespace EventHorizon.UserInterface
 {
     public class MainMenu : GuiRenderer
     {
@@ -9,8 +9,6 @@ namespace EventHorizonGame.UserInterface
         public event Event OnUserRequestEnterGame;
         public event Event OnRequestPlay;
         public event Event OnRequestPause;
-
-        bool UIEnabled = true;
 
         bool firstTime = true;
 
@@ -23,21 +21,19 @@ namespace EventHorizonGame.UserInterface
         // Use this for initialization
         void Start()
         {
-            EventHorizon.Instance.OnUserRequestHideMainMenu += Hide;
-            EventHorizon.Instance.OnUserRequestShowMainMenu += Show;
+            MainController.Instance.OnUserRequestHideMainMenu += Hide;
+            MainController.Instance.OnUserRequestShowMainMenu += Show;
             ComputeUIRectangles();
         }
 
-        void Show()
+        protected override void Show()
         {
-            //UIEnabled = true;
             OnRequestPause();
             StartCoroutine(FadeGUI(1F, 0.2F));
         }
 
-        void Hide()
+        protected override void Hide()
         {
-            //UIEnabled = false;
             OnRequestPlay();
             StartCoroutine(FadeGUI(0F, 0.1F));
         }
@@ -59,52 +55,49 @@ namespace EventHorizonGame.UserInterface
 
         protected override void ComputeUIRectangles()
         {
-            base.ComputeUIRectangles();
             container = new Rect(-1, -1, Screen.width + 2, Screen.height + 2);
             titleRect = new Rect(container.width / 2 - 512, 100, 1024, 206);
             menuRect = new Rect(container.width / 2 - 150, container.height / 2 - 50, 300, 200);
 
-            buttons = GuiRenderer.GetButtons(new Rect(0, 0, menuRect.width, menuRect.height), 2, 60F, Disposition.Vertical);
+            buttons = GuiRenderer.GetAreaRectangles(new Rect(0, 0, menuRect.width, menuRect.height), 2, 60F, Disposition.Vertical);
         }
 
-        void OnGUI()
+        protected override void Draw()
         {
-            if (UIEnabled)
+            GUI.skin = MainController.Instance.MainSkin;
+            GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, visibility);
+
+            GUI.DrawTexture(container, background);
+            GUI.DrawTexture(titleRect, title);
+
+            GUI.BeginGroup(menuRect);
+
+            if (firstTime)
             {
-                GUI.skin = EventHorizon.Instance.MainSkin;
-                GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, visibility);
-
-                GUI.DrawTexture(container, background);
-                GUI.DrawTexture(titleRect, title);
-
-                GUI.BeginGroup(menuRect);
-
-                if (firstTime)
+                if (GUI.Button(buttons[0], "Start"))
                 {
-                    if (GUI.Button(buttons[0], "Start"))
-                    {
-                        firstTime = false;
-                        OnUserRequestEnterGame();
-                        visibility = 0;
-                    }
+                    firstTime = false;
+                    OnUserRequestEnterGame();
+                    visibility = 0;
                 }
+            }
 
-                else
-                {
-                    if (GUI.Button(buttons[0], "Resume"))
-                    {
-                        Hide();
-                    }
-                }
-
-                if (GUI.Button(buttons[1], "Quit"))
+            else
+            {
+                if (GUI.Button(buttons[0], "Resume"))
                 {
                     Hide();
-                    OnUserRequestLeave();
                 }
-
-                GUI.EndGroup();
             }
+
+            if (GUI.Button(buttons[1], "Quit"))
+            {
+                Hide();
+                OnUserRequestLeave();
+            }
+
+            GUI.EndGroup();
+
         }
     }
 }

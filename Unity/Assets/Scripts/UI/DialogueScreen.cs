@@ -1,4 +1,4 @@
-﻿using EventHorizonGame.UserInterface;
+﻿using EventHorizon.UserInterface;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Text;
 using UnityEngine;
 using System.IO;
 
-namespace EventHorizonGame.UI
+namespace EventHorizon.UserInterface
 {
     struct DialogueLine
     {
@@ -153,9 +153,8 @@ namespace EventHorizonGame.UI
             actors = new Actor[3] { taeresa, marshall, nobody };
         }
 
-        public override void OnGUI()
+        protected override void Draw()
         {
-            base.OnGUI();
             GUI.BeginGroup(container);
             GUI.color = guiColor;
             GUI.skin = skin;

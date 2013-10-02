@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace EventHorizonGame.UserInterface
+namespace EventHorizon.UserInterface
 {
     public enum Disposition { Vertical, Horizontal };
 
@@ -14,18 +14,14 @@ namespace EventHorizonGame.UserInterface
         public GUISkin skin;
         public Color guiColor;
         protected float visibility = 1F;
+        private bool GuiEnabled;
         protected Rect container;
 
         public Texture2D background;
 
+        protected abstract void ComputeUIRectangles();
 
-
-        protected virtual void ComputeUIRectangles()
-        {
-
-        }
-
-        public static Rect[] GetButtons(Rect area, int number, float space, Disposition d)
+        public static Rect[] GetAreaRectangles(Rect area, int number, float space, Disposition d)
         {
             Rect[] result = new Rect[number];
 
@@ -44,9 +40,25 @@ namespace EventHorizonGame.UserInterface
 
         public virtual void OnGUI()
         {
-            if (background != null)
-                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), background);
+            if (GuiEnabled)
+            {
+                if (background != null)
+                    GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), background);
+
+                Draw();
+            }
         }
+
+        protected virtual void Show()
+        {
+            GuiEnabled = true;
+        }
+        
+        protected virtual void Hide()
+        {
+            GuiEnabled = false;
+        }
+        protected abstract void Draw();
     }
 }
 
