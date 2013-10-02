@@ -1,17 +1,16 @@
-﻿using EventHorizonGame.Items;
+﻿using EventHorizon.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace EventHorizonGame.Items
+namespace EventHorizon.Objects
 {
     public class Weapon : Usable
     {
         public bool AutoFire;
         WeaponPart[] weapons;
-        public Texture2D Icon;
 
         public override void Trigger()
         {           
