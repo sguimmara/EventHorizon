@@ -12,7 +12,7 @@ namespace EventHorizon.UserInterface
     public abstract class GuiRenderer : MonoBehaviour
     {
         public GUISkin skin;
-        public Color guiColor;
+        public Color guiColor = Color.white;
         protected float visibility = 1F;
         private bool GuiEnabled;
         protected Rect container;
