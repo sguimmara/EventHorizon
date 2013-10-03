@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EventHorizon.Objects;
+//using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +10,39 @@ namespace EventHorizon
 {
     public class LevelSlider : MonoBehaviour
     {
+        public SceneryObject asteroid;
+
         void Update()
         {
-            transform.Translate(Vector3.left * Time.deltaTime * 4);
+            transform.Translate(Vector3.left * Time.deltaTime * 2);
+        }        
+
+        public IEnumerator AddRandomSceneryObjects()
+        {
+            while (true)
+            {                
+                yield return new WaitForSeconds(UnityEngine.Random.Range(0.5F, 1F));
+
+                Vector3 pos = new Vector3(Globals.SpawnArea.x, Random.Range(Globals.SpawnArea.yMin, Globals.SpawnArea.yMax), Random.Range(-0.3F, 1F));
+
+                //Quaternion rot = Quaternion.Euler(0, 0, UnityEngine.Random.Range(0, 360F));
+                GameObject c = (GameObject) GameObject.Instantiate(asteroid.gameObject, pos, Quaternion.identity );
+                c.transform.parent = transform;
+                c.transform.localScale *= Random.Range(0.05F, 0.7F);
+
+                SceneryObject m = c.GetComponent<SceneryObject>();
+                m.Inertia = 0;
+                m.Direction = Vector3.left;
+                m.Speed = Random.Range(0.001F, 0.01F);
+                m.CurrentSpeed = m.Speed;
+                m.Acceleration = 100;
+                m.Rotation = Random.Range(-3, 3);
+            }
+        }
+
+        void Awake()
+        {
+            StartCoroutine(AddRandomSceneryObjects());
         }
     }
 }
