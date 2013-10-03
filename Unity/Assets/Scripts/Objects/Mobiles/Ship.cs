@@ -7,8 +7,9 @@ namespace EventHorizon.Objects
 {
     public class Ship : Mobile, ICollidable
     {
-        public Usable[] Slots;
         public bool AutoTrigger;
+
+        public Usable[] Slots;
         public SpriteSlots Sprites;
 
         public event EventMobile OnDestroy;
@@ -56,24 +57,31 @@ namespace EventHorizon.Objects
 
         public void Collide(ICollidable other)
         {
-            currentHp -= (other.CurrentHp);
+            Destroy();
+        }
+
+        public void Damage(IHarmful other)
+        {
+            currentHp -= (other.Damage);
         }
 
         public void OnTriggerEnter(Collider other)
         {
-            if (this.tag != other.tag)
-            {
-                Collide(other as ICollidable);
-            }
+            Mobile m = other.gameObject.GetComponent<Mobile>();
+
+            if (other.tag == "Projectile")
+                Damage(m as IHarmful);
+            else if (other.tag == "Enemy" || other.tag == "Player")
+                Collide(m as ICollidable);
         }
 
         public void Destroy()
         {
             if (OnDestroy != null)
-                OnDestroy(this);
+                OnDestroy(this);            
 
             if (Sprites.Explosion != null)
-                GameObject.Instantiate(Sprites.Explosion, transform.position, Quaternion.identity);
+                GameObject.Instantiate(Sprites.Explosion, transform.position, Quaternion.Euler(new Vector3(0,0, Random.Range(0, 360F))));
 
             Destroy(gameObject);
         }
@@ -89,7 +97,7 @@ namespace EventHorizon.Objects
             get { return currentHp; }
         }
 
-            [SerializeField]
+        [SerializeField]
         public int MaxHp
         {
             get

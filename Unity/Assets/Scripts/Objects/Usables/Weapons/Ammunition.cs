@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EventHorizon.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,60 +7,43 @@ using UnityEngine;
 
 namespace EventHorizon.Objects
 {
-    public class Ammunition : Mobile, ICollidable
+    public class Ammunition : Mobile, ICollidable, IHarmful
     {
+        public Sprite Impact;
+
+        public int damage = 1;
+
         public event EventMobile OnDestroy;
+
+        public void OnTriggerEnter(Collider other)
+        {
+            if (other.tag == "Player" || other.tag == "Enemy")
+                Collide(other as ICollidable);
+        }
 
         public void Collide(ICollidable other)
         {
             Destroy();
         }
 
-        // Destroy the mobile when its rectangle is *totally* out of Spawn area.
-        protected override void DestroyWhenOutOfVoidArea()
-        {
-            if (this.transform.position.x < Globals.GameArea.x - Size.width / 2
-                || this.transform.position.x > Globals.GameArea.x + Globals.GameArea.width + Size.width / 2
-                || this.transform.position.y < Globals.GameArea.y - Size.height / 2
-                || this.transform.position.y > Globals.GameArea.y + Globals.GameArea.height + Size.height / 2)
-            {
-                Destroy(this.gameObject);
-            }
-        }
-
-        public int CurrentHp
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public int MaxHp
-        {
-            get
-            {
-                return 0;
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         public void Destroy()
         {
             Destroy(gameObject);
-            //GameObject.Instantiate(Sprites.Explosion.gameObject, transform.position, Quaternion.identity);
+
+            if (Impact != null)
+                //GameObject.Instantiate(Impact.gameObject, transform.position, Quaternion.Euler(new Vector3(0, 0, UnityEngine.Random.Range(0, 360F))));
+                Impact.Create(transform.position);
+
             if (OnDestroy != null)
                 OnDestroy(this);
         }
 
-        public void UpdateHp()
+        public int Damage
         {
-            throw new NotImplementedException();
-        }
-
-        public void OnTriggerEnter(Collider other)
-        {
-            Collide(other as ICollidable);
+            get
+            {
+                return damage;
+            }
         }
     }
 }

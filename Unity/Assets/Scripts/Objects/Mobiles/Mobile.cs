@@ -12,16 +12,17 @@ namespace EventHorizon.Objects
 {
     public abstract class Mobile : MonoBehaviour
     {
-        public int ScreenDepth;
-        protected Rect Size;
-
+        [HideInInspector]
         public Vector3 Direction;
 
-        public float Acceleration;
-        public float Inertia;
+        public float Acceleration = 1;
+        public float Inertia = 0;
 
+        [HideInInspector]
         public float CurrentSpeed;
-        public float MaxSpeed;
+        public float Speed;
+
+        protected Rect Size;
 
 
         public Rect GetRectSize()
@@ -43,32 +44,9 @@ namespace EventHorizon.Objects
             CurrentSpeed = 0;
         }
 
-        protected virtual void Update()
-        {
-            UpdatePosition();
-
-            EnforceDepth();
-            DestroyWhenOutOfVoidArea();
-        }
-
         public void Accelerate()
         {
             CurrentSpeed += Acceleration * Time.deltaTime;
-        }
-
-        protected void UpdatePosition()
-        {
-            CurrentSpeed *= (1 - Inertia);
-
-            CurrentSpeed = Mathf.Clamp(CurrentSpeed, 0, MaxSpeed);
-
-            transform.Translate(Direction * CurrentSpeed);
-        }
-
-        void EnforceDepth()
-        {
-            Vector3 p = transform.position;
-            transform.position = new Vector3(p.x, p.y, (float)ScreenDepth);
         }
 
         public override string ToString()
@@ -78,7 +56,9 @@ namespace EventHorizon.Objects
 
         protected virtual void Awake()
         {
+            Direction = transform.right;
             Size = GetRectSize();
+            enabled = true;
         }
 
         // Destroy the mobile when its rectangle is *totally* out of Spawn area.
@@ -95,8 +75,21 @@ namespace EventHorizon.Objects
 
         protected virtual void Start()
         {
-            ScreenDepth = 0;
-            CurrentSpeed = MaxSpeed;
+            CurrentSpeed = Speed;
+        }
+
+        protected virtual void Update()
+        {
+            UpdatePosition();
+        }
+
+        protected void UpdatePosition()
+        {
+            CurrentSpeed *= (1 - Inertia);
+
+            CurrentSpeed = Mathf.Clamp(CurrentSpeed, 0, Speed);
+
+            transform.Translate(Direction * CurrentSpeed);
         }
 
         void OnGUI()
@@ -108,6 +101,16 @@ namespace EventHorizon.Objects
                 " Y: ", Direction.y);
 
             GUI.Label(new Rect(0, 0, 200, 20), s);
+        }
+
+        void OnBecameVisible()
+        {
+            enabled = true;
+        }
+
+        void OnBecameInvisible()
+        {
+            Destroy(gameObject);
         }
     }
 }
