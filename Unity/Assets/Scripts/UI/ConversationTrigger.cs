@@ -15,11 +15,12 @@ namespace EventHorizon.UserInterface
         public string line;
     }
 
-    public class DialogueScreen : GuiRenderer
+    public class ConversationTrigger : GuiRenderer
     {
         public event Event OnDialogueFinished;
 
         public TextAsset DialogueFile;
+        public float FadeTime = 1;
 
         string[] originals;
         string currentDialogueLine;
@@ -28,6 +29,8 @@ namespace EventHorizon.UserInterface
         public Texture2D marshallTexture;
         public Texture2D taeresaTexture;
         public Texture2D nobodyTexture;
+        public Texture2D weilinTexture;
+        public Texture2D jacobTexture;
 
         private Actor[] actors;
 
@@ -56,14 +59,18 @@ namespace EventHorizon.UserInterface
                 yield return new WaitForSeconds(timeBetweeLines + 0.03F * original.Length);
             }
 
-            float f = 0;
-
-            while (f <= 3)
+            if (FadeTime > 0)
             {
-                guiColor = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1 - (f / 3F));
-                f += Time.deltaTime;
-                yield return new WaitForEndOfFrame();
+                float f = 0;
+                while (f <= FadeTime)
+                {
+                    guiColor = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1 - (f / FadeTime));
+                    f += Time.deltaTime;
+                    yield return new WaitForEndOfFrame();
+                }
             }
+
+            Hide();
 
             if (OnDialogueFinished != null)
                 OnDialogueFinished();
@@ -119,7 +126,7 @@ namespace EventHorizon.UserInterface
 
         void Awake()
         {
-            CREATE_TEST_ACTORS();
+            TEMP_CREATE_ACTORS();
 
             if (!audio)
                 gameObject.AddComponent<AudioSource>();
@@ -141,16 +148,18 @@ namespace EventHorizon.UserInterface
         void Start()
         {
             ComputeUIRectangles();
-            Play();
         }
 
-        void CREATE_TEST_ACTORS()
+        // Temporary
+        void TEMP_CREATE_ACTORS()
         {
-            Actor taeresa = new Actor { ID = "Taeresa", Name = "Taeresa", Portrait = taeresaTexture };
-            Actor marshall = new Actor { ID = "Marshall", Name = "Marshall", Portrait = marshallTexture };
+            Actor taeresa = new Actor { ID = "Taeresa", Name = "Taeresa Niemeyer", Portrait = taeresaTexture };
+            Actor marshall = new Actor { ID = "Marshall", Name = "Marshall Elon", Portrait = marshallTexture };
+            Actor weilin = new Actor { ID = "Weilin", Name = "Weilin Gu", Portrait = weilinTexture };
+            Actor jacob = new Actor { ID = "Jacob", Name = "Jacob Freeman", Portrait = jacobTexture };
             Actor nobody = new Actor { ID = "Nobody", Name = "", Portrait = nobodyTexture };
 
-            actors = new Actor[3] { taeresa, marshall, nobody };
+            actors = new Actor[5] { taeresa, marshall, nobody, weilin, jacob };
         }
 
         protected override void Draw()
@@ -170,7 +179,10 @@ namespace EventHorizon.UserInterface
         void OnTriggerEnter(Collider other)
         {
             if (DialogueFile != null && other.tag == "Player")
+            {
+                Show();
                 Play();
+            }
         }
     }
 }
