@@ -9,20 +9,19 @@ namespace EventHorizon.Graphics
     public class Sprite : MonoBehaviour
     {
         public bool PlayOnAwake;
+        public bool FixedRotation;
         public int height = 5;
         public int width = 5;
         public float duration;
         public bool reversed;
         public SpriteMode mode;
-        int nOfStates;
 
         Vector2[] originalSet;
-
         Mesh mesh;
 
         void Awake()
         {
-            nOfStates = height * width;
+  
             mesh = GetComponent<MeshFilter>().mesh;
 
             Vector2[] result = new Vector2[mesh.uv.Length];
@@ -47,7 +46,7 @@ namespace EventHorizon.Graphics
 
         IEnumerator Animate(float duration, bool reversed, SpriteMode mode)
         {
-            //GameObject sphere = GameObject.Find("Sphere");
+            int nOfStates = height * width;
 
             float timestep = duration / nOfStates;
             int currentY = height;
@@ -86,6 +85,11 @@ namespace EventHorizon.Graphics
                 default:
                     break;
             }
+        }
+
+        public void Create(Vector3 position)
+        {
+            GameObject.Instantiate(gameObject, new Vector3(position.x, position.y, position.z - 0.1F), FixedRotation ? Quaternion.identity : Quaternion.Euler(0, 0, Random.Range(0, 360F)));
         }
     }
 
