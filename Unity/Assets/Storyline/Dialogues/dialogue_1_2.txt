@@ -1,0 +1,17 @@
+# Dialogues for level 1 - Deep Space
+# Section 2 (After first encounter)
+
+[Weilin]
+What was that !?
+
+[Taeresa] 
+I have no idea. Everyone stay alert. Jacob, I want a damage report now.
+
+[Jacob]
+We have a minor leak in the front hull, but this should be fixed soon enough. And we also...
+
+[Weilin]
+More incoming !
+
+[Taeresa]
+Gun them down !
