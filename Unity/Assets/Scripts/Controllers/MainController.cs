@@ -1,6 +1,7 @@
-﻿using EventHorizonGame.AI;
-using EventHorizonGame.Sound;
-using EventHorizonGame.UserInterface;
+﻿using EventHorizon.AI;
+using EventHorizon.Objects;
+using EventHorizon.Sound;
+using EventHorizon.UserInterface;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,16 +9,16 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace EventHorizonGame
+namespace EventHorizon
 {
     public delegate void Event();
     public delegate void EventLevel(string level);
-    public delegate void EventMobile(object sender, MobileArgs args);
+    public delegate void EventMobile(Mobile sender);
 
-    public class EventHorizon : MonoBehaviour
+    public class MainController : MonoBehaviour
     {
         [NonSerialized]
-        public static EventHorizon Instance;
+        public static MainController Instance;
 
         private GameObject SpawnArea;
         private GameObject GameArea;
@@ -36,9 +37,9 @@ namespace EventHorizonGame
 
         public event Event OnUserRequestShowMainMenu;
         public event Event OnUserRequestHideMainMenu;
-        public event Event OnUserRequestLeaveGame;
+        //public event Event OnUserRequestLeaveGame;
         public event Event OnPoolLoaded;
-        public event EventLevel OnEnterScene;
+        //public event EventLevel OnEnterScene;
         public event EventLevel OnLevelLoaded;
 
         private void ListenToKeyboard()
