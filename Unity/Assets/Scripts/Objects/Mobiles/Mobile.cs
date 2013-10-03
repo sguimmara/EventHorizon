@@ -83,7 +83,7 @@ namespace EventHorizon.Objects
             UpdatePosition();
         }
 
-        protected void UpdatePosition()
+        protected virtual void UpdatePosition()
         {
             CurrentSpeed *= (1 - Inertia);
 
