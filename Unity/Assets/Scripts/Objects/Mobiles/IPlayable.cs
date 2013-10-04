@@ -7,6 +7,7 @@ namespace EventHorizon
 {
     public interface IPlayable
     {
+        bool IsPlayable { get; set; }
         void Control();
     }
 }
