@@ -19,6 +19,8 @@ namespace EventHorizon.Core
 
     public class Engine : MonoBehaviour
     {
+        public Player playerShip;
+
         public static Engine Instance;
 
         public bool USE_PLACEHOLDERS = false;
@@ -29,7 +31,9 @@ namespace EventHorizon.Core
         MainMenu mainMenu;
         Cutscene cutScene;
         IngameUi ingameUi;
-        
+        ConversationUi conversationUi;
+
+        public Player player { get; private set; }
 
         public GUISkin MainSkin;
         public GUISkin StorylineSkin;
@@ -114,6 +118,18 @@ namespace EventHorizon.Core
             mainMenu.OnUserRequestLeave += LeaveGame;
             mainMenu.OnRequestPause += Pause;
             mainMenu.OnRequestPlay += Play;
+
+            conversationUi = GetComponent<ConversationUi>();
+
+            ingameUi = GetComponent<IngameUi>();
+
+            cutScene = GetComponent<Cutscene>();
+
+            DontDestroyOnLoad(this);
+
+            CreatePlayer();
+
+            Application.LoadLevel("Empty");
         }
 
         void Initialize()
@@ -130,6 +146,12 @@ namespace EventHorizon.Core
         {
             if (Input.GetKeyUp(KeyCode.Escape))
                 OnUserRequestShowMainMenu();
+        }
+
+        void CreatePlayer()
+        {
+            player = (Player)GameObject.Instantiate(playerShip, STARTING_POSITION, Quaternion.identity);
+            DontDestroyOnLoad(player);
         }
 
         // Temporary
