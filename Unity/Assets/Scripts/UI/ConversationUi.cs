@@ -36,7 +36,6 @@ namespace EventHorizon.UserInterface
 
         Character[] actors;
 
-        List<DialogueLine> lines;
         DialogueLine currentLine;
 
         Rect actorPortraitRect;
@@ -48,7 +47,7 @@ namespace EventHorizon.UserInterface
 
         bool displayDialogue;
 
-        IEnumerator RunDialogueSequence(DialogueLine[] lines, float timePerCharacter, float timeBetweeLines)
+        IEnumerator RunDialogueSequence(Dialogue dialogue, float timePerCharacter, float timeBetweeLines)
         {
             float f = 0;
             float delta;
@@ -69,9 +68,9 @@ namespace EventHorizon.UserInterface
 
             displayDialogue = true;
 
-            for (int j = 0; j < lines.Length; j++)
+            for (int j = 0; j < dialogue.lines.Length; j++)
             {
-                currentLine = lines[j];
+                currentLine = dialogue.lines[j];
                 string original = currentLine.line;
                 currentDialogueLine = "";
 
@@ -117,16 +116,6 @@ namespace EventHorizon.UserInterface
             Hide();
         }
 
-        // Find an actor by its ID
-        Character Find(string ID)
-        {
-            for (int i = 0; i < actors.Length; i++)
-                if (actors[i].ID == ID)
-                    return actors[i];
-
-            return null;
-        }
-
         protected override void ComputeUIRectangles()
         {
             stripeHeight = Screen.height * 0.12F;
@@ -142,56 +131,17 @@ namespace EventHorizon.UserInterface
             BottomStripe = new Rect(-2, Screen.height, Screen.width+6, stripeHeight);
         }
 
-        void ExtractDialogueData()
+        public override void Awake()
         {
-            string text = DialogueFile.text;
-
-            string[] list = text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-
-            for (int i = 0; i < list.Length; i++)
-                list[i] = list[i].Trim();
-
-            lines = new List<DialogueLine>();
-
-            for (int i = 0; i < list.Length - 1; i = i + 2)
-            {
-                string s = list[i].Trim();
-
-                if (!s.StartsWith("#"))
-                {
-                    if (s.StartsWith("["))
-                    {
-                        s = s.Substring(1, s.Length - 2);
-                        Character a = Find(s);
-                        string l = list[i + 1];
-                        lines.Add(new DialogueLine { actor = a, line = l });
-                    }
-                }
-            }
-        }
-
-        void Awake()
-        {
+            base.Awake();
             Instance = this;
 
-            TEMP_CREATE_ACTORS();
             displayDialogue = false;
-
-            if (!audio)
-                gameObject.AddComponent<AudioSource>();
-
-            if (DialogueFile == null)
-                Debug.LogWarning(String.Concat(Application.loadedLevelName, " error : there is no dialogue file in ", name));
-
-            else if (DialogueFile.text == "")
-                Debug.LogWarning(String.Concat(Application.loadedLevelName, " error : there is no text in the dialogue file in ", name));
-
-            else ExtractDialogueData();
         }
 
-        public void Play(Dialogue conversation)
+        public void Play(Dialogue dialogue)
         {
-            StartCoroutine(RunDialogueSequence(lines.ToArray(), 0.03F, 1F));
+            StartCoroutine(RunDialogueSequence(dialogue, 0.03F, 1F));
         }
 
         void Start()
@@ -199,22 +149,10 @@ namespace EventHorizon.UserInterface
             ComputeUIRectangles();
         }
 
-        // Temporary
-        void TEMP_CREATE_ACTORS()
-        {
-            Character taeresa = new Character { ID = "Taeresa", Name = "Taeresa Niemeyer", Portrait = taeresaTexture };
-            Character marshall = new Character { ID = "Marshall", Name = "Marshall Elon", Portrait = marshallTexture };
-            Character weilin = new Character { ID = "Weilin", Name = "Weilin Gu", Portrait = weilinTexture };
-            Character jacob = new Character { ID = "Jacob", Name = "Jacob Freeman", Portrait = jacobTexture };
-            Character nobody = new Character { ID = "Nobody", Name = "", Portrait = nobodyTexture };
-
-            actors = new Character[5] { taeresa, marshall, nobody, weilin, jacob };
-        }
-
         protected override void Draw()
         {
             GUI.color = guiColor;
-            GUI.skin = skin;
+            GUI.skin = MainSkin;
             GUI.DrawTexture(TopStripe, black);
             GUI.DrawTexture(BottomStripe, black);
 

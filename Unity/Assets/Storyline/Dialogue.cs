@@ -14,7 +14,7 @@ namespace EventHorizon.Storyline
 
     public class Dialogue
     {
-        DialogueLine[] lines;
+       public  DialogueLine[] lines;
 
         public Dialogue(DialogueLine[] lines)
         {
