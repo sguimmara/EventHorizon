@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using EventHorizon.Core;
 
 namespace EventHorizon.UserInterface
 {
@@ -15,6 +16,9 @@ namespace EventHorizon.UserInterface
         public float speed = 10;
 
         public Texture2D title;
+
+        public event GameEvent OnCutsceneStarted;
+        public event GameEvent OnCutsceneFinished;
 
         // Use this for initialization
         public override void Start()

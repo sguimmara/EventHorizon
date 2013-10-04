@@ -110,6 +110,11 @@ namespace EventHorizon.Core
             Time.timeScale = 0F;
         }        
 
+        void SwitchPlayablePhase()
+        {
+            player.IsPlayable = !player.IsPlayable;
+        }
+
         void Awake()
         {
             Instance = this;
@@ -120,10 +125,14 @@ namespace EventHorizon.Core
             mainMenu.OnRequestPlay += Play;
 
             conversationUi = GetComponent<ConversationUi>();
+            conversationUi.OnDialogueFinished += SwitchPlayablePhase;
+            conversationUi.OnDialogueStarted += SwitchPlayablePhase;
 
             ingameUi = GetComponent<IngameUi>();
 
             cutScene = GetComponent<Cutscene>();
+            cutScene.OnCutsceneFinished += SwitchPlayablePhase;
+            cutScene.OnCutsceneStarted += SwitchPlayablePhase;
 
             DontDestroyOnLoad(this);
 

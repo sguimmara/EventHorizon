@@ -16,6 +16,7 @@ namespace EventHorizon.UserInterface
         public static ConversationUi Instance;
 
         public event GameEvent OnDialogueFinished;
+        public event GameEvent OnDialogueStarted;
 
         public TextAsset DialogueFile;
         public float FadeTime = 1;
@@ -53,6 +54,8 @@ namespace EventHorizon.UserInterface
             float delta;
 
             Show();
+
+            OnDialogueStarted();
 
             while (f <= 1)
             {
@@ -113,6 +116,7 @@ namespace EventHorizon.UserInterface
             }
 
             displayDialogue = false;
+            OnDialogueFinished();
             Hide();
         }
 
