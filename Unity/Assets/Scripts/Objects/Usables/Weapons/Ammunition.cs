@@ -1,4 +1,5 @@
-﻿using EventHorizon.Graphics;
+﻿using EventHorizon.Core;
+using EventHorizon.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace EventHorizon.Objects
 {
-    public class Ammunition : Mobile, ICollidable, IHarmful
+    public class Ammunition : Mobile, ICollidable, IHarmful, ICreatable
     {
         public Sprite Impact;
 
@@ -31,8 +32,7 @@ namespace EventHorizon.Objects
             Destroy(gameObject);
 
             if (Impact != null)
-                //GameObject.Instantiate(Impact.gameObject, transform.position, Quaternion.Euler(new Vector3(0, 0, UnityEngine.Random.Range(0, 360F))));
-                Impact.Create(transform.position);
+                Impact.Create(transform);
 
             if (OnDestroy != null)
                 OnDestroy(this);
@@ -44,6 +44,11 @@ namespace EventHorizon.Objects
             {
                 return damage;
             }
+        }
+
+        public void Create(Transform parent)
+        {
+            GameObject g = (GameObject) GameObject.Instantiate(gameObject, parent.position, parent.rotation);
         }
     }
 }
