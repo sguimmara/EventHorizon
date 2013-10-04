@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EventHorizon.UserInterface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,25 +9,21 @@ namespace EventHorizon
 {
     public class Globals : MonoBehaviour
     {
+        [HideInInspector]
         public static Rect SpawnArea;
+        [HideInInspector]
         public static Rect GameArea;
-        public static Rect VoidArea;
 
         void Awake()
         {
             Globals.InitializeAreaRects();
-
-            Debug.Log(VoidArea.x);
-            Debug.Log(VoidArea.y);
-            Debug.Log(VoidArea.width);
-            Debug.Log(VoidArea.height);
         }
 
         public static void InitializeAreaRects()
         {
             GameObject SpawnAreaGo = GameObject.Find("SpawnArea");
             GameObject GameAreaGo = GameObject.Find("GameArea");
-            GameObject VoidAreaGo = GameObject.Find("VoidArea");
+            //GameObject VoidAreaGo = GameObject.Find("VoidArea");
 
             if (SpawnAreaGo != null)
             {
@@ -38,15 +35,15 @@ namespace EventHorizon
             }
             else Debug.LogError("SpawnArea null");
 
-            if (VoidAreaGo != null)
-            {
-                Bounds b = VoidAreaGo.GetComponent<MeshRenderer>().bounds;
-                VoidArea.x = b.min.x;
-                VoidArea.y = b.min.y;
-                VoidArea.width = b.max.x - b.min.x;
-                VoidArea.height = b.max.y - b.min.y;
-            }
-            else Debug.LogError("VoidArea null");
+            //if (VoidAreaGo != null)
+            //{
+            //    Bounds b = VoidAreaGo.GetComponent<MeshRenderer>().bounds;
+            //    VoidArea.x = b.min.x;
+            //    VoidArea.y = b.min.y;
+            //    VoidArea.width = b.max.x - b.min.x;
+            //    VoidArea.height = b.max.y - b.min.y;
+            //}
+            //else Debug.LogError("VoidArea null");
 
             if (GameAreaGo)
             {
