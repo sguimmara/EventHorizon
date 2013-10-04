@@ -9,6 +9,8 @@ namespace EventHorizon.Objects
 {
     public class Player : Ship, IPlayable
     {
+        public CharacterSheet characterSheet;
+
         void LimitShipPositionWithinBoundaries()
         {
             Vector3 pos = transform.position;
@@ -16,7 +18,7 @@ namespace EventHorizon.Objects
 
             float newX = Mathf.Clamp(pos.x, wb.x + Size.width / 2, wb.x + wb.width - Size.width / 2);
             float newY = Mathf.Clamp(pos.y, wb.y + Size.height / 2, wb.y + wb.height - Size.height / 2);
-            transform.position = new Vector3(newX, newY, 0);
+            transform.position = new Vector3(newX, newY, transform.position.z);
         }
 
         protected override void Start()
@@ -24,13 +26,16 @@ namespace EventHorizon.Objects
             base.Start();
             Direction = Vector3.zero;
             CurrentSpeed = 0F;
+            IsPlayable = false;
         }
 
         protected override void Update()
         {
             base.Update();
             LimitShipPositionWithinBoundaries();
-            Control();
+
+            if (IsPlayable)
+                Control();
         }
 
         public void Control()
@@ -66,5 +71,7 @@ namespace EventHorizon.Objects
         {
             return "PlayerShip";
         }
+
+        public bool IsPlayable { get; set; }
     }
 }
