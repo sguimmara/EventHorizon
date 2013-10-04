@@ -11,14 +11,28 @@ namespace EventHorizon.Objects
     {
         public float rateOfFire = 5;
         public Ammunition Ammunition;
+        float OriginalRotation;
+        public float Spread;
 
         protected float lastShot;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            OriginalRotation = transform.rotation.eulerAngles.z;
+        }
 
         public override void Trigger()
         {
             if (Time.time - lastShot >= (1 / rateOfFire))
             {
-                GameObject.Instantiate(Ammunition, transform.position, transform.rotation);
+                Vector3 orig = transform.rotation.eulerAngles;
+                float rot = UnityEngine.Random.Range(-Spread, Spread);
+
+
+                orig.z = rot;
+                transform.rotation = Quaternion.Euler(orig);
+                Ammunition.Create(transform);
                 lastShot = Time.time;
             }
         }
