@@ -5,7 +5,7 @@ using EventHorizon.Objects;
 
 namespace EventHorizon.UserInterface
 {
-    public class HUD : GuiRenderer
+    public class IngameUi : GuiRenderer
     {
         Rect shipRect;
         Rect HUDZone;

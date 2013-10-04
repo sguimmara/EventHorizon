@@ -6,7 +6,7 @@ namespace EventHorizon.Graphics
 {
     public enum SpriteMode { DestroyAtEnd, Loop, Once }
 
-    public class Sprite : MonoBehaviour
+    public class Sprite : MonoBehaviour, ICreatable
     {
         public bool PlayOnAwake;
         public bool FixedRotation;
@@ -87,8 +87,9 @@ namespace EventHorizon.Graphics
             }
         }
 
-        public void Create(Vector3 position)
+        public void Create(Transform parent)
         {
+            Vector3 position = parent.position;
             GameObject.Instantiate(gameObject, new Vector3(position.x, position.y, position.z - 0.1F), FixedRotation ? Quaternion.identity : Quaternion.Euler(0, 0, Random.Range(0, 360F)));
         }
     }

@@ -1,12 +1,7 @@
-﻿using EventHorizonGame.Data;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections;
 using UnityEngine;
 
-namespace EventHorizonGame.AI
+namespace EventHorizon.AI
 {
     public sealed class EnemyAI : MonoBehaviour
     {
@@ -40,8 +35,8 @@ namespace EventHorizonGame.AI
             while (i < number || number == -1)
             {
                 yield return new WaitForSeconds(UnityEngine.Random.Range(0.5F, 1F));
-                EnemyShip ship = Pool.Instance.Create<EnemyShip>("Enemy", RandomSpawnPosition(), "Mobiles/Ships/Enemy/Phantasm");
-                ship.motionParams.MaxSpeed = UnityEngine.Random.Range(0.05F, 0.1F);
+                //EnemyShip ship = Pool.Instance.Create<EnemyShip>("Enemy", RandomSpawnPosition(), "Mobiles/Ships/Enemy/Phantasm");
+                //ship.properties.MaxSpeed = UnityEngine.Random.Range(0.05F, 0.1F);
                 i++;
             }
             IsRunning = false;

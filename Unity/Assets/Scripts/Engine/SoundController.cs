@@ -1,10 +1,11 @@
-﻿using System;
+﻿using EventHorizon.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace EventHorizonGame.Sound
+namespace EventHorizon.Sound
 {
     public class SoundController : MonoBehaviour
     {
@@ -32,24 +33,12 @@ namespace EventHorizonGame.Sound
             effectSource = gameObject.AddComponent<AudioSource>();
 
             LoadMusics();
-            EventHorizon.Instance.OnLevelLoaded += PlayMusic;
-        }
-
-        void Start()
-        {
-            EventHorizon.Instance.OnPoolLoaded += Initialize;
+            Engine.Instance.OnLevelLoaded += PlayMusic;
         }
 
         void Initialize()
         {
             Instance = this;
-            Pool.Instance.OnMobileCreated += HookToNewMobile;  
-        }
-
-        void HookToNewMobile(object sender, MobileArgs args)
-        {
-            args.mobile.OnMobileExplosion += delegate { Play(args.explosionEffect); };
-            args.mobile.OnMobileShoot += delegate { Play(args.shootEffect); };
         }
 
         void Play(string effectName)
@@ -57,11 +46,11 @@ namespace EventHorizonGame.Sound
             effectSource.PlayOneShot(effects[1], masterVolume * 1F);
         }
 
-        void PlayMusic(string name)
+        void PlayMusic(Level level)
         {
             musicSource.Stop();
             musicSource.clip = musicTracks[name];
-			
+
             musicSource.loop = true;
             musicSource.Play();
         }

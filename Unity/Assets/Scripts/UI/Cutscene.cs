@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace EventHorizon.UserInterface
 {
-    public class Credits : GuiRenderer
+    public class Cutscene : GuiRenderer
     {
         Rect menuRect;
         Rect titleRect;
