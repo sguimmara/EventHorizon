@@ -16,9 +16,8 @@ namespace EventHorizon.Objects
 
         protected float lastShot;
 
-        protected override void Awake()
+        protected void Awake()
         {
-            base.Awake();
             OriginalRotation = transform.rotation.eulerAngles.z;
         }
 
