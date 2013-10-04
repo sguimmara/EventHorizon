@@ -10,26 +10,26 @@ namespace EventHorizon.Objects
     public class Weapon : Usable
     {
         public bool AutoFire;
-        WeaponPart[] weapons;
+        WeaponPart[] subWeapons;
 
         public override void Trigger()
         {           
-            for (int i = 0; i < weapons.Length; i++)
+            for (int i = 0; i < subWeapons.Length; i++)
             {
-                weapons[i].Trigger();
+                subWeapons[i].Trigger();
             }
         }
 
         public override void Initialize()
         {
-            weapons = GetComponentsInChildren<WeaponPart>();
-            if (weapons == null || weapons.Length == 0)
+            subWeapons = GetComponentsInChildren<WeaponPart>();
+            if (subWeapons == null || subWeapons.Length == 0)
                 Debug.LogWarning(gameObject.name + " WeaponGroup empty");
 
             else
             {
-                for (int i = 0; i < weapons.Length; i++)
-                    weapons[i].Initialize();
+                for (int i = 0; i < subWeapons.Length; i++)
+                    subWeapons[i].Initialize();
             }
         }
 

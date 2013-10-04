@@ -24,7 +24,7 @@ namespace EventHorizon.UserInterface
         Player player;
 
         // Use this for initialization
-        void Start()
+        public override void Start()
         {
             player = Engine.Instance.player;
             ComputeUIRectangles();

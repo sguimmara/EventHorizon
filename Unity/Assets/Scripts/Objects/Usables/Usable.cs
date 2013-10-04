@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Usable : MonoBehaviour
+namespace EventHorizon.Objects
 {
-    public abstract void Trigger();
-    public abstract void Initialize();
-    public bool Active;
-    public Texture2D Icon;
+    public abstract class Usable : MonoBehaviour
+    {
+        public abstract void Trigger();
+        public abstract void Initialize();
+        public Texture2D Icon;
+        SlotType type;
+    }
 }

@@ -144,7 +144,7 @@ namespace EventHorizon.UserInterface
             StartCoroutine(RunDialogueSequence(dialogue, 0.03F, 1F));
         }
 
-        void Start()
+        public override void Start()
         {
             ComputeUIRectangles();
         }

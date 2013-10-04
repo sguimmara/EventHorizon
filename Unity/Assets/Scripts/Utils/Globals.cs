@@ -14,6 +14,8 @@ namespace EventHorizon
         [HideInInspector]
         public static Rect GameArea;
 
+        public const int MAX_SKILL_POINTS = 100;
+
         void Awake()
         {
             Globals.InitializeAreaRects();
