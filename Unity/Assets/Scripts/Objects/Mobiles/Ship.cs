@@ -2,6 +2,7 @@
 using System.Collections;
 using EventHorizon.Objects;
 using EventHorizon.FX;
+using EventHorizon.Core;
 
 namespace EventHorizon.Objects
 {
@@ -9,7 +10,20 @@ namespace EventHorizon.Objects
     {
         public bool AutoTrigger;
 
-        public Usable[] Slots;
+        public Slot[] Slots;
+
+        public Usable TEMP;
+
+        public Slot PrimarySlot;
+        public Slot SecondarySlot;
+        public Slot HullSlot;
+        public Slot EngineSlot;
+
+        public Transform PrimarySlotLocation;
+        public Transform SecondarySlotLocation;
+        public Transform HullSlotLocation;
+        public Transform EngineSlotLocation;
+        
         public SpriteSlots Sprites;
 
         public event EventMobile OnDestroy;
@@ -19,12 +33,8 @@ namespace EventHorizon.Objects
 
         public void Trigger()
         {
-            for (int i = 0; i < Slots.Length; i++)
-                if (Slots[i].Active)
-                {
-                    Slots[i].Trigger();
-                }
-                else Debug.LogWarning(string.Concat("Slot ", i.ToString(), " is null"));
+            if (PrimarySlot.Active)
+                PrimarySlot.Trigger();
         }
 
         public override string ToString()
@@ -39,11 +49,23 @@ namespace EventHorizon.Objects
             maxHp = Mathf.Clamp(maxHp, 1, 10000);
             currentHp = maxHp;
 
-            foreach (Usable slot in Slots)
+            PrimarySlot = new Slot(PrimarySlotLocation, SlotType.Primary);
+            SecondarySlot = new Slot(SecondarySlotLocation, SlotType.Primary);
+            HullSlot = new Slot(HullSlotLocation, SlotType.Hull);
+            EngineSlot = new Slot(EngineSlotLocation, SlotType.Engine);
+
+            Slots = new Slot[4] { PrimarySlot, SecondarySlot, HullSlot, EngineSlot };
+
+            foreach (Slot slot in Slots)
             {
-                slot.Initialize();
-                slot.Active = true;
+                if (slot != null && slot.Content != null)
+                {
+                    slot.Initialize();
+                    slot.Active = true;
+                }
             }
+
+            PrimarySlot.Set(TEMP);
         }
 
         protected override void Update()
