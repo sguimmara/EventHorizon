@@ -123,6 +123,8 @@ namespace EventHorizon.Core
             mainMenu.OnUserRequestLeave += LeaveGame;
             mainMenu.OnRequestPause += Pause;
             mainMenu.OnRequestPlay += Play;
+            mainMenu.OnMainMenuOff += SwitchPlayablePhase;
+            mainMenu.OnMainMenuOn += SwitchPlayablePhase;
 
             conversationUi = GetComponent<ConversationUi>();
             conversationUi.OnDialogueFinished += SwitchPlayablePhase;
