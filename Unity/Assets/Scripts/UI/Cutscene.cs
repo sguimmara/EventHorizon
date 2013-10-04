@@ -10,33 +10,25 @@ namespace EventHorizon.UserInterface
         Rect textZone;
         Rect titleZone;
         Rect[] buttons;
-        string credits;
+        string cutsceneText;
         float creditsY;
         public float speed = 10;
 
         public Texture2D title;
 
         // Use this for initialization
-        void Start()
+        public override void Start()
         {
-            credits = LoadCredits("credits");
+            base.Start();
             creditsY = Screen.height;
             ComputeUIRectangles();
         }
 
-        string LoadCredits(string path)
-        {
-            string s = ((TextAsset)Resources.Load(path)).text;
-
-            return s;
-        }
-
         protected override void ComputeUIRectangles()
         {
-            GUIContent content = new GUIContent(credits);
-            Vector2 size = skin.GetStyle("credits").CalcSize(content);
+            GUIContent content = new GUIContent(cutsceneText);
+            Vector2 size = MainSkin.GetStyle("credits").CalcSize(content);
             container = new Rect(Screen.width / 2 - size.x / 2, creditsY, size.x, size.y);        
-            titleZone = new Rect(0, 0, container.width, title.height * container.width / title.width);
 
             textZone = new Rect(0, titleZone.height, container.width, size.y);
             container.height = titleZone.height + textZone.height;
@@ -47,10 +39,8 @@ namespace EventHorizon.UserInterface
             creditsY -= Time.deltaTime * speed;
             GUI.BeginGroup(container);
             container.y = creditsY;
-            //ComputeUIRectangles();
-            GUI.skin = skin;
-            GUI.DrawTexture(titleZone, title);
-            GUI.Label(textZone, credits, "credits");
+            GUI.skin = MainSkin;
+            GUI.Label(textZone, cutsceneText, "credits");
             GUI.EndGroup();          
         }
 

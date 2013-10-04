@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EventHorizon.Core;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,25 @@ namespace EventHorizon.UserInterface
 
     public abstract class GuiRenderer : MonoBehaviour
     {
-        public GUISkin skin;
+        public GUISkin MainSkin;
+        public GUISkin StorylineSkin;
         public Color guiColor = Color.white;
         protected float visibility = 1F;
         private bool GuiEnabled;
         protected Rect container;
 
         public Texture2D background;
+
+        public virtual void Awake()
+        {
+
+        }
+
+        public virtual void Start()
+        {
+            MainSkin = Engine.Instance.MainSkin;
+            StorylineSkin = Engine.Instance.StorylineSkin;
+        }
 
         protected abstract void ComputeUIRectangles();
 
@@ -58,6 +71,7 @@ namespace EventHorizon.UserInterface
         {
             GuiEnabled = false;
         }
+        
         protected abstract void Draw();
     }
 }

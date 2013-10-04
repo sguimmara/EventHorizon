@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityExtended;
 using EventHorizon.Objects;
+using EventHorizon.Core;
 
 namespace EventHorizon.UserInterface
 {
@@ -25,7 +26,7 @@ namespace EventHorizon.UserInterface
         // Use this for initialization
         void Start()
         {
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+            player = Engine.Instance.player;
             ComputeUIRectangles();
             shipGradient = new Color[numberOfColors] { Color.green, Color.yellow, Color.red, Color.black };
             shipIcon = Utils.Load<Texture2D>("ship_representation");
@@ -64,7 +65,7 @@ namespace EventHorizon.UserInterface
 
         protected override void Draw()
         {
-            GUI.skin = skin;
+            GUI.skin = MainSkin;
             GUI.BeginGroup(container);
             DrawShipUI();
             GUI.EndGroup();
