@@ -27,6 +27,12 @@ namespace EventHorizon.Objects
             Destroy();
         }
 
+        //protected override void Awake()
+        //{
+        //    base.Awake();
+        //    Direction = Vector3.right;
+        //}
+
         public void Destroy()
         {
             Destroy(gameObject);
@@ -48,7 +54,8 @@ namespace EventHorizon.Objects
 
         public void Create(Transform parent)
         {
-            GameObject g = (GameObject) GameObject.Instantiate(gameObject, parent.position, parent.rotation);
+            GameObject g = (GameObject) GameObject.Instantiate(gameObject, parent.position, parent.localRotation);
+            g.transform.rotation = parent.rotation;
         }
     }
 }

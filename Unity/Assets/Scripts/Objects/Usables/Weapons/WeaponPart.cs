@@ -28,9 +28,8 @@ namespace EventHorizon.Objects
                 Vector3 orig = transform.rotation.eulerAngles;
                 float rot = UnityEngine.Random.Range(-Spread, Spread);
 
-
                 orig.z = rot;
-                transform.rotation = Quaternion.Euler(orig);
+                transform.localRotation = Quaternion.Euler(orig);
                 Ammunition.Create(transform);
                 lastShot = Time.time;
             }
