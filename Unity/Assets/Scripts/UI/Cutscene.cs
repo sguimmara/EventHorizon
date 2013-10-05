@@ -6,52 +6,69 @@ namespace EventHorizon.UserInterface
 {
     public class Cutscene : GuiRenderer
     {
-        Rect menuRect;
-        Rect titleRect;
         Rect textZone;
-        Rect titleZone;
-        Rect[] buttons;
-        string cutsceneText;
-        float creditsY;
+        Rect startButtonRect;
+        float textPosition;
         public float speed = 10;
+        string text;
 
-        public Texture2D title;
-
-        public event GameEvent OnCutsceneStarted;
         public event GameEvent OnCutsceneFinished;
+
+        public override void Launch()
+        {
+            base.Launch();
+            text = Engine.Instance.CurrentLevel.IntroText;
+            ComputeUIRectangles();
+            StartCoroutine(Play());
+        }
+
+        IEnumerator Play()
+        {
+            while (textPosition + textZone.height > -100)
+            {
+                textPosition -= Time.deltaTime * speed;
+                yield return new WaitForEndOfFrame();
+            }
+
+            OnCutsceneFinished();
+        }
+
+        void Stop()
+        {
+            StopAllCoroutines();
+        }
 
         // Use this for initialization
         public override void Start()
         {
             base.Start();
-            creditsY = Screen.height;
-            ComputeUIRectangles();
+            textPosition = Screen.height;
         }
 
         protected override void ComputeUIRectangles()
         {
-            GUIContent content = new GUIContent(cutsceneText);
+            GUIContent content = new GUIContent(text);
             Vector2 size = MainSkin.GetStyle("credits").CalcSize(content);
-            container = new Rect(Screen.width / 2 - size.x / 2, creditsY, size.x, size.y);        
-
-            textZone = new Rect(0, titleZone.height, container.width, size.y);
-            container.height = titleZone.height + textZone.height;
+            container = new Rect(0, 0, Screen.width, Screen.height);
+            startButtonRect = new Rect(Screen.width - 250, Screen.height - 100, 200, 80);
+            float textWidth = container.width / 3;
+            textZone = new Rect(container.width / 2 - textWidth / 2, textPosition, textWidth, size.y); 
         }
 
         protected override void Draw()
-        {
-            creditsY -= Time.deltaTime * speed;
+        {            
             GUI.BeginGroup(container);
-            container.y = creditsY;
+            textZone.y = textPosition;
             GUI.skin = MainSkin;
-            GUI.Label(textZone, cutsceneText, "credits");
+            GUI.Label(textZone, text, "credits");
+            if (GUI.Button(startButtonRect, "Skip"))
+                OnCutsceneFinished();
             GUI.EndGroup();          
         }
 
-        void Update() 
+        public override string ToString()
         {
-            if (creditsY + container.height < -100)
-                Application.Quit();
+            return "Cutscene";
         }
     }
 }

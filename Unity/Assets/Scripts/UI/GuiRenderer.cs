@@ -12,8 +12,8 @@ namespace EventHorizon.UserInterface
 
     public abstract class GuiRenderer : MonoBehaviour
     {
-        public GUISkin MainSkin;
-        public GUISkin StorylineSkin;
+        protected GUISkin MainSkin;
+        protected GUISkin StorylineSkin;
         public Color guiColor = Color.white;
         protected float visibility = 1F;
         private bool GuiEnabled;
@@ -28,6 +28,7 @@ namespace EventHorizon.UserInterface
 
         public virtual void Launch()
         {
+            Debug.Log("Launching " + this.ToString());
             Show();
         }
 
@@ -36,10 +37,15 @@ namespace EventHorizon.UserInterface
 
         }
 
-        public virtual void Start()
+        public virtual void Init()
         {
             MainSkin = Engine.Instance.MainSkin;
             StorylineSkin = Engine.Instance.StorylineSkin;
+        }
+
+        public virtual void Start()
+        {
+
         }
 
         protected abstract void ComputeUIRectangles();

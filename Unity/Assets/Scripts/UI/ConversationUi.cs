@@ -135,7 +135,7 @@ namespace EventHorizon.UserInterface
             BottomStripe = new Rect(-2, Screen.height, Screen.width+6, stripeHeight);
         }
 
-        public override void Awake()
+        public override void Init()
         {
             base.Awake();
             Instance = this;
@@ -167,6 +167,11 @@ namespace EventHorizon.UserInterface
                 GUI.Label(textRect, currentDialogueLine);
                 GUI.EndGroup();
             }
+        }
+
+        public override string ToString()
+        {
+            return "ConversationUI";
         }
     }
 }

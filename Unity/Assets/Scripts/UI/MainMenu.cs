@@ -1,14 +1,17 @@
-﻿using UnityEngine;
+﻿using EventHorizon.Core;
+using UnityEngine;
 using System.Collections;
 
 namespace EventHorizon.UserInterface
 {
     public class MainMenu : GuiRenderer
     {
-        public event Event OnUserRequestLeave;
-        public event Event OnUserRequestEnterGame;
-        public event Event OnRequestPlay;
-        public event Event OnRequestPause;
+        public event GameEvent OnUserRequestLeave;
+        public event GameEvent OnUserRequestEnterGame;
+        public event GameEvent OnRequestPlay;
+        public event GameEvent OnRequestPause;
+        public event GameEvent OnMainMenuOn;
+        public event GameEvent OnMainMenuOff;
 
         bool firstTime = true;
 
@@ -19,28 +22,27 @@ namespace EventHorizon.UserInterface
         public Texture2D title;
 
         // Use this for initialization
-        void Start()
+        public override void Start()
         {
-            MainController.Instance.OnUserRequestHideMainMenu += Hide;
-            MainController.Instance.OnUserRequestShowMainMenu += Show;
             ComputeUIRectangles();
         }
 
-        protected override void Show()
-        {
-            OnRequestPause();
-            StartCoroutine(FadeGUI(1F, 0.2F));
-        }
+        //protected override void Show()
+        //{
+        //    //OnRequestPause();
+        //    StartCoroutine(FadeGUI(1F, 0.2F));
+        //}
 
-        protected override void Hide()
-        {
-            OnRequestPlay();
-            StartCoroutine(FadeGUI(0F, 0.1F));
-        }
+        //protected override void Hide()
+        //{
+        //    OnRequestPlay();
+        //    StartCoroutine(FadeGUI(0F, 0.1F));
+        //}
 
         IEnumerator FadeGUI(float newValue, float duration)
         {
             float f = 0;
+
             float origValue = visibility;
 
             while (f <= duration)
@@ -64,9 +66,8 @@ namespace EventHorizon.UserInterface
 
         protected override void Draw()
         {
-            GUI.skin = MainController.Instance.MainSkin;
             GUI.color = new Color(GUI.color.r, GUI.color.g, GUI.color.b, visibility);
-
+            GUI.skin = MainSkin;
             GUI.DrawTexture(container, background);
             GUI.DrawTexture(titleRect, title);
 
