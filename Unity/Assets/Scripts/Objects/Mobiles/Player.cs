@@ -26,7 +26,7 @@ namespace EventHorizon.Objects
             base.Start();
             Direction = Vector3.zero;
             CurrentSpeed = 0F;
-            IsPlayable = false;
+            IsPlayable = true;
         }
 
         protected override void Update()
@@ -40,31 +40,20 @@ namespace EventHorizon.Objects
 
         public void Control()
         {
-            if (Input.GetKey(KeyCode.DownArrow))
-            {
-                Debug.Log("down");
+            if (Input.GetKey(KeyCode.S))
                 Move(Vector3.down);
-            }
 
-            if (Input.GetKey(KeyCode.UpArrow))
-            {
+            if (Input.GetKey(KeyCode.Z))
                 Move(Vector3.up);
-            }
 
-            if (Input.GetKey(KeyCode.LeftArrow))
-            {
+            if (Input.GetKey(KeyCode.Q))
                 Move(Vector3.left);
-            }
 
-            if (Input.GetKey(KeyCode.RightArrow))
-            {
+            if (Input.GetKey(KeyCode.D))
                 Move(Vector3.right);
-            }
 
-            if (Input.GetKey(KeyCode.Space))
-            {
+            if (Input.GetMouseButton(0)) 
                 Trigger();
-            }
         }
 
         public override string ToString()

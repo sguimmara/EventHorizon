@@ -61,18 +61,6 @@ namespace EventHorizon.Objects
             enabled = true;
         }
 
-        // Destroy the mobile when its rectangle is *totally* out of Spawn area.
-        //protected virtual void DestroyWhenOutOfVoidArea()
-        //{
-        //    if (this.transform.position.x < Globals.VoidArea.x - Size.width / 2
-        //        || this.transform.position.x > Globals.VoidArea.x + Globals.VoidArea.width + Size.width / 2
-        //        || this.transform.position.y < Globals.VoidArea.y - Size.height / 2
-        //        || this.transform.position.y > Globals.VoidArea.y + Globals.VoidArea.height + Size.height / 2)
-        //    {
-        //        Destroy(this.gameObject);
-        //    }
-        //}
-
         protected virtual void Start()
         {
             CurrentSpeed = Speed;

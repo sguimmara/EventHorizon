@@ -50,7 +50,7 @@ namespace EventHorizon.Objects
             currentHp = maxHp;
 
             PrimarySlot = new Slot(PrimarySlotLocation, SlotType.Primary);
-            SecondarySlot = new Slot(SecondarySlotLocation, SlotType.Primary);
+            SecondarySlot = new Slot(SecondarySlotLocation, SlotType.Secondary);
             HullSlot = new Slot(HullSlotLocation, SlotType.Hull);
             EngineSlot = new Slot(EngineSlotLocation, SlotType.Engine);
 
