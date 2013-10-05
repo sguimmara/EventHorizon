@@ -21,6 +21,16 @@ namespace EventHorizon.UserInterface
 
         public Texture2D background;
 
+        public virtual void ShutDown()
+        {
+            Hide();
+        }
+
+        public virtual void Launch()
+        {
+            Show();
+        }
+
         public virtual void Awake()
         {
 
