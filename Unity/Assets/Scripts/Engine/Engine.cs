@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using UnityEditor;
 using UnityEngine;
 
@@ -40,7 +41,7 @@ namespace EventHorizon.Core
         public GUISkin MainSkin;
         public GUISkin StorylineSkin;
 
-        Level CurrentLevel;
+        public Level CurrentLevel;
         int currentLevelIndex;
         Level[] levels;
 
@@ -84,16 +85,8 @@ namespace EventHorizon.Core
 
         void StartGame()
         {
-            levelPhase = LevelPhase.Init;
-            mainMenu.ShutDown();
-            cutScene.ShutDown();
-            ingameUi.ShutDown();
-            conversationUi.ShutDown();
-            upgradeScreen.ShutDown();
-            scoreScreen.ShutDown();
-
-            levels[0].Load();
-            MoveToIntroPhase();
+            currentLevelIndex = 0;
+            MoveToInitPhase();
         }
 
         void LeaveGame()
@@ -128,44 +121,9 @@ namespace EventHorizon.Core
             player.IsPlayable = !player.IsPlayable;
         }
 
-        void MoveToIntroPhase()
+        void Start()
         {
-            levelPhase = LevelPhase.Intro;
-            cutScene.Launch();
-        }
-
-        void MoveToUpgradePhase()
-        {
-            levelPhase = LevelPhase.Upgrade;
-            cutScene.ShutDown();
-            upgradeScreen.Launch();
-        }
-
-        void MoveToGamePhase()
-        {
-            levelPhase = LevelPhase.Game;
-            upgradeScreen.ShutDown();
-        }
-
-        void MoveToScorePhase()
-        {
-            levelPhase = LevelPhase.Score;
-            scoreScreen.Launch();
-        }
-
-        void MoveToNextLevel()
-        {
-            mainMenu.ShutDown();
-            cutScene.ShutDown();
-            ingameUi.ShutDown();
-            conversationUi.ShutDown();
-            upgradeScreen.ShutDown();
-            scoreScreen.ShutDown();
-            levelPhase = LevelPhase.Init;
-
-            levels[currentLevelIndex].Load();
-
-            MoveToIntroPhase();
+            mainMenu.Launch();
         }
 
         void Awake()
@@ -196,14 +154,72 @@ namespace EventHorizon.Core
 
             DontDestroyOnLoad(this);
 
-            CreatePlayer();
+            mainMenu.Init();
+            conversationUi.Init();
+            ingameUi.Init();
+            cutScene.Init();
+            upgradeScreen.Init();
+            scoreScreen.Init();
 
-            Application.LoadLevel(1);
+            Initialize();
         }
 
         void Initialize()
         {
+            currentLevelIndex = 0;
+            DeserializeLevels();
             InitializeDebugSettings();
+        }
+
+        void MoveToInitPhase()
+        {
+            CurrentLevel = levels[currentLevelIndex];
+            levelPhase = LevelPhase.Init;
+            mainMenu.ShutDown();
+            cutScene.ShutDown();
+            ingameUi.ShutDown();
+            conversationUi.ShutDown();
+            upgradeScreen.ShutDown();
+            scoreScreen.ShutDown();
+
+            CurrentLevel.Load();
+            MoveToIntroPhase();
+        }
+
+        void MoveToIntroPhase()
+        {
+            levelPhase = LevelPhase.Intro;
+            cutScene.Launch();
+        }
+
+        void MoveToUpgradePhase()
+        {
+            levelPhase = LevelPhase.Upgrade;
+            cutScene.ShutDown();
+            upgradeScreen.Launch();
+        }
+
+        void MoveToGamePhase()
+        {
+            levelPhase = LevelPhase.Game;
+            if (player == null)
+                CreatePlayer();
+            
+            else player.transform.position = STARTING_POSITION;
+            
+            upgradeScreen.ShutDown();
+        }
+
+        void MoveToScorePhase()
+        {
+            levelPhase = LevelPhase.Score;
+            scoreScreen.Launch();
+        }
+
+        void MoveToNextLevel()
+        {
+            currentLevelIndex++;
+            MoveToInitPhase();
         }
 
         void Update()
@@ -231,7 +247,39 @@ namespace EventHorizon.Core
 
         void DeserializeLevels()
         {
+            string text = ((TextAsset)Resources.Load("Levels")).text;
 
+            XmlDocument doc = new XmlDocument();
+
+            doc.LoadXml(text);
+
+            XmlNodeList list = doc.SelectNodes("levels/level");
+            levels = new Level[list.Count];
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                int levelNumber = 0;
+
+                if (!int.TryParse(list[i].SelectSingleNode("number").InnerText, out levelNumber))
+                    Debug.LogError("Error parsing Levels.xml, invalid level number " + list[i].SelectSingleNode("number").InnerText);
+
+                string name = list[i].SelectSingleNode("name").InnerText;
+
+                if (name == "")
+                    Debug.LogWarning("Parsing Levels.Xml, level name empty");
+
+                string intro = list[i].SelectSingleNode("intro").InnerText;
+
+                if (intro == "")
+                    Debug.LogWarning("Parsing Levels.Xml, level intro empty");
+
+                levels[i] = new Level(name, levelNumber, ((TextAsset)Resources.Load(intro)).text);
+            }
+
+            foreach (Level level in levels)
+            {
+                Debug.Log(level.ToString());
+            }
         }
 
         // Temporary
