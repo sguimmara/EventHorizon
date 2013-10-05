@@ -32,6 +32,8 @@ namespace EventHorizon.Core
         Cutscene cutScene;
         IngameUi ingameUi;
         ConversationUi conversationUi;
+        UpgradeScreen upgradeScreen;
+        ScoreScreen scoreScreen;
 
         public Player player { get; private set; }
 
@@ -39,8 +41,11 @@ namespace EventHorizon.Core
         public GUISkin StorylineSkin;
 
         Level CurrentLevel;
+        int currentLevelIndex;
+        Level[] levels;
 
         public GameData GameData;
+        public LevelPhase levelPhase;
 
         public event GameEvent OnUserRequestShowMainMenu;
         //public event GameEvent OnUserRequestHideMainMenu;
@@ -79,8 +84,16 @@ namespace EventHorizon.Core
 
         void StartGame()
         {
-            //LoadLevel();
-            Debug.LogException(new NotImplementedException());
+            levelPhase = LevelPhase.Init;
+            mainMenu.ShutDown();
+            cutScene.ShutDown();
+            ingameUi.ShutDown();
+            conversationUi.ShutDown();
+            upgradeScreen.ShutDown();
+            scoreScreen.ShutDown();
+
+            levels[0].Load();
+            MoveToIntroPhase();
         }
 
         void LeaveGame()
@@ -108,11 +121,51 @@ namespace EventHorizon.Core
         void Pause()
         {
             Time.timeScale = 0F;
-        }        
+        }
 
         void SwitchPlayablePhase()
         {
             player.IsPlayable = !player.IsPlayable;
+        }
+
+        void MoveToIntroPhase()
+        {
+            levelPhase = LevelPhase.Intro;
+            cutScene.Launch();
+        }
+
+        void MoveToUpgradePhase()
+        {
+            levelPhase = LevelPhase.Upgrade;
+            cutScene.ShutDown();
+            upgradeScreen.Launch();
+        }
+
+        void MoveToGamePhase()
+        {
+            levelPhase = LevelPhase.Game;
+            upgradeScreen.ShutDown();
+        }
+
+        void MoveToScorePhase()
+        {
+            levelPhase = LevelPhase.Score;
+            scoreScreen.Launch();
+        }
+
+        void MoveToNextLevel()
+        {
+            mainMenu.ShutDown();
+            cutScene.ShutDown();
+            ingameUi.ShutDown();
+            conversationUi.ShutDown();
+            upgradeScreen.ShutDown();
+            scoreScreen.ShutDown();
+            levelPhase = LevelPhase.Init;
+
+            levels[currentLevelIndex].Load();
+
+            MoveToIntroPhase();
         }
 
         void Awake()
@@ -133,14 +186,19 @@ namespace EventHorizon.Core
             ingameUi = GetComponent<IngameUi>();
 
             cutScene = GetComponent<Cutscene>();
-            cutScene.OnCutsceneFinished += SwitchPlayablePhase;
-            cutScene.OnCutsceneStarted += SwitchPlayablePhase;
+            cutScene.OnCutsceneFinished += MoveToUpgradePhase;
+
+            upgradeScreen = GetComponent<UpgradeScreen>();
+            upgradeScreen.OnUpgradeFinished += MoveToGamePhase;
+
+            scoreScreen = GetComponent<ScoreScreen>();
+            scoreScreen.OnScoreFinished += MoveToNextLevel;
 
             DontDestroyOnLoad(this);
 
             CreatePlayer();
 
-            Application.LoadLevel("Empty");
+            Application.LoadLevel(1);
         }
 
         void Initialize()
@@ -163,6 +221,17 @@ namespace EventHorizon.Core
         {
             player = (Player)GameObject.Instantiate(playerShip, STARTING_POSITION, Quaternion.identity);
             DontDestroyOnLoad(player);
+        }
+
+        public void ReachEndOfLevel()
+        {
+            Debug.Log("End of level reached.");
+            MoveToScorePhase();
+        }
+
+        void DeserializeLevels()
+        {
+
         }
 
         // Temporary
