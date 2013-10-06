@@ -23,12 +23,15 @@ namespace EventHorizon.Core
         public bool DESIGN_MODE;
         public Player playerShip;
 
+        public Texture2D black;
+
         public static Engine Instance;
 
         public bool USE_PLACEHOLDERS = false;
         public Material PLACEHOLDER;
 
         public Vector3 STARTING_POSITION;
+        public Vector3 END_POSITION;
 
         MainMenu mainMenu;
         Cutscene cutScene;
@@ -49,11 +52,16 @@ namespace EventHorizon.Core
         public GameData GameData;
         public LevelPhase levelPhase;
 
+        float visibility = 0;
+
+        List<Ship> ships;
+
         public event GameEvent OnUserRequestShowMainMenu;
         //public event GameEvent OnUserRequestHideMainMenu;
         //public event GameEvent OnUserRequestLeaveGame;
         //public event EventLevel OnEnterLevel;
         public event EventLevel OnLevelLoaded;
+        public event EventMobile OnShipDestroyed;
 
         void InitializeDebugSettings()
         {
@@ -119,17 +127,19 @@ namespace EventHorizon.Core
 
         void SwitchPlayablePhase()
         {
-//            player.IsPlayable = !player.IsPlayable;
+            //            player.IsPlayable = !player.IsPlayable;
         }
 
         void Start()
         {
             if (!DESIGN_MODE)
                 mainMenu.Launch();
+
+            else ingameUi.Launch();
         }
 
         void Awake()
-        {           
+        {
             Instance = this;
             TEMP_CREATE_ACTORS();
             mainMenu = GetComponent<MainMenu>();
@@ -141,8 +151,8 @@ namespace EventHorizon.Core
             mainMenu.OnMainMenuOn += SwitchPlayablePhase;
 
             conversationUi = GetComponent<ConversationUi>();
-            conversationUi.OnDialogueFinished += SwitchPlayablePhase;
-            conversationUi.OnDialogueStarted += SwitchPlayablePhase;
+            conversationUi.OnDialogueFinished += MoveToPlayablePhase;
+            conversationUi.OnDialogueStarted += MoveToNonPlayablePhase;
 
             ingameUi = GetComponent<IngameUi>();
 
@@ -156,6 +166,8 @@ namespace EventHorizon.Core
             scoreScreen.OnScoreFinished += MoveToNextLevel;
 
             DontDestroyOnLoad(this);
+
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
             mainMenu.Init();
             conversationUi.Init();
@@ -205,10 +217,10 @@ namespace EventHorizon.Core
         void MoveToGamePhase()
         {
             levelPhase = LevelPhase.Game;
-            if (player == null)
-                CreatePlayer();
+            //if (player == null)
+            //    CreatePlayer();
 
-            else player.transform.position = STARTING_POSITION;
+            //else player.transform.position = STARTING_POSITION;
 
             upgradeScreen.ShutDown();
         }
@@ -245,7 +257,29 @@ namespace EventHorizon.Core
         public void ReachEndOfLevel()
         {
             Debug.Log("End of level reached.");
-            MoveToScorePhase();
+            ingameUi.ShutDown();
+            StartCoroutine(FadeOut());
+            StartCoroutine(ForcePlayerToLocation(END_POSITION));
+
+            //MoveToScorePhase();
+        }
+
+        IEnumerator FadeOut()
+        {
+            float f = 0;
+
+            while (f <= 1)
+            {
+                visibility = f;
+                f += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+        }
+
+        void OnGUI()
+        {
+            GUI.color = new Color(0, 0, 0, visibility);
+            GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), black);
         }
 
         void DeserializeLevels()
@@ -295,6 +329,37 @@ namespace EventHorizon.Core
             Character nobody = new Character { ID = "Nobody", Name = "", Portrait = GameData.Nobody };
 
             CharacterPool.characters = new Character[5] { taeresa, marshall, nobody, weilin, jacob };
+        }
+
+        public void AddShip(Ship ship)
+        {
+            ship.OnDestroy += delegate(Mobile m) { OnShipDestroyed(m as Ship); };
+        }
+
+        void MoveToNonPlayablePhase()
+        {
+            ingameUi.ShutDown();
+            StartCoroutine(ForcePlayerToLocation(STARTING_POSITION));
+        }
+          
+        void MoveToPlayablePhase()
+        {
+            ingameUi.Launch();
+            player.IsPlayable = true;
+        }
+
+        // In non playable phases, the player's ship must go back to the center of the screen.
+        IEnumerator ForcePlayerToLocation(Vector3 location)
+        {
+            player.IsPlayable = false;
+            Vector3 delta;
+
+            while (Vector3.Distance(player.transform.position, location) > 0.01F)
+            {
+                delta = location - player.transform.position;
+                player.transform.position += delta * Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
         }
     }
 }
