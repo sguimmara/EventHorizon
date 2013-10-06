@@ -54,6 +54,9 @@ namespace EventHorizon.Objects
 
             if (Input.GetMouseButton(0)) 
                 Trigger();
+
+            if (Input.GetMouseButton(1))
+                Trigger(SecondarySlot);
         }
 
         public override string ToString()
