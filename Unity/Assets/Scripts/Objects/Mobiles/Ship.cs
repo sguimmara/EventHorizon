@@ -79,7 +79,8 @@ namespace EventHorizon.Objects
 
         public void Collide(ICollidable other)
         {
-            Destroy();
+            currentHp -= (other as Ship).maxHp;
+            //Destroy();
         }
 
         public void Damage(IHarmful other)
@@ -87,7 +88,7 @@ namespace EventHorizon.Objects
             currentHp -= (other.Damage);
         }
 
-        public void OnTriggerEnter(Collider other)
+        public virtual void OnTriggerEnter(Collider other)
         {
             Mobile m = other.gameObject.GetComponent<Mobile>();
 
@@ -120,6 +121,12 @@ namespace EventHorizon.Objects
         public int CurrentHp
         {
             get { return currentHp; }
+        }
+
+        protected override void OnBecameVisible()
+        {
+            base.OnBecameVisible();
+            Engine.Instance.AddShip(this);
         }
 
         [SerializeField]
