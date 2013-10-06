@@ -20,6 +20,7 @@ namespace EventHorizon.Core
 
     public class Engine : MonoBehaviour
     {
+        public bool DESIGN_MODE;
         public Player playerShip;
 
         public static Engine Instance;
@@ -118,17 +119,19 @@ namespace EventHorizon.Core
 
         void SwitchPlayablePhase()
         {
-            player.IsPlayable = !player.IsPlayable;
+//            player.IsPlayable = !player.IsPlayable;
         }
 
         void Start()
         {
-            mainMenu.Launch();
+            if (!DESIGN_MODE)
+                mainMenu.Launch();
         }
 
         void Awake()
-        {
+        {           
             Instance = this;
+            TEMP_CREATE_ACTORS();
             mainMenu = GetComponent<MainMenu>();
             mainMenu.OnUserRequestEnterGame += StartGame;
             mainMenu.OnUserRequestLeave += LeaveGame;
@@ -204,9 +207,9 @@ namespace EventHorizon.Core
             levelPhase = LevelPhase.Game;
             if (player == null)
                 CreatePlayer();
-            
+
             else player.transform.position = STARTING_POSITION;
-            
+
             upgradeScreen.ShutDown();
         }
 
@@ -278,7 +281,7 @@ namespace EventHorizon.Core
 
             foreach (Level level in levels)
             {
-                Debug.Log(level.ToString());
+                Debug.Log(level.ToString() + " added to level list");
             }
         }
 
