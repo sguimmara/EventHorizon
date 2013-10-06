@@ -47,6 +47,7 @@ namespace EventHorizon.UserInterface
 
         protected override void ComputeUIRectangles()
         {
+            textPosition = 0;
             GUIContent content = new GUIContent(text);
             Vector2 size = MainSkin.GetStyle("credits").CalcSize(content);
             container = new Rect(0, 0, Screen.width, Screen.height);
