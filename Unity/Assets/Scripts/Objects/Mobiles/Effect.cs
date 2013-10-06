@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace EventHorizon.FX
 {
     [Serializable]
-    public class SpriteSlots
+    public class Effects
     {
         public Sprite Explosion;
+        public AudioClip ExplosionSound;
     }
 }
