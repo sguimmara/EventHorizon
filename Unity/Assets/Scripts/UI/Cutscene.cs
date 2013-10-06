@@ -24,6 +24,7 @@ namespace EventHorizon.UserInterface
 
         IEnumerator Play()
         {
+            textPosition = 0;
             while (textPosition + textZone.height > -100)
             {
                 textPosition -= Time.deltaTime * speed;

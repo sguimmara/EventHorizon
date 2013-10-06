@@ -77,9 +77,12 @@ namespace EventHorizon.Helpers
 
         void OnDrawGizmosSelected()
         {
-            Rect blockZone = new Rect(startTop.x, startTop.y, endTop.x - startTop.x, startBottom.y - startTop.y);
+            if (blockZoneTex != null)
+            {
+                Rect blockZone = new Rect(startTop.x, startTop.y, endTop.x - startTop.x, startBottom.y - startTop.y);
 
-            Gizmos.DrawGUITexture(blockZone, blockZoneTex);
+                Gizmos.DrawGUITexture(blockZone, blockZoneTex);
+            }
         }
     }
 

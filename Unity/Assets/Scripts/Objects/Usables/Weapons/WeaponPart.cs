@@ -40,7 +40,6 @@ namespace EventHorizon.Objects
         public override void Initialize()
         {
             lastShot = Time.time;
-            renderer.enabled = false;
         }
     }
 

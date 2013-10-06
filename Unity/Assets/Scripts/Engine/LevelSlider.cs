@@ -10,6 +10,7 @@ namespace EventHorizon.Core
 {
     public class LevelSlider : MonoBehaviour
     {
+        public static LevelSlider Instance;
         public int speed;
         public SceneryObject asteroid;
 
@@ -43,6 +44,7 @@ namespace EventHorizon.Core
 
         void Awake()
         {
+            Instance = this;
             StartCoroutine(AddRandomSceneryObjects());
         }
     }
