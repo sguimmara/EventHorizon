@@ -24,7 +24,7 @@ namespace EventHorizon.Objects
         public Transform HullSlotLocation;
         public Transform EngineSlotLocation;
         
-        public SpriteSlots Sprites;
+        public Effects effects;
 
         public event EventMobile OnDestroy;
 
@@ -100,10 +100,13 @@ namespace EventHorizon.Objects
         public void Destroy()
         {
             if (OnDestroy != null)
-                OnDestroy(this);            
+                OnDestroy(this);
 
-            if (Sprites.Explosion != null)
-                GameObject.Instantiate(Sprites.Explosion, transform.position, Quaternion.Euler(new Vector3(0,0, Random.Range(0, 360F))));
+            if (effects.Explosion != null)
+            {
+                GameObject.Instantiate(effects.Explosion, transform.position, Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360F))));
+                Engine.Instance.audio.PlayOneShot(effects.ExplosionSound);
+            }
 
             Destroy(gameObject);
         }
