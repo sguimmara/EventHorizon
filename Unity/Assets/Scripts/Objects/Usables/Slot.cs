@@ -9,7 +9,7 @@ namespace EventHorizon.Objects
     [Serializable]
     public class Slot
     {
-        Transform location;
+        public Transform location;
         public SlotType Type;
         public Usable Content;
         public bool Active;
@@ -23,14 +23,23 @@ namespace EventHorizon.Objects
 
         public void Initialize()
         {
-            Content.Initialize();
+            if (Content != null)
+            {
+                Content = (Usable)GameObject.Instantiate(Content, location.position, location.rotation);
+                Content.transform.parent = location;
+                Content.transform.localPosition = Vector3.zero;
+                Content.Initialize();
+                Active = true;
+            }
+
+            else Debug.LogWarning("Slot.Set() parameter null");
         }
 
         public void Set(Usable usable)
         {
             if (usable != null)
             {
-                Content = (Usable)GameObject.Instantiate(usable, location.position, location.rotation);
+                Content = (Usable)GameObject.Instantiate(Content, location.position, location.rotation);
                 Content.transform.parent = location;
                 Content.transform.localPosition = Vector3.zero;
                 Content.Initialize();
