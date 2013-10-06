@@ -8,7 +8,7 @@ namespace EventHorizon.Storyline
 {
     public struct DialogueLine
     {
-        public Character actor;
+        public string actorID;
         public string line;
     }
 
