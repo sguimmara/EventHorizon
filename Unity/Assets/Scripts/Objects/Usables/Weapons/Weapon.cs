@@ -10,7 +10,6 @@ namespace EventHorizon.Objects
 {
     public class Weapon : Usable
     {
-        public bool AutoFire;
         public AudioClip sound;
         WeaponPart[] subWeapons;
 
@@ -41,7 +40,7 @@ namespace EventHorizon.Objects
 
         public override void Initialize()
         {
-            enabled = false;
+            //enabled = false;
             subWeapons = GetComponentsInChildren<WeaponPart>();
             if (subWeapons == null || subWeapons.Length == 0)
                 Debug.LogWarning(gameObject.name + " WeaponGroup empty");
@@ -53,11 +52,5 @@ namespace EventHorizon.Objects
             }
         }
 
-        void Update()
-        {
-
-            if (AutoFire)
-                Trigger();
-        }
     }
 }
