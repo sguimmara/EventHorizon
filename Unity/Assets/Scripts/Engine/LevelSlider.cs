@@ -10,11 +10,12 @@ namespace EventHorizon.Core
 {
     public class LevelSlider : MonoBehaviour
     {
+        public int speed;
         public SceneryObject asteroid;
 
         void Update()
         {
-            transform.Translate(Vector3.left * Time.deltaTime * 2);
+            transform.Translate(Vector3.left * Time.deltaTime * speed);
         }        
 
         public IEnumerator AddRandomSceneryObjects()
