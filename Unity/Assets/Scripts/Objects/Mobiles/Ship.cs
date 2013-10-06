@@ -12,8 +12,6 @@ namespace EventHorizon.Objects
 
         public Slot[] Slots;
 
-        public Usable TEMP;
-
         public Slot PrimarySlot;
         public Slot SecondarySlot;
         public Slot HullSlot;
@@ -33,8 +31,13 @@ namespace EventHorizon.Objects
 
         public void Trigger()
         {
-            if (PrimarySlot.Active)
-                PrimarySlot.Trigger();
+            Trigger(PrimarySlot);
+        }
+
+        public void Trigger(Slot slot)
+        {
+            if (slot.Active)
+                slot.Trigger();
         }
 
         public override string ToString()
@@ -49,10 +52,15 @@ namespace EventHorizon.Objects
             maxHp = Mathf.Clamp(maxHp, 1, 10000);
             currentHp = maxHp;
 
-            PrimarySlot = new Slot(PrimarySlotLocation, SlotType.Primary);
-            SecondarySlot = new Slot(SecondarySlotLocation, SlotType.Secondary);
-            HullSlot = new Slot(HullSlotLocation, SlotType.Hull);
-            EngineSlot = new Slot(EngineSlotLocation, SlotType.Engine);
+            PrimarySlot.Type = SlotType.Primary;
+            SecondarySlot.Type = SlotType.Secondary;
+            HullSlot.Type = SlotType.Hull;
+            EngineSlot.Type = SlotType.Engine;
+
+            PrimarySlot.location = PrimarySlotLocation;
+            SecondarySlot.location = SecondarySlotLocation;
+            HullSlot.location = HullSlotLocation;
+            EngineSlot.location = EngineSlotLocation;
 
             Slots = new Slot[4] { PrimarySlot, SecondarySlot, HullSlot, EngineSlot };
 
@@ -64,8 +72,6 @@ namespace EventHorizon.Objects
                     slot.Active = true;
                 }
             }
-
-            PrimarySlot.Set(TEMP);
         }
 
         protected override void Update()
@@ -79,12 +85,35 @@ namespace EventHorizon.Objects
 
         public void Collide(ICollidable other)
         {
+            StartCoroutine(Flash());
             currentHp -= (other as Ship).maxHp;
-            //Destroy();
+        }
+
+        IEnumerator Flash()
+        {
+            StopCoroutine("Flash");
+            Material m = renderer.material;
+
+            float f = 0;
+
+            while (f < 0.04F)
+            {
+                m.SetFloat("_Flash", Mathf.Clamp01(f / 0.01F));
+                f += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+
+            while (f < 0.08F)
+            {
+                m.SetFloat("_Flash",Mathf.Clamp01(1 - f / 0.01F));
+                f += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
         }
 
         public void Damage(IHarmful other)
         {
+            StartCoroutine(Flash());
             currentHp -= (other.Damage);
         }
 
