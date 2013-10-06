@@ -7,6 +7,7 @@ using UnityEngine;
 using EventHorizon;
 using EventHorizon.Graphics;
 using EventHorizon.FX;
+using UnityEditor;
 
 namespace EventHorizon.Objects
 {
@@ -23,7 +24,6 @@ namespace EventHorizon.Objects
         public float Speed;
 
         protected Rect Size;
-
 
         public Rect GetRectSize()
         {
@@ -58,7 +58,7 @@ namespace EventHorizon.Objects
         {
             Direction = transform.right;
             Size = GetRectSize();
-            enabled = true;
+            enabled = false;
         }
 
         protected virtual void Start()
@@ -80,7 +80,7 @@ namespace EventHorizon.Objects
             transform.Translate(Direction * CurrentSpeed);
         }
 
-        void OnBecameVisible()
+        protected virtual void OnBecameVisible()
         {
             enabled = true;
         }
@@ -88,6 +88,16 @@ namespace EventHorizon.Objects
         void OnBecameInvisible()
         {
             Destroy(gameObject);
+        }
+
+        void OnDrawGizmos()
+        {
+            Gizmos.DrawWireSphere(transform.position, 0.5F);
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            Handles.Label(transform.position, name);
         }
     }
 }
