@@ -48,7 +48,7 @@ namespace EventHorizon.UserInterface
 
         bool displayDialogue;
 
-        IEnumerator RunDialogueSequence(Dialogue dialogue, float timePerCharacter, float timeBetweeLines)
+        IEnumerator RunDialogueSequence(Dialogue dialogue, float timePerCharacter, float timeBetweenLines)
         {
             float f = 0;
             float delta;
@@ -84,20 +84,21 @@ namespace EventHorizon.UserInterface
                     yield return new WaitForSeconds(timePerCharacter);
                 }
 
-                yield return new WaitForSeconds(timeBetweeLines + 0.03F * original.Length);
+                yield return new WaitForSeconds(timeBetweenLines + 0.03F * original.Length);
             }
 
-            if (FadeTime > 0)
-            {
-                f = 0;
-                while (f <= FadeTime)
-                {
-                    guiColor = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1 - (f / FadeTime));
-                    f += Time.deltaTime;
-                    yield return new WaitForEndOfFrame();
-                }
-            }
+            //if (FadeTime > 0)
+            //{
+            //    f = 0;
+            //    while (f <= FadeTime)
+            //    {
+            //        guiColor = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1 - (f / FadeTime));
+            //        f += Time.deltaTime;
+            //        yield return new WaitForEndOfFrame();
+            //    }
+            //}
 
+            displayDialogue = false;
             if (OnDialogueFinished != null)
                 OnDialogueFinished();
 
@@ -115,7 +116,7 @@ namespace EventHorizon.UserInterface
                 yield return new WaitForEndOfFrame();
             }
 
-            displayDialogue = false;
+
             OnDialogueFinished();
             Hide();
         }
@@ -137,7 +138,7 @@ namespace EventHorizon.UserInterface
 
         public override void Init()
         {
-            base.Awake();
+            base.Init();
             Instance = this;
 
             displayDialogue = false;
@@ -156,14 +157,14 @@ namespace EventHorizon.UserInterface
         protected override void Draw()
         {
             GUI.color = guiColor;
-            GUI.skin = MainSkin;
+            GUI.skin = StorylineSkin;
             GUI.DrawTexture(TopStripe, black);
             GUI.DrawTexture(BottomStripe, black);
 
             if (displayDialogue)
             {
                 GUI.BeginGroup(container);
-                GUI.DrawTexture(actorPortraitRect, currentLine.actor.Portrait);
+                GUI.DrawTexture(actorPortraitRect, CharacterPool.Find(currentLine.actorID).Portrait);
                 GUI.Label(textRect, currentDialogueLine);
                 GUI.EndGroup();
             }
