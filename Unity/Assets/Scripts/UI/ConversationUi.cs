@@ -46,6 +46,8 @@ namespace EventHorizon.UserInterface
         Rect TopStripe;
         Rect BottomStripe;
 
+        AudioSource source;
+
         bool displayDialogue;
 
         IEnumerator RunDialogueSequence(Dialogue dialogue, float timePerCharacter, float timeBetweenLines)
@@ -80,7 +82,7 @@ namespace EventHorizon.UserInterface
                 for (int i = 0; i < original.Length; i++)
                 {
                     currentDialogueLine = string.Concat(currentDialogueLine, original[i]);
-                    audio.PlayOneShot(beep);
+                    source.PlayOneShot(beep);
                     yield return new WaitForSeconds(timePerCharacter);
                 }
 
@@ -140,6 +142,8 @@ namespace EventHorizon.UserInterface
         {
             base.Init();
             Instance = this;
+            source = gameObject.AddComponent<AudioSource>();
+            source.volume = 0.1F;
 
             displayDialogue = false;
         }
