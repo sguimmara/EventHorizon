@@ -24,14 +24,8 @@ namespace EventHorizon.Objects
 
         public void Collide(ICollidable other)
         {
-            Destroy();
+                Destroy();
         }
-
-        //protected override void Awake()
-        //{
-        //    base.Awake();
-        //    Direction = Vector3.right;
-        //}
 
         public void Destroy()
         {
@@ -54,8 +48,9 @@ namespace EventHorizon.Objects
 
         public void Create(Transform parent)
         {
-            GameObject g = (GameObject) GameObject.Instantiate(gameObject, parent.position, parent.localRotation);
+            GameObject g = (GameObject)GameObject.Instantiate(gameObject, parent.position, parent.localRotation);
             g.transform.rotation = parent.rotation;
+            g.transform.parent = parent.root;
         }
     }
 }

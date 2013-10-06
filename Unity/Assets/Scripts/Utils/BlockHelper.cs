@@ -21,6 +21,8 @@ namespace EventHorizon.Helpers
     {
         LevelSlider levelSlider;
 
+        public Texture2D blockZoneTex;
+
         float BlockLength;
         public int BlockDurationInSeconds;
 
@@ -31,6 +33,11 @@ namespace EventHorizon.Helpers
 
         const float upperLimit = 4.146766F;
         const float labelHeight = 7F;
+
+        Vector3 startTop;
+        Vector3 startBottom;
+        Vector3 endTop;
+        Vector3 endBottom;
 
         void DrawBlockLimits()
         {
@@ -54,6 +61,11 @@ namespace EventHorizon.Helpers
 
         void OnDrawGizmos()
         {
+            startTop = new Vector3(transform.position.x, upperLimit, 5);
+            startBottom = new Vector3(transform.position.x, -upperLimit, 5);
+            endTop = new Vector3(transform.position.x + BlockLength, upperLimit, 5);
+            endBottom = new Vector3(transform.position.x + BlockLength, -upperLimit, 5);
+
             if (levelSlider == null)
                 levelSlider = GameObject.Find("LevelSlider").GetComponent<LevelSlider>();
 
@@ -61,6 +73,13 @@ namespace EventHorizon.Helpers
 
             if (DisplayBlockLimits)
                 DrawBlockLimits();
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            Rect blockZone = new Rect(startTop.x, startTop.y, endTop.x - startTop.x, startBottom.y - startTop.y);
+
+            Gizmos.DrawGUITexture(blockZone, blockZoneTex);
         }
     }
 

@@ -21,7 +21,7 @@ namespace EventHorizon.Objects
             OriginalRotation = transform.rotation.eulerAngles.z;
         }
 
-        public override void Trigger()
+        public override bool Trigger()
         {
             if (Time.time - lastShot >= (1 / rateOfFire))
             {
@@ -32,7 +32,9 @@ namespace EventHorizon.Objects
                 transform.localRotation = Quaternion.Euler(orig);
                 Ammunition.Create(transform);
                 lastShot = Time.time;
+                return true;
             }
+            return false;
         }
 
         public override void Initialize()

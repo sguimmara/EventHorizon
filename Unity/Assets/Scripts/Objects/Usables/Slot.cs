@@ -14,7 +14,7 @@ namespace EventHorizon.Objects
         public Usable Content;
         public bool Active;
 
-        public virtual Texture2D Icon { get { return Content.Icon; } }
+        public virtual Texture2D Icon { get { return Content == null ? null : Content.Icon; } }
 
         public void Trigger()
         {

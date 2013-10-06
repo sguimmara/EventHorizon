@@ -11,28 +11,37 @@ namespace EventHorizon.Objects
     public class Weapon : Usable
     {
         public bool AutoFire;
+        public AudioClip sound;
         WeaponPart[] subWeapons;
-        Vector3 rotation;
+
+        bool notPlayed = true;
 
         void Awake()
         {
-            rotation = transform.rotation.eulerAngles;
+			if (transform.parent == null)
+				Initialize();
+
+            if (audio == null)
+                gameObject.AddComponent<AudioSource>();
         }
 
-        public override void Trigger()
+        public override bool Trigger()
         {
-            rotation.z = AimController.GetRotation(transform);
-
-            transform.rotation = Quaternion.Euler(rotation);
-
+            notPlayed = true;
             for (int i = 0; i < subWeapons.Length; i++)
             {
-                subWeapons[i].Trigger();
+                if (subWeapons[i].Trigger() && notPlayed)
+                {
+                    notPlayed = false;
+                    audio.PlayOneShot(sound);
+                }
             }
+            return true;
         }
 
         public override void Initialize()
         {
+            enabled = false;
             subWeapons = GetComponentsInChildren<WeaponPart>();
             if (subWeapons == null || subWeapons.Length == 0)
                 Debug.LogWarning(gameObject.name + " WeaponGroup empty");

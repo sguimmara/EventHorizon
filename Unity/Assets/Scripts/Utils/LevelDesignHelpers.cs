@@ -11,6 +11,7 @@ namespace EventHorizon.Helpers
 {
     public class LevelDesignHelpers : MonoBehaviour
     {
+        public bool enabled;
         float LevelLength;
         public int LevelDuration;
         public bool VerticalLimits;
@@ -87,25 +88,28 @@ namespace EventHorizon.Helpers
 
         void OnDrawGizmos()
         {
-            if (levelSlider == null)
+            if (enabled)
             {
-                levelSlider = GetComponent<LevelSlider>();
+                if (levelSlider == null)
+                {
+                    levelSlider = GetComponent<LevelSlider>();
+                }
+
+                speed = levelSlider.speed;
+
+                LevelLength = LevelDuration * 60 * levelSlider.speed;
+
+                if (VerticalLimits)
+                    DrawLevelVerticalLimits();
+
+                if (Graduations)
+                    DrawHorizontalGraduations();
+
+                if (GameArea)
+                    DrawGameArea();
+
+                DrawLevelExtremities();
             }
-
-            speed = levelSlider.speed;
-
-            LevelLength = LevelDuration * 60 * levelSlider.speed;
-
-            if (VerticalLimits)
-                DrawLevelVerticalLimits();
-
-            if (Graduations)
-                DrawHorizontalGraduations();
-
-            if (GameArea)
-                DrawGameArea();
-
-            DrawLevelExtremities();
         }
     }
 

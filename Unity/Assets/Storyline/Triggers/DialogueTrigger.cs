@@ -14,6 +14,9 @@ namespace EventHorizon.Triggers
     {
         public TextAsset DialogueFile;
         Character[] characters;
+        float dialogueLength;
+        float timePerCharacter = 0.03F;
+        float timeBetweenLines = 1F;
 
         Dialogue dialogue;
 
@@ -28,7 +31,7 @@ namespace EventHorizon.Triggers
             else dialogue = ExtractDialogueData(DialogueFile);
         }
 
-        static Dialogue ExtractDialogueData(TextAsset DialogueFile)
+        Dialogue ExtractDialogueData(TextAsset DialogueFile)
         {
             string text = DialogueFile.text;
 
@@ -47,16 +50,35 @@ namespace EventHorizon.Triggers
                 {
                     if (s.StartsWith("["))
                     {
-                        s = s.Substring(1, s.Length - 2);
-                        Character a = CharacterPool.Find(s);
+                        // actor ID
+                        string actorId = s.Substring(1, s.Length - 2);
+
                         string l = list[i + 1];
-                        lines.Add(new DialogueLine { actor = a, line = l });
+
+                        lines.Add(new DialogueLine { actorID = actorId, line = l });
                     }
                 }
             }
 
+            //dialogueLength = 3;
+
+            //foreach (DialogueLine line in lines)
+            //    dialogueLength += (line.line.Length * timePerCharacter + (timeBetweenLines + 0.03F * line.line.Length));
+
+            //dialogueLength *= 2;
+
             return new Dialogue(lines.ToArray());
         }
+
+        //void OnDrawGizmos()
+        //{
+        //    if (dialogue == null)
+        //    {
+        //        ExtractDialogueData(DialogueFile);
+        //    }
+        //    Gizmos.DrawLine(new Vector3(transform.position.x, 2.059772F, 5), new Vector3(transform.position.x, -2.059772F, 5));
+        //    Gizmos.DrawLine(new Vector3(transform.position.x + dialogueLength, 2.059772F, 5), new Vector3(transform.position.x + dialogueLength, -2.059772F, 5));
+        //}
 
         protected override void Trigger()
         {

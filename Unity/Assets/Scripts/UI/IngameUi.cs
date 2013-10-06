@@ -23,10 +23,16 @@ namespace EventHorizon.UserInterface
 
         Player player;
 
+        public override void Launch()
+        {
+            base.Launch();
+            player = Engine.Instance.player;
+        }
+
         // Use this for initialization
         public override void Start()
         {
-            player = Engine.Instance.player;
+
             ComputeUIRectangles();
             shipGradient = new Color[numberOfColors] { Color.green, Color.yellow, Color.red, Color.black };
             shipIcon = Utils.Load<Texture2D>("ship_representation");
@@ -52,14 +58,14 @@ namespace EventHorizon.UserInterface
 
         void DrawShipUI()
         {
-            float hp = Mathf.Clamp01(((float) player.CurrentHp / player.MaxHp));
-            GUI.color = UnityExtended.Interp.Lerp(shipGradient,1 - hp);
+            float hp = Mathf.Clamp01(((float)player.CurrentHp / player.MaxHp));
+            GUI.color = UnityExtended.Interp.Lerp(shipGradient, 1 - hp);
             GUI.Box(shipRect, shipIcon);
             GUI.Box(moduleArea, "");
             GUI.color = Color.white;
             GUI.BeginGroup(moduleArea);
             for (int i = 0; i < moduleRects.Length; i++)
-                GUI.Box(moduleRects[i], player.Slots[i].Icon);  
+                GUI.Box(moduleRects[i], player.Slots[i].Icon);
             GUI.EndGroup();
         }
 

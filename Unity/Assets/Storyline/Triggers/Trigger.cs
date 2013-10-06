@@ -16,7 +16,6 @@ namespace EventHorizon.Triggers
 
         protected virtual void OnTriggerEnter(Collider other)
         {
-            Debug.Log(other.tag + " " + type.ToString());
             if (other.tag == type.ToString())
                 Trigger();
         }
