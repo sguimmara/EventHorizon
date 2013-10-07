@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using EventHorizon.Objects;
-using EventHorizon.FX;
+using EventHorizon.Effects;
 using EventHorizon.Core;
 
 namespace EventHorizon.Objects
@@ -21,8 +21,8 @@ namespace EventHorizon.Objects
         public Transform SecondarySlotLocation;
         public Transform HullSlotLocation;
         public Transform EngineSlotLocation;
-        
-        public Effects effects;
+
+        public EffectsContainer effects;
 
         public event EventMobile OnDestroy;
 

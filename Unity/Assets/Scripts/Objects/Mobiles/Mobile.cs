@@ -6,7 +6,7 @@ using System.Text;
 using UnityEngine;
 using EventHorizon;
 using EventHorizon.Graphics;
-using EventHorizon.FX;
+using EventHorizon.Effects;
 using UnityEditor;
 
 namespace EventHorizon.Objects

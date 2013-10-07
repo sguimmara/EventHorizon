@@ -43,7 +43,7 @@ namespace EventHorizon
             while (f < 0.02F)
             {
                 sign *= -1;
-                transform.position += (new Vector3(0.1F * sign, 0.1F * sign, transform.position.z));
+                transform.position += (new Vector3(0.2F * sign, 0.2F * sign, transform.position.z));
                 f += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }

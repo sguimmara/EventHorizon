@@ -1,27 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
 namespace EventHorizon.Graphics
 {
-    public enum SpriteMode { DestroyAtEnd, Loop, Once }
+    public enum FXmode { DestroyAtEnd, Loop, Once }
 
-    public class Sprite : MonoBehaviour, ICreatable
+    public class Sprite : FX
     {
-        public bool PlayOnAwake;
         public bool FixedRotation;
         public int height = 5;
         public int width = 5;
-        public float duration;
-        public bool reversed;
-        public SpriteMode mode;
 
         Vector2[] originalSet;
         Mesh mesh;
 
         void Awake()
-        {
-  
+        {  
             mesh = GetComponent<MeshFilter>().mesh;
 
             Vector2[] result = new Vector2[mesh.uv.Length];
@@ -39,12 +33,12 @@ namespace EventHorizon.Graphics
                 Play();
         }
 
-        public void Play()
+        public override void Play()
         {
-            StartCoroutine(Animate(duration, reversed, mode));
+            StartCoroutine(Animate(duration, mode));
         }
 
-        IEnumerator Animate(float duration, bool reversed, SpriteMode mode)
+        IEnumerator Animate(float duration, FXmode mode)
         {
             int nOfStates = height * width;
 
@@ -67,7 +61,6 @@ namespace EventHorizon.Graphics
 
                     Vector2 vNew = new Vector2(newX, newY);
                     result[j] = vNew;
-                    //sphere.transform.position = new Vector3(vNew.x, vNew.y, 0);
                 }
 
                 mesh.uv = result;
@@ -78,16 +71,16 @@ namespace EventHorizon.Graphics
 
             switch (mode)
             {
-                case SpriteMode.DestroyAtEnd: Destroy(this.gameObject);
+                case FXmode.DestroyAtEnd: Destroy(this.gameObject);
                     break;
-                case SpriteMode.Loop: Play();
+                case FXmode.Loop: Play();
                     break;
                 default:
                     break;
             }
         }
 
-        public void Create(Transform parent)
+        public override void Create(Transform parent)
         {
             Vector3 position = parent.position;
             GameObject.Instantiate(gameObject, new Vector3(position.x, position.y, position.z - 0.1F), FixedRotation ? Quaternion.identity : Quaternion.Euler(0, 0, Random.Range(0, 360F)));

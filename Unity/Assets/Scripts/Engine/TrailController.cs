@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace EventHorizon.FX
+namespace EventHorizon.Effects
 {
     // Changes size of trail according to speed. 
     // The greater the speed on the +X axis, the bigger.

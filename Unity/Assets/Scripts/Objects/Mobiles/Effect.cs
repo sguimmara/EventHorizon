@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace EventHorizon.FX
+namespace EventHorizon.Effects
 {
     [Serializable]
-    public class Effects
+    public class EffectsContainer
     {
-        public Sprite Explosion;
+        public FX Explosion;
         public AudioClip ExplosionSound;
     }
 }
