@@ -1,26 +1,26 @@
 # Dialogues for level 1 - Deep Space
-# Section 1 (Intro screen)
+# Section 1 (Game starts)
 
-[Taeresa]
-This is an emergency call from LMS Matsuri, we have received damage after crossing Wormhole WH-227 XA 474, please respond.
+[AI]
+Wake up.
 
-[Nobody] 
-...
+[AI] 
+It is time to wake up.
 
-[Taeresa]
-Mayday, mayday, we need assistance. This is captain Taeresa Niemeyer, in charge of LMS Matsuri, is anybody there ?
+[AI]
+Ah, there you are. You have been sleeping for a while now. Or maybe you were stunned.
 
-[Nobody]
-...
+[AI]
+I cannot really tell the difference from here.
 
-[Marshall]
-Captain !
+[AI]
+The thing is, the ship has been hit by something and you were shaken. You need to repair this ship.
 
-[Taeresa]
-What is it Marshall ?
+[AI]
+Oh don't worry for me. I have been spared by the shock. Trust me. It is not your case. Look at you, your head is bleeding.
 
-[Marshall]
-I'm picking up strange signatures on the radar, it seems they are coming toward us !
+[AI]
+I am not saying you did fail. But you must repair this ship or something bad will happen.
 
-[Taeresa]
-I don't like that. I don't like that at all. Everyone be ready. We must avoid any contact !
+[AI]
+There. Sit down a moment. You must think. Can you do that ? Me ? I am fine. Don't you worry.
