@@ -89,17 +89,6 @@ namespace EventHorizon.UserInterface
                 yield return new WaitForSeconds(timeBetweenLines + 0.03F * original.Length);
             }
 
-            //if (FadeTime > 0)
-            //{
-            //    f = 0;
-            //    while (f <= FadeTime)
-            //    {
-            //        guiColor = new Color(GUI.color.r, GUI.color.g, GUI.color.b, 1 - (f / FadeTime));
-            //        f += Time.deltaTime;
-            //        yield return new WaitForEndOfFrame();
-            //    }
-            //}
-
             displayDialogue = false;
             if (OnDialogueFinished != null)
                 OnDialogueFinished();
@@ -143,7 +132,7 @@ namespace EventHorizon.UserInterface
             base.Init();
             Instance = this;
             source = gameObject.AddComponent<AudioSource>();
-            source.volume = 0.1F;
+            source.volume = 0.0F;
 
             displayDialogue = false;
         }

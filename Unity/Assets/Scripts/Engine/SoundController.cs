@@ -33,7 +33,7 @@ namespace EventHorizon.Sound
             effectSource = gameObject.AddComponent<AudioSource>();
 
             LoadMusics();
-            Engine.Instance.OnLevelLoaded += PlayMusic;
+//            Engine.Instance.OnLevelLoaded += PlayMusic;
         }
 
         void Initialize()
