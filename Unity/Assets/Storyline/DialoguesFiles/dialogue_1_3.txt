@@ -1,23 +1,11 @@
 # Dialogues for level 1 - Deep Space
-# Section 3 (After second encounter with big wave of aliens)
+# Section 3 (After second encounter)
 
-[Weilin]
-For christ sake, did you see those things ?
+[AI]
+Did you see that again ?
 
-[Taeresa] 
-They didn't seem to be aware of us. I wonder what that was...
+[AI]
+That is unlikely. Maybe you should defend this ship.
 
-[Jacob]
-Clearly, we have just witnessed the birth of a big scientific discovery ! A new alien race !
-
-[Marshall]
-Just keep cool Jacob, don't you forget we are a ship in distress.
-
-[Taeresa]
-Whatever that was, we need to repair this ship quickly and get the hell out of this sector !
-
-[Weilin]
-I think they have seen us ! They are coming again ! Permission to shoot Captain ?
-
-[Taeresa]
-Permission granted !
+[AI]
+There. I just unlocked the minigun.

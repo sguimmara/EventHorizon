@@ -1,17 +1,17 @@
 # Dialogues for level 1 - Deep Space
-# Section 4 (End of level)
+# Section 4 (Before boss)
 
-[Weilin]
-For christ sake, did you see those things ?
+[AI]
+I think you did good.
 
-[Taeresa] 
-They didn't seem to be aware of us. I wonder what that was...
+[AI]
+At least you did your best.
 
-[Jacob]
-Clearly, we have just witnessed the birth of a big scientific discovery ! A new alien race !
+[AI]
+You could have done better though.
 
-[Marshall]
-Just keep cool Jacob, don't you forget we are a ship in distress.
+[AI]
+It is fine by me. I have been programmed to tolerate imperfection.
 
-[Taeresa]
-Whatever that was, we need to repair this ship quickly and get the hell out of this sector !
+[AI]
+Something is coming. Are you prepared ?

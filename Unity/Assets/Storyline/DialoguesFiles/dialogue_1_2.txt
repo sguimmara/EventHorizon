@@ -1,17 +1,12 @@
 # Dialogues for level 1 - Deep Space
 # Section 2 (After first encounter)
 
-[Weilin]
-What was that !?
+[AI]
+I saw something. Did you see something too ?
 
-[Taeresa] 
-I have no idea. Everyone stay alert. Jacob, I want a damage report now.
+[AI]
+Are you okay ? You are still bleeding. I don't like that.
 
-[Jacob]
-We have a minor leak in the front hull, but this should be fixed soon enough. And we also...
+[AI]
+Maybe you should rest. Do you want to rest ?
 
-[Weilin]
-More incoming !
-
-[Taeresa]
-Weilin, get us out of this mess !
