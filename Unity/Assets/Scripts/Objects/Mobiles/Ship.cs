@@ -3,6 +3,7 @@ using System.Collections;
 using EventHorizon.Objects;
 using EventHorizon.Effects;
 using EventHorizon.Core;
+using EventHorizon.AI;
 
 namespace EventHorizon.Objects
 {
@@ -21,6 +22,8 @@ namespace EventHorizon.Objects
         public Transform SecondarySlotLocation;
         public Transform HullSlotLocation;
         public Transform EngineSlotLocation;
+
+        public AIContainer AIBehaviours;
 
         public EffectsContainer effects;
 
@@ -105,7 +108,7 @@ namespace EventHorizon.Objects
 
             while (f < 0.08F)
             {
-                m.SetFloat("_Flash",Mathf.Clamp01(1 - f / 0.01F));
+                m.SetFloat("_Flash", Mathf.Clamp01(1 - f / 0.01F));
                 f += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }
@@ -133,10 +136,10 @@ namespace EventHorizon.Objects
                 OnDestroy(this);
 
             if (effects.Explosion != null)
-            {
                 GameObject.Instantiate(effects.Explosion, transform.position, Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360F))));
+
+            if (effects.ExplosionSound != null)
                 Engine.Instance.audio.PlayOneShot(effects.ExplosionSound);
-            }
 
             Destroy(gameObject);
         }
@@ -155,7 +158,12 @@ namespace EventHorizon.Objects
         protected override void OnBecameVisible()
         {
             base.OnBecameVisible();
-            Engine.Instance.AddShip(this);
+
+            if (Engine.Instance != null)
+                Engine.Instance.AddShip(this);
+
+            if (AIBehaviours.motionPattern != null)
+                AIBehaviours.motionPattern.Create(this.transform);
         }
 
         [SerializeField]
