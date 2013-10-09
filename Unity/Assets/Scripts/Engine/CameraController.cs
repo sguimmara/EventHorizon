@@ -28,7 +28,8 @@ namespace EventHorizon
 
         void Start()
         {
-            Engine.Instance.OnShipDestroyed += Shake;
+            if (Engine.Instance != null)
+                Engine.Instance.OnShipDestroyed += Shake;
         }
 
         IEnumerator ShakeSequence()

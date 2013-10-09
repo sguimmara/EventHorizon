@@ -45,10 +45,11 @@ namespace EventHorizon.UserInterface
         {
             float f = 0;
             float t = 0;
+            float duration = 4F;
 
-            while (f <= 2)
+            while (f <= duration)
             {
-                t = f / 2;
+                t = f / duration;
                 backgroundOpacity = Mathf.Lerp(backgroundOpacity, 0F, t);
                 eventOpacity = Mathf.Lerp(eventOpacity, 0F, t);
                 horizonOpacity = Mathf.Lerp(horizonOpacity, 0F, t);

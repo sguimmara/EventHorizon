@@ -322,13 +322,14 @@ namespace EventHorizon.Core
         // Temporary
         void TEMP_CREATE_ACTORS()
         {
-            Character taeresa = new Character { ID = "Taeresa", Name = "Taeresa Niemeyer", Portrait = GameData.Taeresa };
-            Character marshall = new Character { ID = "Marshall", Name = "Marshall Elon", Portrait = GameData.Marshall };
-            Character weilin = new Character { ID = "Weilin", Name = "Weilin Gu", Portrait = GameData.Weilin };
-            Character jacob = new Character { ID = "Jacob", Name = "Jacob Freeman", Portrait = GameData.Jacob };
-            Character nobody = new Character { ID = "Nobody", Name = "", Portrait = GameData.Nobody };
+            //Character taeresa = new Character { ID = "Taeresa", Name = "Taeresa Niemeyer", Portrait = GameData.Taeresa };
+            //Character marshall = new Character { ID = "Marshall", Name = "Marshall Elon", Portrait = GameData.Marshall };
+            //Character weilin = new Character { ID = "Weilin", Name = "Weilin Gu", Portrait = GameData.Weilin };
+            //Character jacob = new Character { ID = "Jacob", Name = "Jacob Freeman", Portrait = GameData.Jacob };
+            //Character nobody = new Character { ID = "Nobody", Name = "", Portrait = GameData.Nobody };
+            Character charAI = new Character { ID = "AI", Name = "AI", Portrait = GameData.Nobody };
 
-            CharacterPool.characters = new Character[5] { taeresa, marshall, nobody, weilin, jacob };
+            CharacterPool.characters = new Character[1] { charAI };
         }
 
         public void AddShip(Ship ship)

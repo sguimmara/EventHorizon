@@ -13,6 +13,8 @@ namespace EventHorizon.Objects
 {
     public abstract class Mobile : MonoBehaviour
     {
+        public bool NeverDestroy;
+
         [HideInInspector]
         public Vector3 Direction;
 
@@ -87,7 +89,8 @@ namespace EventHorizon.Objects
 
         void OnBecameInvisible()
         {
-            Destroy(gameObject);
+            if (!NeverDestroy)
+                Destroy(gameObject);
         }
 
         void OnDrawGizmos()
