@@ -10,10 +10,7 @@ namespace EventHorizon.Graphics
         public float duration;
         public FXmode mode;
 
-        public virtual void Create(Transform parent)
-        {
-            GameObject.Instantiate(gameObject, transform.position, transform.rotation);
-        }
+        public abstract void Create(Transform parent);
 
         public abstract void Play();
     }
