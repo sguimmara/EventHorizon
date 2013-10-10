@@ -8,13 +8,27 @@ using UnityEngine;
 
 namespace EventHorizon.Objects
 {
-    public class Ammunition : Mobile, ICollidable, IHarmful, ICreatable
+    public class Ammunition : Mobile, ICollidable, IHarmful, ICreatable, IMovable
     {
         public Sprite Impact;
 
         public int damage = 1;
 
+        public int Damage
+        {
+            get
+            {
+                return damage;
+            }
+        }
+
         public event EventMobile OnDestroy;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            Direction = transform.right;
+        }
 
         public void OnTriggerEnter(Collider other)
         {
@@ -24,7 +38,7 @@ namespace EventHorizon.Objects
 
         public void Collide(ICollidable other)
         {
-                Destroy();
+            Destroy();
         }
 
         public void Destroy()
@@ -38,19 +52,24 @@ namespace EventHorizon.Objects
                 OnDestroy(this);
         }
 
-        public int Damage
-        {
-            get
-            {
-                return damage;
-            }
-        }
-
         public void Create(Transform parent)
         {
             GameObject g = (GameObject)GameObject.Instantiate(gameObject, parent.position, parent.localRotation);
             g.transform.rotation = parent.rotation;
-            g.transform.parent = parent.root;
+        }
+
+        void Update()
+        {
+            UpdatePosition();
+        }
+
+        public float Speed;
+
+        public Vector3 Direction { get; set; }
+
+        public void UpdatePosition()
+        {
+            transform.Translate(Direction * Speed / 100);
         }
     }
 }
