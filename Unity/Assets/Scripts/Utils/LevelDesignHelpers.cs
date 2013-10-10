@@ -11,9 +11,9 @@ namespace EventHorizon.Helpers
 {
     public class LevelDesignHelpers : MonoBehaviour
     {
-        public bool enabled;
+        public bool Active;
         float LevelLength;
-        public int LevelDuration;
+        int LevelDuration;
         public bool VerticalLimits;
         public bool Graduations;
         public bool GameArea;
@@ -88,7 +88,7 @@ namespace EventHorizon.Helpers
 
         void OnDrawGizmos()
         {
-            if (enabled)
+            if (Active)
             {
                 if (levelSlider == null)
                 {
@@ -97,7 +97,7 @@ namespace EventHorizon.Helpers
 
                 speed = levelSlider.speed;
 
-                LevelLength = LevelDuration * 60 * levelSlider.speed;
+                LevelLength = levelSlider.DurationInMinutes * 60 * levelSlider.speed;
 
                 if (VerticalLimits)
                     DrawLevelVerticalLimits();
