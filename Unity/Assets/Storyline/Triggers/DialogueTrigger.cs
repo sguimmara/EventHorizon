@@ -15,8 +15,6 @@ namespace EventHorizon.Triggers
         public TextAsset DialogueFile;
         Character[] characters;
         float dialogueLength;
-        float timePerCharacter = 0.03F;
-        float timeBetweenLines = 1F;
 
         Dialogue dialogue;
 
@@ -60,25 +58,8 @@ namespace EventHorizon.Triggers
                 }
             }
 
-            //dialogueLength = 3;
-
-            //foreach (DialogueLine line in lines)
-            //    dialogueLength += (line.line.Length * timePerCharacter + (timeBetweenLines + 0.03F * line.line.Length));
-
-            //dialogueLength *= 2;
-
             return new Dialogue(lines.ToArray());
         }
-
-        //void OnDrawGizmos()
-        //{
-        //    if (dialogue == null)
-        //    {
-        //        ExtractDialogueData(DialogueFile);
-        //    }
-        //    Gizmos.DrawLine(new Vector3(transform.position.x, 2.059772F, 5), new Vector3(transform.position.x, -2.059772F, 5));
-        //    Gizmos.DrawLine(new Vector3(transform.position.x + dialogueLength, 2.059772F, 5), new Vector3(transform.position.x + dialogueLength, -2.059772F, 5));
-        //}
 
         protected override void Trigger()
         {
