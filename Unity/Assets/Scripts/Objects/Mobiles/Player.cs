@@ -4,12 +4,23 @@ using System.Collections.Generic;
 using EventHorizon;
 using EventHorizon.Graphics;
 using EventHorizon.Objects;
+using EventHorizon.Core;
 
 namespace EventHorizon.Objects
 {
-    public class Player : Ship, IPlayable
+    public class Player : Ship, IPlayable, IMovable
     {
-        public CharacterSheet characterSheet;
+        [HideInInspector]
+        public Vector3 Direction { get; set; }
+
+        public float Acceleration = 1;
+        public float Inertia = 0;
+
+        [HideInInspector]
+        public float CurrentSpeed;
+        public float Speed;
+
+        CharacterSheet characterSheet;
 
         void LimitShipPositionWithinBoundaries()
         {
@@ -21,9 +32,28 @@ namespace EventHorizon.Objects
             transform.position = new Vector3(newX, newY, transform.position.z);
         }
 
-        protected override void Start()
+        public void Move(Vector3 direction)
         {
-            base.Start();
+            Direction = Vector3.Normalize(Direction + direction);
+            Accelerate();
+        }
+
+        public void Accelerate()
+        {
+            CurrentSpeed += Acceleration * Time.deltaTime;
+        }
+
+        public void UpdatePosition()
+        {
+            CurrentSpeed *= (1 - Inertia);
+
+            CurrentSpeed = Mathf.Clamp(CurrentSpeed, 0, Speed/100);
+
+            transform.Translate(Direction * CurrentSpeed);
+        }
+
+        protected void Start()
+        {
             Direction = Vector3.zero;
             CurrentSpeed = 0F;
             IsPlayable = true;
@@ -32,10 +62,17 @@ namespace EventHorizon.Objects
         protected override void Update()
         {
             base.Update();
+            UpdatePosition();
             LimitShipPositionWithinBoundaries();
 
             if (IsPlayable)
                 Control();
+        }
+
+        public void Trigger(Slot slot)
+        {
+            if (slot != null && slot.Active)
+                slot.Trigger();
         }
 
         public void Control()
@@ -56,7 +93,7 @@ namespace EventHorizon.Objects
                 Trigger();
 
             if (Input.GetMouseButton(1))
-                Trigger(SecondarySlot);
+                Trigger(Slots[1]);
         }
 
         public override string ToString()
@@ -65,5 +102,10 @@ namespace EventHorizon.Objects
         }
 
         public bool IsPlayable { get; set; }
+
+        public override void Trigger()
+        {
+            Trigger(Slots[0]);
+        }
     }
 }
