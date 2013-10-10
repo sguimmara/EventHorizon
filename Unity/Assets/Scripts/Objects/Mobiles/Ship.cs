@@ -9,21 +9,7 @@ namespace EventHorizon.Objects
 {
     public class Ship : Mobile, ICollidable
     {
-        public bool AutoTrigger;
-
         public Slot[] Slots;
-
-        public Slot PrimarySlot;
-        public Slot SecondarySlot;
-        public Slot HullSlot;
-        public Slot EngineSlot;
-
-        public Transform PrimarySlotLocation;
-        public Transform SecondarySlotLocation;
-        public Transform HullSlotLocation;
-        public Transform EngineSlotLocation;
-
-        public AIContainer AIBehaviours;
 
         public EffectsContainer effects;
 
@@ -32,20 +18,9 @@ namespace EventHorizon.Objects
         protected int currentHp;
         public int maxHp;
 
-        public void Trigger()
+        public virtual void Trigger()
         {
-            Trigger(PrimarySlot);
-        }
 
-        public void Trigger(Slot slot)
-        {
-            if (slot.Active)
-                slot.Trigger();
-        }
-
-        public override string ToString()
-        {
-            return "Ship";
         }
 
         protected override void Awake()
@@ -54,19 +29,7 @@ namespace EventHorizon.Objects
 
             maxHp = Mathf.Clamp(maxHp, 1, 10000);
             currentHp = maxHp;
-
-            PrimarySlot.Type = SlotType.Primary;
-            SecondarySlot.Type = SlotType.Secondary;
-            HullSlot.Type = SlotType.Hull;
-            EngineSlot.Type = SlotType.Engine;
-
-            PrimarySlot.location = PrimarySlotLocation;
-            SecondarySlot.location = SecondarySlotLocation;
-            HullSlot.location = HullSlotLocation;
-            EngineSlot.location = EngineSlotLocation;
-
-            Slots = new Slot[4] { PrimarySlot, SecondarySlot, HullSlot, EngineSlot };
-
+            
             foreach (Slot slot in Slots)
             {
                 if (slot != null && slot.Content != null)
@@ -77,12 +40,8 @@ namespace EventHorizon.Objects
             }
         }
 
-        protected override void Update()
+        protected virtual void Update()
         {
-            base.Update();
-            if (AutoTrigger)
-                Trigger();
-
             UpdateHp();
         }
 
@@ -161,9 +120,6 @@ namespace EventHorizon.Objects
 
             if (Engine.Instance != null)
                 Engine.Instance.AddShip(this);
-
-            if (AIBehaviours.motionPattern != null)
-                AIBehaviours.motionPattern.Create(this.transform);
         }
 
         [SerializeField]
