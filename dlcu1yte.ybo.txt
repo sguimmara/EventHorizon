@@ -1,0 +1,51 @@
+﻿Merge remote-tracking branch 'origin/unlicenced-assets'
+
+Conflicts:
+	Unity/Assets/Graphics/Backgrounds/Images/AP110511099886.jpg.meta
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# All conflicts fixed but you are still merging.
+#   (use "git commit" to conclude merge)
+#
+# Changes to be committed:
+#
+#	new file:   Unity/Assets/Audio/Resources/Music/149990__vosvoy__tinnitus-loud.wav
+#	new file:   Unity/Assets/Audio/Resources/Music/149990__vosvoy__tinnitus-loud.wav.meta
+#	new file:   Unity/Assets/Audio/Resources/Music/Antle_-_Extraterrestrial_Contact.mp3
+#	new file:   Unity/Assets/Audio/Resources/Music/Antle_-_Extraterrestrial_Contact.mp3.meta
+#	new file:   Unity/Assets/Audio/Resources/SoundEffects/102734__sarge4267__explosion4.wav
+#	new file:   Unity/Assets/Audio/Resources/SoundEffects/102734__sarge4267__explosion4.wav.meta
+#	new file:   Unity/Assets/Audio/Resources/SoundEffects/154953__keykrusher__microwave-beep.wav
+#	new file:   Unity/Assets/Audio/Resources/SoundEffects/154953__keykrusher__microwave-beep.wav.meta
+#	modified:   Unity/Assets/Graphics/Backgrounds/Images/AP110511099886.jpg.meta
+#	new file:   Unity/Assets/Graphics/Fonts/pf_tempesta_five.ttf
+#	new file:   Unity/Assets/Graphics/Fonts/pf_tempesta_five.ttf.meta
+#	modified:   Unity/Assets/Graphics/Mobiles/Ships/Abaddon/mat_abaddon_normal.mat
+#	modified:   Unity/Assets/Graphics/Mobiles/Ships/Phantasm/mat_phantasm_normal.mat
+#	modified:   Unity/Assets/Graphics/Mobiles/Ships/Xerezith/xerezith_head_1.PNG
+#	modified:   Unity/Assets/Graphics/Mobiles/Ships/Xerezith/xerezith_head_1.PNG.meta
+#	modified:   Unity/Assets/Levels/NonPlayable/Workshop.unity
+#	modified:   Unity/Assets/Objects/FX/ExplosionSmall.prefab
+#	modified:   Unity/Assets/Objects/Mobiles/Ships/Enemy/Xerezith_1A.prefab
+#	modified:   Unity/Assets/Scripts/Engine/Engine.cs
+#	modified:   Unity/Assets/Scripts/Objects/Mobiles/Ship.cs
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	Unity/Assets/Graphics/FX/Flame.meta
+#	Unity/Assets/Graphics/FX/Flame/
+#	Unity/Assets/Graphics/FX/Lasers.meta
+#	Unity/Assets/Graphics/FX/Lasers/
+#	W/3D/
+#	W/Maps/
+#	W/ship_xerezith_base_UV.png
+

@@ -166,7 +166,8 @@ namespace EventHorizon.Core
             scoreScreen.OnScoreFinished += MoveToNextLevel;
 
             DontDestroyOnLoad(this);
-
+			
+			if (GameObject.FindGameObjectWithTag("Player") != null)
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
             mainMenu.Init();

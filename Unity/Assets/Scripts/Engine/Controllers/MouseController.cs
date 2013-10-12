@@ -8,6 +8,7 @@ namespace EventHorizon.Core
     {
         Vector3 worldPos;
         Vector3 velocity = Vector3.zero;
+        Vector3 target;
 
         // Use this for initialization
         void Start()
@@ -20,7 +21,10 @@ namespace EventHorizon.Core
         {
             worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 5f));
 
-            transform.position = Vector3.SmoothDamp(transform.position, worldPos, ref velocity, 0.1F);
+            target = Vector3.SmoothDamp(transform.position, worldPos, ref velocity, 0.3F);
+
+            transform.position = target;
+            transform.LookAt(worldPos, Vector3.right);
         }
     }
 }

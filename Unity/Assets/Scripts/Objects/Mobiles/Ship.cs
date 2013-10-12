@@ -105,7 +105,7 @@ namespace EventHorizon.Objects
 
         public void UpdateHp()
         {
-            if (currentHp <= 0)
+            if (!NeverDestroy && currentHp <= 0)
                 Destroy();
         }
 

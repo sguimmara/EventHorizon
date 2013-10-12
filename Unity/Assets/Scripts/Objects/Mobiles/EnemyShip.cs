@@ -9,7 +9,7 @@ namespace EventHorizon.Objects
 {
     public class EnemyShip : Ship, ICollidable
     {
-        public bool AutoTrigger;
+        public bool AutoTrigger = true;
 
         public AIContainer AIBehaviours;
 
