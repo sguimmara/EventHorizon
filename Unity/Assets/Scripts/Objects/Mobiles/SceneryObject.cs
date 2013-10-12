@@ -14,10 +14,10 @@ namespace EventHorizon.Objects
     {
         public float Rotation;
 
-        protected override void UpdatePosition()
-        {
-            transform.Translate(Direction * CurrentSpeed, Space.World);
-            transform.Rotate(Vector3.forward, Rotation);
-        }
+        //protected override void UpdatePosition()
+        //{
+        //    transform.Translate(Direction * CurrentSpeed, Space.World);
+        //    transform.Rotate(Vector3.forward, Rotation);
+        //}
     }
 }

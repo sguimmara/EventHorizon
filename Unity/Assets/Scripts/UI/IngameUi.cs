@@ -64,8 +64,8 @@ namespace EventHorizon.UserInterface
             GUI.Box(moduleArea, "");
             GUI.color = Color.white;
             GUI.BeginGroup(moduleArea);
-            for (int i = 0; i < moduleRects.Length; i++)
-                GUI.Box(moduleRects[i], player.Slots[i].Icon);
+            //for (int i = 0; i < moduleRects.Length; i++)
+            //    GUI.Box(moduleRects[i], player.Slots[i].Icon);
             GUI.EndGroup();
         }
 
