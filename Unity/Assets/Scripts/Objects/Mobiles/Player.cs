@@ -69,10 +69,13 @@ namespace EventHorizon.Objects
                 Control();
         }
 
-        public void Trigger(Slot slot)
+        public void Trigger(int slot)
         {
-            if (slot != null && slot.Active)
-                slot.Trigger();
+            if (Slots.Length >= slot + 1)
+            {
+                if (Slots[slot] != null && Slots[slot].Active)
+                    Slots[slot].Trigger();
+            }
         }
 
         public void Control()
@@ -93,7 +96,7 @@ namespace EventHorizon.Objects
                 Trigger();
 
             if (Input.GetMouseButton(1))
-                Trigger(Slots[1]);
+                Trigger(1);
         }
 
         public override string ToString()
@@ -105,7 +108,7 @@ namespace EventHorizon.Objects
 
         public override void Trigger()
         {
-            Trigger(Slots[0]);
+            Trigger(0);
         }
     }
 }
