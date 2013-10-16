@@ -1,5 +1,4 @@
 ﻿using EventHorizon.Objects;
-//using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +7,19 @@ using UnityEngine;
 
 namespace EventHorizon.Core
 {
-    public class LevelSlider : MonoBehaviour
+    public class LevelController : MonoBehaviour
     {
-        public static LevelSlider Instance;
-        public int DurationInMinutes;
+        public static LevelController Instance;
         
         [HideInInspector]
         public int speed = 2;
         
         public SceneryObject asteroid;
+
+        void Start()
+        {
+            
+        }
 
         void Update()
         {
@@ -49,6 +52,8 @@ namespace EventHorizon.Core
         void Awake()
         {
             Instance = this;
+            if (audio == null)
+                gameObject.AddComponent<AudioSource>();
             //StartCoroutine(AddRandomSceneryObjects());
         }
     }
