@@ -1,40 +1,41 @@
 OVERVIEW
 
-The player controls a spaceship in puzzle like arenas, and must destroy all enemies to gain access to the next level. The player's ships has two unique abilities : a lethal laser and a mirror shield able to repel enemy projectiles.
-
-DIFFICULTY
-
-1.There are three levels of difficulty : Hard, Insane and Japanese. The Japanese level is the hardest and switches all the texts to the corresponding language.
+The player controls a spaceship in puzzle-like arenas, and must destroy all enemies to gain access to the next level. The player's ships has two unique abilities : a lethal laser and a mirror shield able to repel enemy projectiles.
 
 GAMEPLAY
 
 1. To gain access to the next level, the player must destroy all enemy ships.
 
-2. The ship is driven by mouse and click.
+2. The player's ship is driven by mouse and keyboard. 
+
+2a. The mouse controls the orientation.
+
+2b. The keyboard controls the ship's position.
 
 3. The player has two commands : shoot and shield.
 
-4. Enemies fire lethal spherical projectiles. On hit is enough to kill.
+4. The shoot command casts a laser beam forward.
 
-5. The player has a unique weapon : a laser. 
+4b. The laser destroys everything in its way. It is a good thing to make combos.
 
-6. The laser destroys everything in its way. It is a good thing to make combos.
+5. When the player shields, a mirror-like sphere surrounds the ship, making the enemy projectiles bounce off it, but also making it unable to shoot.
 
-7. When the player shields, a mirror-like sphere surrounds the ship, making the enemy projectiles bounce off it, but also making it unable to shoot.
+6. Enemies fire lethal spherical projectiles. One hit is enough to kill.
 
-8. A bounced projectile can destroy a ship.
+7. A bounced projectile can destroy a ship.
 
-9. Enemies have a partial mirror shield and must be killed from an angle. 
+8. Enemies have a partial mirror shield and must be killed from an angle. 
 
-10. Some surfaces can reflect projectiles like shields.
+9. Some surfaces can reflect projectiles like shields.
 
-11. Thus, the player can shoot a laser that will bounce several times before destroying enemies, for instance hidden behind obstacles.
+9a. Thus, the player can shoot a laser that will bounce several times before destroying enemies, for instance hidden behind obstacles.
 
-12. The player earns points by :
+9b. The player can use enemies as deflectors to destroy obstructed enemies.
+
+10. The player earns points by :
 - destroying enemy ships, with bonus when destroying several ships in a row,
-- maintaining a graceful motion, hinted by the ship's trail.
 - avoiding enemy projectiles from the closest distance possible.
-- Killing enemies with bouncing projectiles, be it the enemies balls or the player's laser.
+- Killing enemies with bouncing projectiles, be it the enemy balls or the player's laser.
 
 AMBIENCE
 
@@ -49,6 +50,9 @@ AMBIENCE
 
 4. When the player's ship is destroyed, a message in calligraphy appears : "You are dead." and two choices : "Die Again", "Leave shamefully".
 
+DIFFICULTY
+
+1.There are three levels of difficulty : Hard, Insane and Japanese. The Japanese level is the hardest and switches all the texts to the corresponding language.
 
 
 
