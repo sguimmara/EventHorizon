@@ -16,9 +16,16 @@ namespace EventHorizon.Objects
         public float Acceleration = 1;
         public float Inertia = 0;
 
+
+
         [HideInInspector]
         public float CurrentSpeed;
         public float Speed;
+
+        Vector3 nullVector;
+
+        Laser laser;
+        public GameObject Shield;
 
         CharacterSheet characterSheet;
 
@@ -47,9 +54,10 @@ namespace EventHorizon.Objects
         {
             CurrentSpeed *= (1 - Inertia);
 
-            CurrentSpeed = Mathf.Clamp(CurrentSpeed, 0, Speed/100);
-
-            transform.Translate(Direction * CurrentSpeed);
+            CurrentSpeed = Mathf.Clamp(CurrentSpeed, 0, Speed / 100);
+            //transform.position = Vector3.SmoothDamp(transform.position, transform.position += (Direction * CurrentSpeed), ref nullVector, 1F);
+            //transform.position = transform.position += (Direction * CurrentSpeed);
+            transform.Translate(Direction * CurrentSpeed, Space.World);
         }
 
         protected void Start()
@@ -57,6 +65,7 @@ namespace EventHorizon.Objects
             Direction = Vector3.zero;
             CurrentSpeed = 0F;
             IsPlayable = true;
+            laser = gameObject.GetComponent<Laser>();
         }
 
         protected override void Update()
@@ -92,11 +101,23 @@ namespace EventHorizon.Objects
             if (Input.GetKey(KeyCode.D))
                 Move(Vector3.right);
 
-            if (Input.GetMouseButton(0)) 
-                Trigger();
+            if (Input.GetMouseButton(0) && !Shield.activeInHierarchy)
+                CastLaser();
 
-            if (Input.GetMouseButton(1))
-                Trigger(1);
+            if (Input.GetMouseButtonUp(0))
+                Stop();
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                Shield.SetActive(true);
+                //collider.enabled = false;
+            }
+
+            if (Input.GetMouseButtonUp(1))
+            {
+                //collider.enabled = true;
+                Shield.SetActive(false);
+            }
         }
 
         public override string ToString()
@@ -106,9 +127,19 @@ namespace EventHorizon.Objects
 
         public bool IsPlayable { get; set; }
 
+        void Stop()
+        {
+            laser.Stop();
+        }
+
+        void CastLaser()
+        {
+            laser.Trigger();
+        }
+
         public override void Trigger()
         {
-            Trigger(0);
+            laser.Trigger();
         }
     }
 }
