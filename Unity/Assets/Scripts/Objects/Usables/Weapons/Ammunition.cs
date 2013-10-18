@@ -34,6 +34,8 @@ namespace EventHorizon.Objects
         {
             if (other.tag == "Player" || other.tag == "Enemy")
                 Collide(other as ICollidable);
+
+            else Destroy();
         }
 
         public void Collide(ICollidable other)

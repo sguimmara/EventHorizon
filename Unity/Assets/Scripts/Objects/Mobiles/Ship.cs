@@ -15,6 +15,9 @@ namespace EventHorizon.Objects
 
         public event EventMobile OnDestroy;
 
+        [HideInInspector]
+        public bool isDestroying = false;
+
         protected int currentHp;
         public int maxHp;
 
@@ -84,7 +87,8 @@ namespace EventHorizon.Objects
             Mobile m = other.gameObject.GetComponent<Mobile>();
 
             if (other.tag == "Projectile")
-                Damage(m as IHarmful);
+                //Damage(m as IHarmful);
+                Destroy();
             else if (other.tag == "Enemy" || other.tag == "Player")
                 Collide(m as ICollidable);
         }
@@ -94,11 +98,17 @@ namespace EventHorizon.Objects
             if (OnDestroy != null)
                 OnDestroy(this);
 
+            isDestroying = true;
+
             if (effects.Explosion != null)
                 GameObject.Instantiate(effects.Explosion, transform.position, Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360F))));
 
             if (effects.ExplosionSound != null)
-                Engine.Instance.audio.PlayOneShot(effects.ExplosionSound);
+            {
+                if (Engine.Instance != null)
+                    Engine.Instance.audio.PlayOneShot(effects.ExplosionSound);
+                else audio.PlayOneShot(effects.ExplosionSound);
+            }
 
             Destroy(gameObject);
         }
