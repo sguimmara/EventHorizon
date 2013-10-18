@@ -16,15 +16,19 @@ namespace EventHorizon.Core
             Screen.showCursor = false;
         }
 
+        void OnDrawGizmos()
+        {
+            Gizmos.DrawWireSphere(worldPos, 0.1F);
+        }
+
         // Update is called once per frame
         void Update()
         {
-            worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 5f));
+            worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 25F));            
 
-            target = Vector3.SmoothDamp(transform.position, worldPos, ref velocity, 0.3F);
+            target = Vector3.SmoothDamp(transform.position, worldPos, ref velocity, 5F);
 
-            transform.position = target;
-            transform.LookAt(worldPos, Vector3.right);
+            transform.LookAt(worldPos, Vector3.back);
         }
     }
 }
