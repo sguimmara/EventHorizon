@@ -33,8 +33,19 @@ namespace EventHorizon.Objects
         protected virtual void Awake()
         {
             Size = GetRectSize();
-            enabled = false;
+            //enabled = false;
         }
+
+        //void ListenToEnterOnGameArea()
+        //{
+        //    Vector3 pos = transform.position;
+        //    Rect wb = Globals.GameArea;
+
+        //    if (
+        //    float newX = Mathf.Clamp(pos.x, wb.x + Size.width / 2, wb.x + wb.width - Size.width / 2);
+        //    float newY = Mathf.Clamp(pos.y, wb.y + Size.height / 2, wb.y + wb.height - Size.height / 2);
+        //    transform.position = new Vector3(newX, newY, transform.position.z);
+        //}
 
         protected virtual void OnBecameVisible()
         {

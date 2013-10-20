@@ -8,6 +8,7 @@ using EventHorizon.Core;
 
 namespace EventHorizon.Objects
 {
+    [RequireComponent(typeof(Laser))]
     public class Player : Ship, IPlayable, IMovable
     {
         [HideInInspector]
@@ -16,18 +17,16 @@ namespace EventHorizon.Objects
         public float Acceleration = 1;
         public float Inertia = 0;
 
-
-
         [HideInInspector]
         public float CurrentSpeed;
         public float Speed;
 
-        Vector3 nullVector;
-
         Laser laser;
-        public GameObject Shield;
 
-        CharacterSheet characterSheet;
+        bool LaserActive;
+        bool ShieldActive;
+
+        Animator animator;
 
         void LimitShipPositionWithinBoundaries()
         {
@@ -52,6 +51,7 @@ namespace EventHorizon.Objects
 
         public void UpdatePosition()
         {
+            Vector3 nullVector;
             CurrentSpeed *= (1 - Inertia);
 
             CurrentSpeed = Mathf.Clamp(CurrentSpeed, 0, Speed / 100);
@@ -60,12 +60,52 @@ namespace EventHorizon.Objects
             transform.Translate(Direction * CurrentSpeed, Space.World);
         }
 
+        public override void OnTriggerEnter(Collider other)
+        {
+            if (!ShieldActive)
+                base.OnTriggerEnter(other);
+        }
+
+        public override void NotifyHitByLaser(LaserType type)
+        {
+            if (!ShieldActive || type == LaserType.PierceThroughShield)
+                Destroy();
+        }
+
+        private void ActivateShield()
+        {
+            animator.SetBool("Shield", true);
+            laser.Stop();
+            gameObject.layer = 11; // Reflective
+            ShieldActive = true;
+        }
+
+        private void TurnOffShield()
+        {
+            animator.SetBool("Shield", false);
+            ShieldActive = false;
+            gameObject.layer = 8; // Player
+        }
+
+        private void ActivateLaser()
+        {
+            laser.Trigger();
+        }
+
+        private void TurnOffLaser()
+        {
+            laser.Stop();
+        }
+
         protected void Start()
         {
+            animator = transform.Find("DodecahedronShip").gameObject.GetComponent<Animator>();
+            laser = gameObject.GetComponent<Laser>();
+
+            enabled = true;
             Direction = Vector3.zero;
             CurrentSpeed = 0F;
-            IsPlayable = true;
-            laser = gameObject.GetComponent<Laser>();
+            IsPlayable = true;            
         }
 
         protected override void Update()
@@ -89,34 +129,43 @@ namespace EventHorizon.Objects
 
         public void Control()
         {
-            if (Input.GetKey(KeyCode.S))
-                Move(Vector3.down);
+            if (!ShieldActive)
+            {
+                if (Input.GetKey(KeyCode.S))
+                    Move(Vector3.down);
 
-            if (Input.GetKey(KeyCode.Z))
-                Move(Vector3.up);
+                if (Input.GetKey(KeyCode.Z))
+                    Move(Vector3.up);
 
-            if (Input.GetKey(KeyCode.Q))
-                Move(Vector3.left);
+                if (Input.GetKey(KeyCode.Q))
+                    Move(Vector3.left);
 
-            if (Input.GetKey(KeyCode.D))
-                Move(Vector3.right);
+                if (Input.GetKey(KeyCode.D))
+                    Move(Vector3.right);
+            }
 
-            if (Input.GetMouseButton(0) && !Shield.activeInHierarchy)
-                CastLaser();
+            if (Input.GetMouseButton(0))
+            {
+                if (!ShieldActive)
+                {
+                    ActivateLaser();
+                }
+            }
 
             if (Input.GetMouseButtonUp(0))
-                Stop();
+            {
+                TurnOffLaser();
+            }
 
             if (Input.GetMouseButtonDown(1))
             {
-                Shield.SetActive(true);
-                //collider.enabled = false;
+                TurnOffLaser();
+                ActivateShield();
             }
 
             if (Input.GetMouseButtonUp(1))
             {
-                //collider.enabled = true;
-                Shield.SetActive(false);
+                TurnOffShield();
             }
         }
 
@@ -126,11 +175,6 @@ namespace EventHorizon.Objects
         }
 
         public bool IsPlayable { get; set; }
-
-        void Stop()
-        {
-            laser.Stop();
-        }
 
         void CastLaser()
         {

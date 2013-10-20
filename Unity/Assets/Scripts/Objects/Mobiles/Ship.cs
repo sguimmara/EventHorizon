@@ -26,13 +26,18 @@ namespace EventHorizon.Objects
 
         }
 
+        public virtual void NotifyHitByLaser(LaserType type)
+        {
+            Destroy();
+        }
+
         protected override void Awake()
         {
-            base.Awake();
+            //base.Awake();
 
             maxHp = Mathf.Clamp(maxHp, 1, 10000);
             currentHp = maxHp;
-            
+
             foreach (Slot slot in Slots)
             {
                 if (slot != null && slot.Content != null)
@@ -86,14 +91,15 @@ namespace EventHorizon.Objects
         {
             Mobile m = other.gameObject.GetComponent<Mobile>();
 
-            if (other.tag == "Projectile")
+            if (other.tag == "Projectile" || other.tag == "Enemy" || other.tag == "Player")
                 //Damage(m as IHarmful);
                 Destroy();
-            else if (other.tag == "Enemy" || other.tag == "Player")
-                Collide(m as ICollidable);
+                ;
+            //else if (other.tag == "Enemy" || other.tag == "Player")
+            //    Collide(m as ICollidable);
         }
 
-        public void Destroy()
+        public virtual void Destroy()
         {
             if (OnDestroy != null)
                 OnDestroy(this);
