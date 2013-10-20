@@ -11,18 +11,18 @@ namespace EventHorizon.AI
     {
         public bool Loop;
 
-        [HideInInspector]
-        public Transform objectToMove;
+        //[HideInInspector]
+        //public Transform objectToMove;
 
         public abstract void Play();
 
         public void Create(Transform parent)
         {
-            GameObject g = (GameObject) GameObject.Instantiate(gameObject, parent.position, parent.rotation);
-            AIMotionPattern m = g.GetComponent<AIMotionPattern>();
-            m.objectToMove = parent;
-            //g.transform.parent = parent.root;
-            m.Play();
+            //GameObject g = (GameObject) GameObject.Instantiate(gameObject, parent.position, parent.rotation);
+            //AIMotionPattern m = g.GetComponent<AIMotionPattern>();
+            //m.objectToMove = parent;
+            ////g.transform.parent = parent.root;
+            //m.Play();
         }
     }
 }

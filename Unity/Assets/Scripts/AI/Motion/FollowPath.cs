@@ -13,6 +13,7 @@ namespace EventHorizon.AI
     [Serializable]
     public class FollowPath : AIMotionPattern
     {
+        public bool Rotate;
         public bool MirrorX;
         public bool MirrorY;
 
@@ -31,12 +32,11 @@ namespace EventHorizon.AI
         {
             if (positions == null || positions.Length == 0)
                 ComputePositions();
-
-            Play();
         }
 
         void OnBecameVisible()
         {
+            ComputePositions();
             Play();
         }
 
@@ -101,26 +101,36 @@ namespace EventHorizon.AI
 
         IEnumerator RunWaypoints(float duration)
         {
-            if (duration > 0 && objectToMove != null)
+            if (duration > 0)
             {
                 Vector3 pos;
                 float f = 0;
 
-                while (f <= duration && objectToMove != null)
+                while (f <= duration)
                 {
                     pos = Interp.Lerp(positions, f / duration);
-                    objectToMove.position = pos;
+                    transform.position = pos;
                     f += Time.deltaTime;
                     if (Loop && f >= duration)
                         f = 0;
                     yield return new WaitForEndOfFrame();
                 }
             }
-            //Destroy(gameObject);
+        }
+
+        void OnDestroy()
+        {
+            foreach (Transform t in waypoints)
+                Destroy(t.gameObject);
         }
 
         public override void Play()
         {
+            foreach (Transform t in waypoints)
+                t.parent = null;
+
+            transform.parent = null;
+
             StartCoroutine(RunWaypoints(duration));
         }
     }
