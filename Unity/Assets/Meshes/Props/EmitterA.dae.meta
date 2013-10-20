@@ -4,7 +4,22 @@ ModelImporter:
   serializedVersion: 15
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Cube
+    100004: Cylinder
+    100006: Plane
     400000: //RootNode
+    400002: Cube
+    400004: Cylinder
+    400006: Plane
+    2300000: Cube
+    2300002: Plane
+    2300004: //RootNode
+    3300000: Cube
+    3300002: Plane
+    3300004: //RootNode
+    4300000: Cube
+    4300002: Plane
+    4300004: Cylinder
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -29,7 +44,7 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
+    optimizeMeshForGPU: 0
     weldVertices: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
@@ -37,8 +52,8 @@ ModelImporter:
     secondaryUVPackMargin: 4
   tangentSpace:
     normalSmoothAngle: 60
-    splitTangentsAcrossUV: 1
-    normalImportMode: 0
+    splitTangentsAcrossUV: 0
+    normalImportMode: 1
     tangentImportMode: 1
   importAnimation: 1
   copyAvatar: 0
@@ -56,5 +71,5 @@ ModelImporter:
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   additionalBone: 1
-  animationType: 2
+  animationType: 0
   userData: 
