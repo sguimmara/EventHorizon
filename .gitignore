@@ -35,3 +35,4 @@ obj/
 *.csproj
 *[Ss]trumpy[Ss]hader*
 *[Ss]tandard [Aa]sset*
+*.exr*
