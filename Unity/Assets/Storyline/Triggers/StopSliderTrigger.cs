@@ -14,7 +14,7 @@ namespace EventHorizon.Triggers
     {
         protected override void Trigger()
         {
-            LevelSlider.Instance.speed = 0;
+            LevelController.Instance.speed = 0;
         }
     }
 }

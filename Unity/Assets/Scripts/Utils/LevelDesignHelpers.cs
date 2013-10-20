@@ -17,7 +17,7 @@ namespace EventHorizon.Helpers
         public bool VerticalLimits;
         public bool Graduations;
         public bool GameArea;
-        LevelSlider levelSlider;
+        LevelController levelSlider;
 
         static float speed;
         public Color centerLine;
@@ -83,7 +83,7 @@ namespace EventHorizon.Helpers
 
         void Awake()
         {
-            levelSlider = GetComponent<LevelSlider>();
+            levelSlider = GetComponent<LevelController>();
         }
 
         void OnDrawGizmos()
@@ -92,12 +92,12 @@ namespace EventHorizon.Helpers
             {
                 if (levelSlider == null)
                 {
-                    levelSlider = GetComponent<LevelSlider>();
+                    levelSlider = GetComponent<LevelController>();
                 }
 
                 speed = levelSlider.speed;
 
-                LevelLength = levelSlider.DurationInMinutes * 60 * levelSlider.speed;
+                LevelLength = audio.clip.length * levelSlider.speed;
 
                 if (VerticalLimits)
                     DrawLevelVerticalLimits();

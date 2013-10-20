@@ -19,7 +19,7 @@ namespace EventHorizon.Helpers
 
     public class BlockHelper : MonoBehaviour
     {
-        LevelSlider levelSlider;
+        LevelController levelSlider;
 
         public Texture2D blockZoneTex;
 
@@ -56,7 +56,7 @@ namespace EventHorizon.Helpers
 
         void Awake()
         {
-            levelSlider = GetComponent<LevelSlider>();
+            levelSlider = GetComponent<LevelController>();
         }
 
         void OnDrawGizmos()
@@ -67,7 +67,7 @@ namespace EventHorizon.Helpers
             endBottom = new Vector3(transform.position.x + BlockLength, -upperLimit, 5);
 
             if (levelSlider == null)
-                levelSlider = GameObject.Find("LevelSlider").GetComponent<LevelSlider>();
+                levelSlider = GameObject.Find("LevelSlider").GetComponent<LevelController>();
 
             BlockLength = BlockDurationInSeconds * levelSlider.speed;
 
