@@ -4,7 +4,7 @@ The player controls a spaceship in puzzle-like arenas, and must destroy all enem
 
 GAMEPLAY
 
-1. To gain access to the next level, the player must destroy all enemy ships.
+1. To gain access to the next level, the player must find the exit.
 
 2. The player's ship is driven by mouse and keyboard. 
 
@@ -20,11 +20,11 @@ GAMEPLAY
 
 5. When the player shields, a mirror-like sphere surrounds the ship, making the enemy projectiles bounce off it, but also making it unable to shoot.
 
-6. Enemies fire lethal spherical projectiles. One hit is enough to kill.
+6. Enemies fire lasers with very fast reflexes.
 
-7. A bounced projectile can destroy a ship.
+7. A bounced laser can destroy a ship.
 
-8. Enemies have a partial mirror shield and must be killed from an angle. 
+8. Some Enemies have a partial mirror shield and must be killed from an angle. 
 
 9. Some surfaces can reflect projectiles like shields.
 
@@ -37,22 +37,7 @@ GAMEPLAY
 - avoiding enemy projectiles from the closest distance possible.
 - Killing enemies with bouncing projectiles, be it the enemy balls or the player's laser.
 
-AMBIENCE
-
-1. Each level plays a different piece of classical music, whose mood matches the rythm of the ballet of the enemy ships.
-
-2. When a ship is destroyed, a short and dry "boom" sound plays, similar to a distant fireworks, and the screen shakes briefly.
-
-3. Reactions of the audience :
-- When the player's ship is destroyed : "Oooooh" of disappointment.
-- When the player's ship avoids an enemy projectiles from close distance : "Aaaaah" of admiration.
-- When the player's ship destroys several enemies in a row : Praises and applauses.
-
-4. When the player's ship is destroyed, a message in calligraphy appears : "You are dead." and two choices : "Die Again", "Leave shamefully".
-
-DIFFICULTY
-
-1.There are three levels of difficulty : Hard, Insane and Japanese. The Japanese level is the hardest and switches all the texts to the corresponding language.
+11. The player moves in the level and the camera is locked on its ship.
 
 
 
