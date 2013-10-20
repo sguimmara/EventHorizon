@@ -8,14 +8,15 @@ using UnityEngine;
 namespace EventHorizon.Objects
 {
     public enum LaserType { Normal, Reflected, PierceThroughShield };
+
     public class Laser : MonoBehaviour
     {
-        public LaserType type;
+        public LaserType laserType;
         public Material laserMat;
-        List<Vector3> laserHits = new List<Vector3>();
+        List<Vector3> laserHits;
         float lastShot = 0;
         const float cooldown = 0.05F;
-        const int bounceLimit = 100;
+        const int laserHitsLimit = 20;
         Vector3 lastBounce;
         bool firstRay = true;
         public bool autoTrigger = false;
@@ -23,49 +24,33 @@ namespace EventHorizon.Objects
         public LayerMask bouncingLayer;
         public LayerMask hitLayer;
 
-        LineRenderer[] lineRenderers;
-        List<Ship> MarkedDestroyed;
+        LineRenderer[] segments;
+        List<Ship> MarkedHit;
 
-        void Awake()
+        private void Awake()
         {
-            lineRenderers = new LineRenderer[bounceLimit + 1];
-            MarkedDestroyed = new List<Ship>();
+            laserHits = new List<Vector3>(laserHitsLimit + 1);
+            segments = new LineRenderer[laserHitsLimit + 1];
+            MarkedHit = new List<Ship>();
 
-            for (int i = 0; i < lineRenderers.Length; i++)
+            for (int i = 0; i < segments.Length; i++)
             {
-                lineRenderers[i] = (new GameObject()).AddComponent<LineRenderer>();
-                lineRenderers[i].SetWidth(0.0F, 0.0F);
-                lineRenderers[i].material = laserMat;
+                segments[i] = (new GameObject()).AddComponent<LineRenderer>();
+                segments[i].SetWidth(0.0F, 0.0F);
+                segments[i].material = laserMat;
             }
         }
 
-        void CheckForShipHits()
+        private void Update()
         {
-            RaycastHit[] hits;
-            MarkedDestroyed.Clear();
-
-            for (int i = 0; i < laserHits.Count - 1; i++)
-            {
-                hits = Physics.RaycastAll(new Ray(laserHits[i], laserHits[i + 1] - laserHits[i]), Vector3.Distance(laserHits[i], laserHits[i+1]), hitLayer);
-                if (hits == null || hits.Length == 0)
-                    continue;
-
-                foreach (RaycastHit rh in hits)
-                {
-                    if (rh.transform.tag == "Enemy" || rh.transform.tag == "Player")
-                    {
-                        Ship es = rh.transform.gameObject.GetComponent<Ship>();
-                        if (!MarkedDestroyed.Contains(es))
-                            MarkedDestroyed.Add(es);
-                    }
-                }
-            }
+            if (autoTrigger)
+                Trigger();
         }
 
-        void OnDrawGizmos()
+        private void OnDrawGizmos()
         {
             Color c = Color.white;
-            switch (type)
+            switch (laserType)
             {
                 case LaserType.Normal: c = Color.blue;
                     break;
@@ -80,10 +65,46 @@ namespace EventHorizon.Objects
             Gizmos.DrawRay(transform.position, transform.forward * 20);
         }
 
-        void CastLaser(Ray r)
+        private void OnDestroy()
+        {
+            DisableAllSegments();
+        }
+
+        private void CheckForTouchedShips()
+        {
+            RaycastHit[] hits;
+            MarkedHit.Clear();
+            Ship touchedShip;
+
+            for (int i = 0; i < laserHits.Count - 1; i++)
+            {
+                hits = Physics.RaycastAll(new Ray(laserHits[i], laserHits[i + 1] - laserHits[i]), Vector3.Distance(laserHits[i], laserHits[i + 1]), hitLayer);
+
+                if (hits != null && hits.Length > 0)
+                {
+                    foreach (RaycastHit hit in hits)
+                    {
+                        if (hit.transform.tag == "Enemy" || hit.transform.tag == "Player")
+                        {
+                            touchedShip = hit.transform.gameObject.GetComponent<Ship>();
+
+                            if (touchedShip != null)
+                            {
+                                if (!MarkedHit.Contains(touchedShip))
+                                    MarkedHit.Add(touchedShip);
+                            }
+
+                            else Debug.LogWarning(string.Format("Laser.CheckForTouchedShips() : {0} is marked as {1} but doesnt contain Ship component.", hit.transform.name, hit.transform.tag));
+                        }
+                    }
+                }
+            }
+        }
+
+        private void CastLaserSegment(Ray r)
         {
             RaycastHit hit;
-            if (laserHits.Count <= bounceLimit)
+            if (laserHits.Count <= laserHitsLimit)
             {
                 laserHits.Add(r.origin);
 
@@ -93,72 +114,56 @@ namespace EventHorizon.Objects
                     float dot = Vector3.Dot(v, hit.normal);
                     Vector3 bounce = v - (2 * hit.normal * (Vector3.Dot(v, hit.normal)));
                     lastBounce = bounce;
-                    Debug.DrawLine(r.origin, hit.point);
 
                     firstRay = false;
 
-                    if (type == LaserType.Normal || hit.transform.gameObject.layer != LayerMask.NameToLayer("Reflective"))
+                    int qq = LayerMask.NameToLayer("Reflective");
+
+                    if (laserType == LaserType.Reflected && hit.collider.gameObject.layer == qq)
                     {
-                        laserHits.Add(hit.point);
-                        CheckForShipHits();
-                        DrawLaser();
+                        CastLaserSegment(new Ray(hit.point, bounce));
+                        return;
                     }
 
-                    else CastLaser(new Ray(hit.point, bounce));
-
+                    else
+                        laserHits.Add(hit.point);
                 }
+
+                // No hits
                 else
                 {
-                    Debug.DrawRay(r.origin, r.direction);
                     if (firstRay == true)
                         lastBounce = transform.forward;
 
                     laserHits.Add(laserHits[laserHits.Count - 1] + lastBounce * 50);
-
-                    CheckForShipHits();
-                    DrawLaser();
                 }
             }
-            else
+
+            CheckForTouchedShips();
+            DrawLaser();
+        }
+
+        private void DisableAllSegments()
+        {
+            for (int i = 0; i < segments.Length; i++)
             {
-                CheckForShipHits();
-                DrawLaser();
+                if (segments[i] != null)
+                    segments[i].enabled = false;
             }
         }
 
         private void DrawLaser()
         {
-            DisableAllLasers();
+            DisableAllSegments();
 
             for (int i = 0; i < laserHits.Count - 1; i++)
             {
-                lineRenderers[i].enabled = true;
-                lineRenderers[i].SetPosition(0, laserHits[i]);
-                lineRenderers[i].SetPosition(1, laserHits[i + 1]);
+                segments[i].enabled = true;
+                segments[i].SetPosition(0, laserHits[i]);
+                segments[i].SetPosition(1, laserHits[i + 1]);
             }
 
             StartCoroutine(DisplayLaser(0.02F));
-        }
-
-        private void DisableAllLasers()
-        {
-            for (int i = 0; i < lineRenderers.Length; i++)
-            {
-                lineRenderers[i].enabled = false;
-            }
-        }
-
-        public void Trigger()
-        {
-            if (Time.time - lastShot >= cooldown)
-            {
-                lastShot = Time.time;
-                laserHits.Clear();
-
-                Ray laser = new Ray(transform.position, transform.forward);
-                CastLaser(laser);
-                firstRay = true;
-            }
         }
 
         IEnumerator DisplayLaser(float seconds)
@@ -166,16 +171,16 @@ namespace EventHorizon.Objects
             float f = 0;
             float t = 0;
 
-            float[] values = new float[2] { 0.1F, 0.2F };
+            float[] values = new float[2] { 0.15F, 0.2F };
 
             while (f <= seconds)
             {
                 t = f / seconds;
                 float v = Mathf.Lerp(values[0], values[1], t);
 
-                for (int i = 0; i < lineRenderers.Length; i++)
+                for (int i = 0; i < segments.Length; i++)
                 {
-                    lineRenderers[i].SetWidth(v, v);
+                    segments[i].SetWidth(v, v);
                 }
 
                 yield return new WaitForEndOfFrame();
@@ -190,33 +195,47 @@ namespace EventHorizon.Objects
                 t = f / seconds;
                 float v = Mathf.Lerp(values[1], values[0], t);
 
-                for (int i = 0; i < lineRenderers.Length; i++)
+                for (int i = 0; i < segments.Length; i++)
                 {
-                    lineRenderers[i].SetWidth(v, v);
+                    segments[i].SetWidth(v, v);
                 }
 
                 yield return new WaitForEndOfFrame();
                 f += Time.deltaTime;
             }
 
-            //DisableAllLasers();
+            NotifyMarkedShips();
+        }
 
-            foreach (Ship ship in MarkedDestroyed)
+        private void NotifyMarkedShips()
+        {
+            if (MarkedHit.Count > 0)
             {
-                if (ship != null && ship.gameObject != null && !ship.isDestroying)
-                    ship.Destroy();
+                foreach (Ship ship in MarkedHit)
+                {
+                    if (ship != null && ship.gameObject != null && !ship.isDestroying)
+                        ship.NotifyHitByLaser(laserType);
+                }
             }
         }
 
         public void Stop()
         {
-            DisableAllLasers();
+            DisableAllSegments();
         }
 
-        void Update()
+        //Entry point
+        public void Trigger()
         {
-            if (autoTrigger)
-                Trigger();
+            if (Time.time - lastShot >= cooldown)
+            {
+                lastShot = Time.time;
+                laserHits.Clear();
+
+                Ray laser = new Ray(transform.position, transform.forward);
+                CastLaserSegment(laser);
+                firstRay = true;
+            }
         }
     }
 }
