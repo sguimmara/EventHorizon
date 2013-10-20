@@ -7,8 +7,6 @@ namespace EventHorizon.Core
     public class MouseController : MonoBehaviour
     {
         Vector3 worldPos;
-        Vector3 velocity = Vector3.zero;
-        Vector3 target;
 
         // Use this for initialization
         void Start()
@@ -25,10 +23,7 @@ namespace EventHorizon.Core
         void Update()
         {
             worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 25F));            
-
-            target = Vector3.SmoothDamp(transform.position, worldPos, ref velocity, 5F);
-
-            transform.LookAt(worldPos, Vector3.back);
+            transform.LookAt(worldPos, transform.up);
         }
     }
 }

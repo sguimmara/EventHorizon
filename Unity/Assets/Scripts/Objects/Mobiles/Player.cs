@@ -16,6 +16,7 @@ namespace EventHorizon.Objects
 
         public float Acceleration = 1;
         public float Inertia = 0;
+        bool isAccelerating = false;
 
         [HideInInspector]
         public float CurrentSpeed;
@@ -47,14 +48,22 @@ namespace EventHorizon.Objects
         public void Accelerate()
         {
             CurrentSpeed += Acceleration * Time.deltaTime;
+            isAccelerating = true;
         }
 
         public void UpdatePosition()
         {
-            Vector3 nullVector;
-            CurrentSpeed *= (1 - Inertia);
+            if (!isAccelerating)
+                CurrentSpeed *= (1 - Inertia);
+
+            isAccelerating = false;
 
             CurrentSpeed = Mathf.Clamp(CurrentSpeed, 0, Speed / 100);
+
+            if (CurrentSpeed < 0.01F)
+            {
+                Direction = Vector3.zero;
+            }
             //transform.position = Vector3.SmoothDamp(transform.position, transform.position += (Direction * CurrentSpeed), ref nullVector, 1F);
             //transform.position = transform.position += (Direction * CurrentSpeed);
             transform.Translate(Direction * CurrentSpeed, Space.World);
@@ -105,7 +114,7 @@ namespace EventHorizon.Objects
             enabled = true;
             Direction = Vector3.zero;
             CurrentSpeed = 0F;
-            IsPlayable = true;            
+            IsPlayable = true;
         }
 
         protected override void Update()
@@ -129,7 +138,7 @@ namespace EventHorizon.Objects
 
         public void Control()
         {
-            if (!ShieldActive)
+            if (true)
             {
                 if (Input.GetKey(KeyCode.S))
                     Move(Vector3.down);
