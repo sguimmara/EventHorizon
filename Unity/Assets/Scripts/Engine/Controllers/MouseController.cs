@@ -22,7 +22,7 @@ namespace EventHorizon.Core
         // Update is called once per frame
         void Update()
         {
-            worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 25F));            
+            worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 56F));            
             transform.LookAt(worldPos, transform.up);
         }
     }

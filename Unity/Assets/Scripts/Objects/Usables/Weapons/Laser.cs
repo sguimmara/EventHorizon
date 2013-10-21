@@ -15,7 +15,7 @@ namespace EventHorizon.Objects
         public Material laserMat;
         List<Vector3> laserHits;
         float lastShot = 0;
-        const float cooldown = 0.05F;
+        const float cooldown = 0.005F;
         const int laserHitsLimit = 20;
         Vector3 lastBounce;
         bool firstRay = true;
@@ -161,9 +161,11 @@ namespace EventHorizon.Objects
                 segments[i].enabled = true;
                 segments[i].SetPosition(0, laserHits[i]);
                 segments[i].SetPosition(1, laserHits[i + 1]);
+
+                segments[i].SetWidth(0.2F, 0.2F);
             }
 
-            StartCoroutine(DisplayLaser(0.02F));
+            //StartCoroutine(DisplayLaser(0.02F));
         }
 
         IEnumerator DisplayLaser(float seconds)

@@ -18,7 +18,6 @@ namespace EventHorizon.Objects
         public float Inertia = 0;
         bool isAccelerating = false;
 
-        [HideInInspector]
         public float CurrentSpeed;
         public float Speed;
 
@@ -41,32 +40,30 @@ namespace EventHorizon.Objects
 
         public void Move(Vector3 direction)
         {
-            Direction = Vector3.Normalize(Direction + direction);
+            rigidbody.AddForce(direction * Acceleration, ForceMode.Impulse);
+            //Direction = Vector3.Normalize(Direction + direction);
+            //Direction = direction;
             Accelerate();
         }
 
         public void Accelerate()
         {
-            CurrentSpeed += Acceleration * Time.deltaTime;
+            //CurrentSpeed += Acceleration * Time.deltaTime;
             isAccelerating = true;
         }
 
         public void UpdatePosition()
         {
             if (!isAccelerating)
-                CurrentSpeed *= (1 - Inertia);
+            {
+                Direction *= (1 - Inertia);
+                rigidbody.velocity *= (1 - Inertia);
+            }
 
             isAccelerating = false;
-
-            CurrentSpeed = Mathf.Clamp(CurrentSpeed, 0, Speed / 100);
-
-            if (CurrentSpeed < 0.01F)
-            {
-                Direction = Vector3.zero;
-            }
-            //transform.position = Vector3.SmoothDamp(transform.position, transform.position += (Direction * CurrentSpeed), ref nullVector, 1F);
-            //transform.position = transform.position += (Direction * CurrentSpeed);
-            transform.Translate(Direction * CurrentSpeed, Space.World);
+            CurrentSpeed = rigidbody.velocity.magnitude;
+            //if (Direction.magnitude <= Speed)
+                //rigidbody.AddForce(Direction * Acceleration, ForceMode.VelocityChange);
         }
 
         public override void OnTriggerEnter(Collider other)
@@ -83,6 +80,7 @@ namespace EventHorizon.Objects
 
         private void ActivateShield()
         {
+            Inertia = 0F;
             animator.SetBool("Shield", true);
             laser.Stop();
             gameObject.layer = 11; // Reflective
@@ -91,6 +89,7 @@ namespace EventHorizon.Objects
 
         private void TurnOffShield()
         {
+            Inertia = 0.5F;
             animator.SetBool("Shield", false);
             ShieldActive = false;
             gameObject.layer = 8; // Player
@@ -121,7 +120,7 @@ namespace EventHorizon.Objects
         {
             base.Update();
             UpdatePosition();
-            LimitShipPositionWithinBoundaries();
+            //LimitShipPositionWithinBoundaries();
 
             if (IsPlayable)
                 Control();
@@ -138,7 +137,7 @@ namespace EventHorizon.Objects
 
         public void Control()
         {
-            if (true)
+            if (!ShieldActive)
             {
                 if (Input.GetKey(KeyCode.S))
                     Move(Vector3.down);
