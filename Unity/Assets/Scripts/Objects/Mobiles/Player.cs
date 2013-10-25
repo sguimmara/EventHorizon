@@ -63,7 +63,7 @@ namespace EventHorizon.Objects
             isAccelerating = false;
             CurrentSpeed = rigidbody.velocity.magnitude;
             //if (Direction.magnitude <= Speed)
-                //rigidbody.AddForce(Direction * Acceleration, ForceMode.VelocityChange);
+            //rigidbody.AddForce(Direction * Acceleration, ForceMode.VelocityChange);
         }
 
         public override void OnTriggerEnter(Collider other)
@@ -195,3 +195,4 @@ namespace EventHorizon.Objects
         }
     }
 }
+

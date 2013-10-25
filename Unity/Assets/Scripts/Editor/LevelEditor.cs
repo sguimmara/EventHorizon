@@ -10,7 +10,9 @@ namespace EventHorizon.Helpers
 {
     public class LevelEditor : EditorWindow
     {
-        static LevelSlider slider;
+        static LevelController slider;
+		static float sliderValue;
+		static float maxValue;
 
         [MenuItem("Event Horizon/Level Editor")]
         static void Init()
@@ -18,7 +20,8 @@ namespace EventHorizon.Helpers
             // Get existing open window or if none, make a new one:
             LevelEditor window = (LevelEditor)EditorWindow.GetWindow(typeof(LevelEditor));
             
-            slider = GameObject.Find("LevelSlider").GetComponent<LevelSlider>();
+            slider = GameObject.Find("LevelSlider").GetComponent<LevelController>();
+			
         }
 
         void MirrorOnCenterLine()
@@ -37,11 +40,21 @@ namespace EventHorizon.Helpers
         }
 
         void OnGUI()
-        {
+        {			
             GUILayout.Label("Level : " + Application.loadedLevelName, EditorStyles.boldLabel);
+			
+			if (slider != null && slider.audio != null && slider.audio.clip != null)
+			{
+				GUILayout.Label("Track : " + slider.audio.clip.name, EditorStyles.boldLabel);
+			maxValue = slider.audio.clip.length * slider.speed;
+								sliderValue = GUILayout.HorizontalSlider(sliderValue, 0, maxValue);
+			slider.transform.position = new Vector3(-sliderValue, slider.transform.position.y, slider.transform.position.z);
+				
+			}
 
-            if (GUILayout.Button("Rewind"))
-                Rewind();
+
+//            if (GUILayout.Button("Rewind"))
+//                Rewind();
 
             GUILayout.Label("\nSelection", EditorStyles.boldLabel);
             if (GUILayout.Button("Mirror on center line"))

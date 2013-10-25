@@ -11,7 +11,7 @@ namespace EventHorizon.Behaviour
     {
         protected virtual void OnDestroy()
         {
-            LevelSlider.Instance.speed = 2;
+            LevelController.Instance.speed = 2;
         }
     }
 }

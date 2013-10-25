@@ -32,10 +32,10 @@ namespace EventHorizon.Objects
 
         public void OnTriggerEnter(Collider other)
         {
-            if (other.tag == "Player" || other.tag == "Enemy")
-                Collide(other as ICollidable);
-
-            else Destroy();
+            //if (other.tag == "Player" || other.tag == "Enemy")
+            //    Collide(other as ICollidable);
+           
+            Destroy();
         }
 
         public void Collide(ICollidable other)
