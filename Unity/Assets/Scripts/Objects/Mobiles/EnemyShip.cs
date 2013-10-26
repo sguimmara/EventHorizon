@@ -7,7 +7,7 @@ using EventHorizon.AI;
 
 namespace EventHorizon.Objects
 {
-    public class EnemyShip : Ship, ICollidable
+    public class EnemyShip : Ship
     {
         public bool AutoTrigger = true;
 
@@ -18,10 +18,8 @@ namespace EventHorizon.Objects
             return "EnemyShip";
         }
 
-        protected override void OnBecameVisible()
+        protected void OnBecameVisible()
         {
-            base.OnBecameVisible();
-
             if (Engine.Instance != null)
                 Engine.Instance.AddShip(this);
 
@@ -40,15 +38,15 @@ namespace EventHorizon.Objects
                     }
         }
 
-        public override void Trigger()
-        {
-            for (int i = 0; i < Slots.Length; i++)
-                Slots[i].Trigger();
-        }
+        //public override void Trigger()
+        //{
+        //    for (int i = 0; i < Slots.Length; i++)
+        //        Slots[i].Trigger();
+        //}
 
-        protected override void Update()
+        protected void Update()
         {
-            base.Update();
+
             if (AutoTrigger)
                 Trigger();
         }

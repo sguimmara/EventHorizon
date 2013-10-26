@@ -28,27 +28,14 @@ namespace EventHorizon.Objects
 
         Animator animator;
 
-        void LimitShipPositionWithinBoundaries()
-        {
-            Vector3 pos = transform.position;
-            Rect wb = Globals.GameArea;
-
-            float newX = Mathf.Clamp(pos.x, wb.x + Size.width / 2, wb.x + wb.width - Size.width / 2);
-            float newY = Mathf.Clamp(pos.y, wb.y + Size.height / 2, wb.y + wb.height - Size.height / 2);
-            transform.position = new Vector3(newX, newY, transform.position.z);
-        }
-
         public void Move(Vector3 direction)
         {
             rigidbody.AddForce(direction * Acceleration, ForceMode.Impulse);
-            //Direction = Vector3.Normalize(Direction + direction);
-            //Direction = direction;
             Accelerate();
         }
 
         public void Accelerate()
         {
-            //CurrentSpeed += Acceleration * Time.deltaTime;
             isAccelerating = true;
         }
 
@@ -62,8 +49,6 @@ namespace EventHorizon.Objects
 
             isAccelerating = false;
             CurrentSpeed = rigidbody.velocity.magnitude;
-            //if (Direction.magnitude <= Speed)
-            //rigidbody.AddForce(Direction * Acceleration, ForceMode.VelocityChange);
         }
 
         public override void OnTriggerEnter(Collider other)
@@ -116,23 +101,13 @@ namespace EventHorizon.Objects
             IsPlayable = true;
         }
 
-        protected override void Update()
+        protected void Update()
         {
-            base.Update();
             UpdatePosition();
             //LimitShipPositionWithinBoundaries();
 
             if (IsPlayable)
                 Control();
-        }
-
-        public void Trigger(int slot)
-        {
-            if (Slots.Length >= slot + 1)
-            {
-                if (Slots[slot] != null && Slots[slot].Active)
-                    Slots[slot].Trigger();
-            }
         }
 
         public void Control()

@@ -35,7 +35,6 @@ namespace EventHorizon.Core
 
         MainMenu mainMenu;
         Cutscene cutScene;
-        IngameUi ingameUi;
         ConversationUi conversationUi;
         UpgradeScreen upgradeScreen;
         ScoreScreen scoreScreen;
@@ -134,8 +133,6 @@ namespace EventHorizon.Core
         {
             if (!DESIGN_MODE)
                 mainMenu.Launch();
-
-            else ingameUi.Launch();
         }
 
         void Awake()
@@ -154,8 +151,6 @@ namespace EventHorizon.Core
             conversationUi.OnDialogueFinished += MoveToPlayablePhase;
             conversationUi.OnDialogueStarted += MoveToNonPlayablePhase;
 
-            ingameUi = GetComponent<IngameUi>();
-
             cutScene = GetComponent<Cutscene>();
             cutScene.OnCutsceneFinished += MoveToUpgradePhase;
 
@@ -172,7 +167,6 @@ namespace EventHorizon.Core
 
             mainMenu.Init();
             conversationUi.Init();
-            ingameUi.Init();
             cutScene.Init();
             upgradeScreen.Init();
             scoreScreen.Init();
@@ -193,7 +187,6 @@ namespace EventHorizon.Core
             levelPhase = LevelPhase.Init;
             mainMenu.ShutDown();
             cutScene.ShutDown();
-            ingameUi.ShutDown();
             conversationUi.ShutDown();
             upgradeScreen.ShutDown();
             scoreScreen.ShutDown();
@@ -258,11 +251,8 @@ namespace EventHorizon.Core
         public void ReachEndOfLevel()
         {
             Debug.Log("End of level reached.");
-            ingameUi.ShutDown();
             StartCoroutine(FadeOut());
             StartCoroutine(ForcePlayerToLocation(END_POSITION));
-
-            //MoveToScorePhase();
         }
 
         IEnumerator FadeOut()
@@ -340,13 +330,11 @@ namespace EventHorizon.Core
 
         void MoveToNonPlayablePhase()
         {
-            ingameUi.ShutDown();
             StartCoroutine(ForcePlayerToLocation(STARTING_POSITION));
         }
           
         void MoveToPlayablePhase()
         {
-            ingameUi.Launch();
             player.IsPlayable = true;
         }
 

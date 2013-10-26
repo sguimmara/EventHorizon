@@ -24,9 +24,8 @@ namespace EventHorizon.Objects
 
         public event EventMobile OnDestroy;
 
-        protected override void Awake()
+        protected void Awake()
         {
-            base.Awake();
             Direction = transform.right;
         }
 

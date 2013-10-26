@@ -7,56 +7,21 @@ using EventHorizon.AI;
 
 namespace EventHorizon.Objects
 {
-    public class Ship : Mobile, ICollidable
+    public class Ship : Mobile
     {
-        public Slot[] Slots;
-
         public EffectsContainer effects;
 
         public event EventMobile OnDestroy;
-
-        [HideInInspector]
-        public bool isDestroying = false;
-
-        protected int currentHp;
-        public int maxHp;
 
         public virtual void Trigger()
         {
 
         }
 
-        public virtual void NotifyHitByLaser(LaserType type)
+        public override void NotifyHitByLaser(LaserType type)
         {
+            Debug.Log("Destroying " + gameObject.name);
             Destroy();
-        }
-
-        protected override void Awake()
-        {
-            //base.Awake();
-
-            maxHp = Mathf.Clamp(maxHp, 1, 10000);
-            currentHp = maxHp;
-
-            foreach (Slot slot in Slots)
-            {
-                if (slot != null && slot.Content != null)
-                {
-                    slot.Initialize();
-                    slot.Active = true;
-                }
-            }
-        }
-
-        protected virtual void Update()
-        {
-            UpdateHp();
-        }
-
-        public void Collide(ICollidable other)
-        {
-            StartCoroutine(Flash());
-            currentHp -= (other as Ship).maxHp;
         }
 
         IEnumerator Flash()
@@ -81,30 +46,18 @@ namespace EventHorizon.Objects
             }
         }
 
-        public void Damage(IHarmful other)
-        {
-            StartCoroutine(Flash());
-            currentHp -= (other.Damage);
-        }
-
         public virtual void OnTriggerEnter(Collider other)
         {
             Mobile m = other.gameObject.GetComponent<Mobile>();
 
             if (other.tag == "Projectile" || other.tag == "Enemy" || other.tag == "Player")
-                //Damage(m as IHarmful);
                 Destroy();
-                ;
-            //else if (other.tag == "Enemy" || other.tag == "Player")
-            //    Collide(m as ICollidable);
         }
 
         public virtual void Destroy()
         {
             if (OnDestroy != null)
                 OnDestroy(this);
-
-            isDestroying = true;
 
             if (effects.Explosion != null)
                 GameObject.Instantiate(effects.Explosion, transform.position, Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360F))));
@@ -117,38 +70,6 @@ namespace EventHorizon.Objects
             }
 
             Destroy(gameObject);
-        }
-
-        public void UpdateHp()
-        {
-            if (!NeverDestroy && currentHp <= 0)
-                Destroy();
-        }
-
-        public int CurrentHp
-        {
-            get { return currentHp; }
-        }
-
-        protected override void OnBecameVisible()
-        {
-            base.OnBecameVisible();
-
-            if (Engine.Instance != null)
-                Engine.Instance.AddShip(this);
-        }
-
-        [SerializeField]
-        public int MaxHp
-        {
-            get
-            {
-                return maxHp;
-            }
-            set
-            {
-                maxHp = Mathf.Clamp(value, 1, 10000);
-            }
         }
     }
 }
