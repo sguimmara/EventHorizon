@@ -8,7 +8,7 @@ using UnityEditor;
 
 namespace EventHorizon.Objects
 {
-    public enum LaserType { Normal, Reflected, PierceThroughShield };
+    public enum LaserType { Beacon, Normal, Reflected, PierceThroughShield };
 
     struct Gravitation
     {
@@ -52,7 +52,7 @@ namespace EventHorizon.Objects
         public Material laserMat;
         List<Vector3> laserHits;
         float lastShot = 0;
-        const float cooldown = 0.005F;
+        const float cooldown = 0.002F;
         const int laserHitsLimit = 20;
         Vector3 lastBounce;
         bool firstRay = true;
@@ -127,9 +127,19 @@ namespace EventHorizon.Objects
 
         private void Awake()
         {
-            laserHits = new List<Vector3>(laserHitsLimit + 1);
-            segments = new LineRenderer[laserHitsLimit + 1];
-            MarkedHit = new List<Mobile>();
+            if (laserType == LaserType.Beacon)
+            {
+                laserHits = new List<Vector3>(1);
+                segments = new LineRenderer[1];
+            }
+
+            else
+            {
+                laserHits = new List<Vector3>(laserHitsLimit + 1);
+                segments = new LineRenderer[laserHitsLimit + 1];
+                MarkedHit = new List<Mobile>();
+            }
+
             gravitationData = new Dictionary<Transform, Gravitation>();
 
             for (int i = 0; i < segments.Length; i++)
@@ -226,7 +236,7 @@ namespace EventHorizon.Objects
 
         private void OnDestroy()
         {
-            DisableAllSegments();
+            //DisableAllSegments();
         }
 
         private void CheckForTouchedShips()
@@ -285,13 +295,13 @@ namespace EventHorizon.Objects
                         CastLaserSegment(temp);
                     }
 
-                    else if (laserType == LaserType.Reflected && hit.collider.gameObject.tag == "Reflective")
+                    else if ((laserType == LaserType.Reflected) && hit.collider.gameObject.tag == "Reflective")
                     {
                         CastLaserSegment(new Ray(hit.point, bounce));
                         return;
                     }
 
-                    else if (hit.collider.gameObject.tag == "Normal")
+                    //else if (hit.collider.gameObject.tag == "Normal")
                         laserHits.Add(hit.point);
                 }
 
@@ -306,7 +316,9 @@ namespace EventHorizon.Objects
                 }
             }
 
-            CheckForTouchedShips();
+            if (laserType != LaserType.Beacon)
+                CheckForTouchedShips();
+
             DrawLaser();
         }
 
@@ -330,6 +342,9 @@ namespace EventHorizon.Objects
                 segments[i].SetPosition(1, laserHits[i + 1]);
 
                 segments[i].SetWidth(0.2F, 0.2F);
+
+                if (i == laserHits.Count - 2)
+                    segments[i].SetColors(Color.white, new Color(1, 1, 1, 0));
             }
 
             //StartCoroutine(DisplayLaser(0.02F));
