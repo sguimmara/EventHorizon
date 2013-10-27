@@ -8,7 +8,6 @@ namespace EventHorizon.Objects
         public abstract bool Trigger();
         public abstract void Initialize();
         public Texture2D Icon;
-        SlotType type;
 
         protected virtual void OnBecameVisible()
         {

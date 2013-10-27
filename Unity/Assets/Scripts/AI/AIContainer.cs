@@ -9,6 +9,5 @@ namespace EventHorizon.AI
     public class AIContainer
     {
         public AIMotionPattern motionPattern;
-        public AIShootingPattern shootingPattern;
     }
 }

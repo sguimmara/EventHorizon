@@ -26,8 +26,9 @@ namespace EventHorizon.Core
         void Update()
         {
             worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, depth));
-            transform.LookAt(worldPos, transform.up);
-
+            //transform.LookAt(worldPos, transform.up);
+            Vector3 velocity = new Vector3();
+            transform.position = Vector3.SmoothDamp(transform.position, worldPos, ref velocity, 0.1F);
             //transform.rotation = Quaternion.Euer(transform.rotation.eulerAngles.x, originalRotation.y, originalRotation.z);
         }
     }

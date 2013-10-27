@@ -34,9 +34,6 @@ namespace EventHorizon.Core
         public Vector3 END_POSITION;
 
         MainMenu mainMenu;
-        Cutscene cutScene;
-        ConversationUi conversationUi;
-        UpgradeScreen upgradeScreen;
         ScoreScreen scoreScreen;
 
         public Player player { get; private set; }
@@ -48,7 +45,6 @@ namespace EventHorizon.Core
         int currentLevelIndex;
         Level[] levels;
 
-        public GameData GameData;
         public LevelPhase levelPhase;
 
         float visibility = 0;
@@ -138,7 +134,7 @@ namespace EventHorizon.Core
         void Awake()
         {
             Instance = this;
-            TEMP_CREATE_ACTORS();
+
             mainMenu = GetComponent<MainMenu>();
             mainMenu.OnUserRequestEnterGame += StartGame;
             mainMenu.OnUserRequestLeave += LeaveGame;
@@ -147,15 +143,7 @@ namespace EventHorizon.Core
             mainMenu.OnMainMenuOff += SwitchPlayablePhase;
             mainMenu.OnMainMenuOn += SwitchPlayablePhase;
 
-            conversationUi = GetComponent<ConversationUi>();
-            conversationUi.OnDialogueFinished += MoveToPlayablePhase;
-            conversationUi.OnDialogueStarted += MoveToNonPlayablePhase;
 
-            cutScene = GetComponent<Cutscene>();
-            cutScene.OnCutsceneFinished += MoveToUpgradePhase;
-
-            upgradeScreen = GetComponent<UpgradeScreen>();
-            upgradeScreen.OnUpgradeFinished += MoveToGamePhase;
 
             scoreScreen = GetComponent<ScoreScreen>();
             scoreScreen.OnScoreFinished += MoveToNextLevel;
@@ -166,9 +154,7 @@ namespace EventHorizon.Core
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
             mainMenu.Init();
-            conversationUi.Init();
-            cutScene.Init();
-            upgradeScreen.Init();
+
             scoreScreen.Init();
 
             Initialize();
@@ -186,9 +172,7 @@ namespace EventHorizon.Core
             CurrentLevel = levels[currentLevelIndex];
             levelPhase = LevelPhase.Init;
             mainMenu.ShutDown();
-            cutScene.ShutDown();
-            conversationUi.ShutDown();
-            upgradeScreen.ShutDown();
+
             scoreScreen.ShutDown();
 
             CurrentLevel.Load();
@@ -198,25 +182,17 @@ namespace EventHorizon.Core
         void MoveToIntroPhase()
         {
             levelPhase = LevelPhase.Intro;
-            cutScene.Launch();
         }
 
         void MoveToUpgradePhase()
         {
             levelPhase = LevelPhase.Upgrade;
-            cutScene.ShutDown();
-            upgradeScreen.Launch();
         }
 
         void MoveToGamePhase()
         {
             levelPhase = LevelPhase.Game;
-            //if (player == null)
-            //    CreatePlayer();
 
-            //else player.transform.position = STARTING_POSITION;
-
-            upgradeScreen.ShutDown();
         }
 
         void MoveToScorePhase()
@@ -308,19 +284,6 @@ namespace EventHorizon.Core
             {
                 Debug.Log(level.ToString() + " added to level list");
             }
-        }
-
-        // Temporary
-        void TEMP_CREATE_ACTORS()
-        {
-            //Character taeresa = new Character { ID = "Taeresa", Name = "Taeresa Niemeyer", Portrait = GameData.Taeresa };
-            //Character marshall = new Character { ID = "Marshall", Name = "Marshall Elon", Portrait = GameData.Marshall };
-            //Character weilin = new Character { ID = "Weilin", Name = "Weilin Gu", Portrait = GameData.Weilin };
-            //Character jacob = new Character { ID = "Jacob", Name = "Jacob Freeman", Portrait = GameData.Jacob };
-            //Character nobody = new Character { ID = "Nobody", Name = "", Portrait = GameData.Nobody };
-            Character charAI = new Character { ID = "AI", Name = "AI", Portrait = GameData.Nobody };
-
-            CharacterPool.characters = new Character[1] { charAI };
         }
 
         public void AddShip(Ship ship)

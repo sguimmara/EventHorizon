@@ -14,8 +14,6 @@ namespace EventHorizon.Core
         [HideInInspector]
         public int speed = 2;
         
-        public SceneryObject asteroid;
-
         void Start()
         {
             
