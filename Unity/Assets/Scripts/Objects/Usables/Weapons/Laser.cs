@@ -24,13 +24,8 @@ namespace EventHorizon.Objects
         public Vector3 pDeviation;
 
         // The entry vector (the actual laser ray entering the gravitational field), 
-        // the deviation vector ( = P3 - P0 )
-        // and the exit vector (The ray that exits the gravitational field)
-        public Vector3 vEntry, vDeviation, vExit;
-
-        // alpha : the angle between vEntry and the segment passing through the center of mass and P0;
-        // theta : the angle between vEntry and vDeviation;
-        public float alpha, theta;
+        // the deviation vector ( = P3 - P0 ) used to determined the curvature of the deviation
+        public Vector3 vEntry, vDeviation;
 
         // The distance between the projected point of M and vEntry  
         // and the center of mass of the gravitational body.
@@ -40,11 +35,14 @@ namespace EventHorizon.Objects
 
         public Vector3 k;
 
-        public Vector3 vAlpha, pProj;
+        public Vector3 pProj;
 
+        // The approximation of the bezier curve.
         public Vector3[] deviatedPath;
 
         // The attraction force of the gravitational body.
+        // Depends on two factors : the distance of the ray from the gravitational body,
+        // And the force of the gravitational field itself.
         public float pull;
     }
 
@@ -93,10 +91,6 @@ namespace EventHorizon.Objects
 
             g.pProj = entry.origin + Vector3.Project(g.body.position - entry.origin, entry.direction);
             g.d = Vector3.Distance(g.pProj, g.body.position);
-
-            g.vAlpha = g.body.position - g.P0;
-            g.alpha = Vector3.Angle(g.vEntry, g.vAlpha);
-            g.theta = g.alpha / (1 / g.d);
 
             g.pull = 1 * g.d / Vector3.Distance(g.P0, g.body.position);
             g.pDeviation = g.pProj + (1 - g.pull) * (g.body.position - g.pProj);
@@ -202,8 +196,8 @@ namespace EventHorizon.Objects
                         Gizmos.DrawWireSphere(g.k, radius);
                         Handles.Label(g.k, "k");
 
-                        Gizmos.color = Color.green;
-                        Gizmos.DrawLine(g.P0 + g.vAlpha, g.P0);
+                        //Gizmos.color = Color.green;
+                        //Gizmos.DrawLine(g.P0 + g.vAlpha, g.P0);
 
                         Gizmos.color = Color.white;
                         Gizmos.DrawWireSphere(g.pDeviation, radius);

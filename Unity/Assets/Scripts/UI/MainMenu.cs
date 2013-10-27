@@ -8,10 +8,6 @@ namespace EventHorizon.UserInterface
     {
         public event GameEvent OnUserRequestLeave;
         public event GameEvent OnUserRequestEnterGame;
-        public event GameEvent OnRequestPlay;
-        public event GameEvent OnRequestPause;
-        public event GameEvent OnMainMenuOn;
-        public event GameEvent OnMainMenuOff;
 
         bool firstTime = true;
 

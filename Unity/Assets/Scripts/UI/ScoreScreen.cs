@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.IO;
-using EventHorizon.Storyline;
 using EventHorizon.Core;
 
 namespace EventHorizon.UserInterface

@@ -1,7 +1,6 @@
 ﻿using EventHorizon.AI;
 using EventHorizon.Objects;
 using EventHorizon.Sound;
-using EventHorizon.Storyline;
 using EventHorizon.UserInterface;
 using System;
 using System.Collections;
@@ -138,12 +137,6 @@ namespace EventHorizon.Core
             mainMenu = GetComponent<MainMenu>();
             mainMenu.OnUserRequestEnterGame += StartGame;
             mainMenu.OnUserRequestLeave += LeaveGame;
-            mainMenu.OnRequestPause += Pause;
-            mainMenu.OnRequestPlay += Play;
-            mainMenu.OnMainMenuOff += SwitchPlayablePhase;
-            mainMenu.OnMainMenuOn += SwitchPlayablePhase;
-
-
 
             scoreScreen = GetComponent<ScoreScreen>();
             scoreScreen.OnScoreFinished += MoveToNextLevel;

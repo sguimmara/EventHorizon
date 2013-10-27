@@ -26,7 +26,8 @@ namespace EventHorizon.Objects
         bool LaserActive;
         bool ShieldActive;
 
-        Animator animator;
+        public GameObject Shield { get; private set; }
+        public GameObject Ship { get; private set; }
 
         public void Move(Vector3 direction)
         {
@@ -66,7 +67,8 @@ namespace EventHorizon.Objects
         private void ActivateShield()
         {
             Inertia = 0F;
-            animator.SetBool("Shield", true);
+            Shield.SetActive(true);
+            Ship.SetActive(false);
             laser.Stop();
             gameObject.layer = 11; // Reflective
             ShieldActive = true;
@@ -75,7 +77,8 @@ namespace EventHorizon.Objects
         private void TurnOffShield()
         {
             Inertia = 0.5F;
-            animator.SetBool("Shield", false);
+            Shield.SetActive(false);
+            Ship.SetActive(true);
             ShieldActive = false;
             gameObject.layer = 8; // Player
         }
@@ -92,7 +95,9 @@ namespace EventHorizon.Objects
 
         protected void Start()
         {
-            animator = transform.Find("DodecahedronShip").gameObject.GetComponent<Animator>();
+            Shield = transform.Find("Dodecahedron shield").gameObject;
+            Ship = transform.Find("Player ship").gameObject;
+            
             laser = gameObject.GetComponent<Laser>();
 
             enabled = true;
