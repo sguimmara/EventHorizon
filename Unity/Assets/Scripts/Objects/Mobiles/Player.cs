@@ -8,7 +8,6 @@ using EventHorizon.Core;
 
 namespace EventHorizon.Objects
 {
-    [RequireComponent(typeof(Laser))]
     public class Player : Ship, IPlayable, IMovable
     {
         [HideInInspector]
@@ -26,8 +25,26 @@ namespace EventHorizon.Objects
         bool LaserActive;
         bool ShieldActive;
 
-        public GameObject Shield { get; private set; }
-        public GameObject Ship { get; private set; }
+        public GameObject ShieldObj { get; private set; }
+        public GameObject ShipObj { get; private set; }
+        public GameObject LaserObj { get; private set; }
+        public GameObject BeaconObj { get; private set; }
+
+        protected void Start()
+        {
+            ShieldObj = transform.Find("Dodecahedron shield").gameObject;
+            ShipObj = transform.Find("Player ship").gameObject;
+            LaserObj = transform.Find("PlayerLaser").gameObject;
+            BeaconObj = transform.Find("Beacon").gameObject;
+
+
+            laser = LaserObj.GetComponent<Laser>();
+
+            enabled = true;
+            Direction = Vector3.zero;
+            CurrentSpeed = 0F;
+            IsPlayable = true;
+        }
 
         public void Move(Vector3 direction)
         {
@@ -67,8 +84,9 @@ namespace EventHorizon.Objects
         private void ActivateShield()
         {
             Inertia = 0F;
-            Shield.SetActive(true);
-            Ship.SetActive(false);
+            ShieldObj.SetActive(true);
+            ShipObj.SetActive(false);
+            BeaconObj.SetActive(false);
             laser.Stop();
             gameObject.layer = 11; // Reflective
             ShieldActive = true;
@@ -77,8 +95,9 @@ namespace EventHorizon.Objects
         private void TurnOffShield()
         {
             Inertia = 0.5F;
-            Shield.SetActive(false);
-            Ship.SetActive(true);
+            ShieldObj.SetActive(false);
+            ShipObj.SetActive(true);
+            BeaconObj.SetActive(true);
             ShieldActive = false;
             gameObject.layer = 8; // Player
         }
@@ -93,23 +112,9 @@ namespace EventHorizon.Objects
             laser.Stop();
         }
 
-        protected void Start()
-        {
-            Shield = transform.Find("Dodecahedron shield").gameObject;
-            Ship = transform.Find("Player ship").gameObject;
-            
-            laser = gameObject.GetComponent<Laser>();
-
-            enabled = true;
-            Direction = Vector3.zero;
-            CurrentSpeed = 0F;
-            IsPlayable = true;
-        }
-
         protected void Update()
         {
             UpdatePosition();
-            //LimitShipPositionWithinBoundaries();
 
             if (IsPlayable)
                 Control();
