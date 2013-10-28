@@ -301,7 +301,7 @@ namespace EventHorizon.Objects
                         return;
                     }
 
-                    //else if (hit.collider.gameObject.tag == "Normal")
+                    else //if (hit.collider.gameObject.tag == "Normal")
                         laserHits.Add(hit.point);
                 }
 
@@ -340,55 +340,12 @@ namespace EventHorizon.Objects
                 segments[i].enabled = true;
                 segments[i].SetPosition(0, laserHits[i]);
                 segments[i].SetPosition(1, laserHits[i + 1]);
-
+                segments[i].SetColors(Color.white, Color.white);
                 segments[i].SetWidth(0.2F, 0.2F);
 
                 if (i == laserHits.Count - 2)
                     segments[i].SetColors(Color.white, new Color(1, 1, 1, 0));
             }
-
-            //StartCoroutine(DisplayLaser(0.02F));
-        }
-
-        IEnumerator DisplayLaser(float seconds)
-        {
-            float f = 0;
-            float t = 0;
-
-            float[] values = new float[2] { 0.15F, 0.2F };
-
-            while (f <= seconds)
-            {
-                t = f / seconds;
-                float v = Mathf.Lerp(values[0], values[1], t);
-
-                for (int i = 0; i < segments.Length; i++)
-                {
-                    segments[i].SetWidth(v, v);
-                }
-
-                yield return new WaitForEndOfFrame();
-                f += Time.deltaTime;
-            }
-
-            f = 0;
-            t = 0;
-
-            while (f <= seconds)
-            {
-                t = f / seconds;
-                float v = Mathf.Lerp(values[1], values[0], t);
-
-                for (int i = 0; i < segments.Length; i++)
-                {
-                    segments[i].SetWidth(v, v);
-                }
-
-                yield return new WaitForEndOfFrame();
-                f += Time.deltaTime;
-            }
-
-
         }
 
         private void NotifyMarkedShips()
