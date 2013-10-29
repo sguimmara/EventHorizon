@@ -7,7 +7,6 @@ using UnityEngine;
 using EventHorizon;
 using EventHorizon.Graphics;
 using EventHorizon.Effects;
-using UnityEditor;
 
 namespace EventHorizon.Objects
 {
@@ -20,6 +19,7 @@ namespace EventHorizon.Objects
 
         public virtual void NotifyHitByLaser(LaserType type) { }
 
+#if UNITY_EDITOR
         void OnDrawGizmos()
         {
             Gizmos.DrawWireSphere(transform.position, 0.5F);
@@ -27,7 +27,8 @@ namespace EventHorizon.Objects
 
         void OnDrawGizmosSelected()
         {
-            Handles.Label(transform.position, name);
+            UnityEditor.Handles.Label(transform.position, name);
         }
+#endif
     }
 }

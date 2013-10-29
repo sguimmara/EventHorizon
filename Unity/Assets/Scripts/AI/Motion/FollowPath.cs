@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using UnityEditor;
 using UnityEngine;
 using UnityExtended;
 
@@ -80,9 +79,10 @@ namespace EventHorizon.AI
                     MirrorOnY();
             }
         }
-
+#if UNITY_EDITOR
         public void OnDrawGizmos()
         {
+
             ComputePositions();
 
             if (validPattern)
@@ -96,8 +96,9 @@ namespace EventHorizon.AI
                         Gizmos.DrawLine(positions[i], positions[i + 1]);
                 }
             }
-            else Handles.Label(transform.position, "Invalid motion pattern");
+            else UnityEditor.Handles.Label(transform.position, "Invalid motion pattern");
         }
+#endif
 
         IEnumerator RunWaypoints(float duration)
         {

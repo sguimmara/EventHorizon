@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEditor;
 
 namespace EventHorizon.Core
 {
@@ -11,7 +10,6 @@ namespace EventHorizon.Core
         Vector3 originalRotation;
 
         Vector3 originalMousePosition;
-        Vector3 delta;
 
         // Use this for initialization
         void Start()
@@ -21,22 +19,9 @@ namespace EventHorizon.Core
             Screen.showCursor = false;
         }
 
-        void OnGUI()
-        {
-            string s = string.Format("{0} - {1}", originalMousePosition, delta);
-            GUI.Label(new Rect(0, 0, 300, 20), s);
-        }
-
         // Update is called once per frame
         void Update()
         {
-            //// Absolute position
-            //Vector3 newMousePosition = Input.mousePosition - originalMousePosition;
-            //delta = new Vector3(newMousePosition.x, newMousePosition.y, 0);
-            //originalMousePosition = Input.mousePosition;
-
-            //transform.Translate(delta / 100F, Space.World);
-
             float val = 1;
 
             // Relative position

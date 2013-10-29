@@ -122,6 +122,9 @@ namespace EventHorizon.Objects
 
         public void Control()
         {
+            if (Input.GetKeyDown(KeyCode.Escape))
+                Application.Quit();
+
             if (!ShieldActive)
             {
                 if (Input.GetKey(KeyCode.S))

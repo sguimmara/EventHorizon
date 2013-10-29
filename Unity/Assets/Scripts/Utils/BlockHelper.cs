@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using UnityEditor;
 using UnityEngine;
 
 namespace EventHorizon.Helpers
@@ -39,6 +38,7 @@ namespace EventHorizon.Helpers
         Vector3 endTop;
         Vector3 endBottom;
 
+#if UNITY_EDITOR
         void DrawBlockLimits()
         {
             float seconds = (int)(Mathf.Abs(transform.position.x) / levelSlider.speed);
@@ -48,7 +48,7 @@ namespace EventHorizon.Helpers
             string time = string.Concat(minutes.ToString(), ":", seconds.ToString());
 
             Gizmos.color = BlockColor;
-            Handles.Label(new Vector3(transform.position.x, labelHeight, 5), string.Concat(name, " - ", LevelDesignHelpers.GetTimeString(transform.position.x)));
+            UnityEditor.Handles.Label(new Vector3(transform.position.x, labelHeight, 5), string.Concat(name, " - ", LevelDesignHelpers.GetTimeString(transform.position.x)));
             Gizmos.DrawLine(new Vector3(transform.position.x, upperLimit, 5), new Vector3(transform.position.x, -upperLimit, 5));
             Gizmos.DrawLine(new Vector3(transform.position.x + BlockLength, upperLimit, 5), new Vector3(transform.position.x + BlockLength, -upperLimit, 5));
 
@@ -84,6 +84,7 @@ namespace EventHorizon.Helpers
                 Gizmos.DrawGUITexture(blockZone, blockZoneTex);
             }
         }
+#endif
     }
 
 }

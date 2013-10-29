@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using UnityEditor;
 using UnityEngine;
 
 namespace EventHorizon.Core
@@ -104,8 +103,6 @@ namespace EventHorizon.Core
 
         void LoadGame()
         {
-            //LoadLevel("");
-            //EnterLevel();
             Debug.LogException(new NotImplementedException());
         }
 

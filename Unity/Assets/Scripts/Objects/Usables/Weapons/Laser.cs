@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using UnityEditor;
 
 namespace EventHorizon.Objects
 {
@@ -156,6 +155,7 @@ namespace EventHorizon.Objects
                 Trigger();
         }
 
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
             Color c = Color.white;
@@ -184,37 +184,37 @@ namespace EventHorizon.Objects
                     {
                         float radius = 0.03F;
                         Gizmos.DrawWireSphere(g.P0, radius);
-                        Handles.Label(g.P0, "P0");
+                        UnityEditor.Handles.Label(g.P0, "P0");
 
                         Gizmos.DrawWireSphere(g.P3, radius);
-                        Handles.Label(g.P3, "P3");
+                        UnityEditor.Handles.Label(g.P3, "P3");
 
                         Gizmos.DrawWireSphere(g.P2, radius);
-                        Handles.Label(g.P2, "P2");
+                        UnityEditor.Handles.Label(g.P2, "P2");
 
                         Gizmos.DrawWireSphere(g.P1, radius);
-                        Handles.Label(g.P1, "P1");
+                        UnityEditor.Handles.Label(g.P1, "P1");
 
                         Gizmos.DrawWireSphere(g.body.position, radius);
-                        Handles.Label(g.body.position, "M");
+                        UnityEditor.Handles.Label(g.body.position, "M");
 
                         Gizmos.DrawWireSphere(g.body.position, g.body.GetComponent<SphereCollider>().radius);
 
                         Gizmos.DrawWireSphere(g.pProj, radius);
-                        Handles.Label(g.pProj, "pProj");
+                        UnityEditor.Handles.Label(g.pProj, "pProj");
 
                         Gizmos.DrawWireSphere(g.k, radius);
-                        Handles.Label(g.k, "k");
+                        UnityEditor.Handles.Label(g.k, "k");
 
                         //Gizmos.color = Color.green;
                         //Gizmos.DrawLine(g.P0 + g.vAlpha, g.P0);
 
                         Gizmos.color = Color.white;
                         Gizmos.DrawWireSphere(g.pDeviation, radius);
-                        Handles.Label(g.pDeviation, "pDeviation");
+                        UnityEditor.Handles.Label(g.pDeviation, "pDeviation");
 
                         Gizmos.DrawWireSphere(g.pProjDeviation, radius);
-                        Handles.Label(g.pProjDeviation, "pProjDeviation");
+                        UnityEditor.Handles.Label(g.pProjDeviation, "pProjDeviation");
 
                         Gizmos.color = Color.cyan;
                         Gizmos.DrawRay(g.P0, g.vDeviation);
@@ -233,6 +233,7 @@ namespace EventHorizon.Objects
                 }
             }
         }
+#endif
 
         private void OnDestroy()
         {

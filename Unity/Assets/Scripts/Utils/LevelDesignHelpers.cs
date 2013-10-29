@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using UnityEditor;
 using UnityEngine;
 
 namespace EventHorizon.Helpers
@@ -31,6 +30,7 @@ namespace EventHorizon.Helpers
 
         Matrix4x4 handleMatrix;
 
+#if UNITY_EDITOR
         void DrawLevelVerticalLimits()
         {
             Gizmos.color = viewLimits;
@@ -54,11 +54,11 @@ namespace EventHorizon.Helpers
 
         void DrawLevelExtremities()
         {
-            Handles.Label(new Vector3(0, labelHeight + 2, 5), GetTimeString(transform.position.x));
+            UnityEditor.Handles.Label(new Vector3(0, labelHeight + 2, 5), GetTimeString(transform.position.x));
             Gizmos.color = Color.green;
             Gizmos.DrawLine(new Vector3(transform.position.x, upperLimit, 5), new Vector3(transform.position.x, -upperLimit, 5));
-            Handles.Label(new Vector3(transform.position.x, labelHeight + 1, 5), "Start");
-            Handles.Label(new Vector3(transform.position.x + LevelLength, labelHeight + 1, 5), "End");
+            UnityEditor.Handles.Label(new Vector3(transform.position.x, labelHeight + 1, 5), "Start");
+            UnityEditor.Handles.Label(new Vector3(transform.position.x + LevelLength, labelHeight + 1, 5), "End");
             Gizmos.DrawLine(new Vector3(transform.position.x + LevelLength, upperLimit, 5), new Vector3(transform.position.x + LevelLength, -upperLimit, 5));
         }
 
@@ -111,6 +111,7 @@ namespace EventHorizon.Helpers
                 DrawLevelExtremities();
             }
         }
+#endif
     }
 
 }

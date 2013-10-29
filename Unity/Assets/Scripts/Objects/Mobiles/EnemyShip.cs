@@ -27,23 +27,6 @@ namespace EventHorizon.Objects
                 AIBehaviours.motionPattern.Create(this.transform);
         }
 
-        void OnDrawGizmos()
-        {
-            if (!Application.isPlaying)
-                if (AIBehaviours.motionPattern != null)
-                    if (AIBehaviours.motionPattern.GetType() == typeof(FollowPath))
-                    {
-                        ((FollowPath)AIBehaviours.motionPattern).currentTransform = transform;
-                        ((FollowPath)AIBehaviours.motionPattern).OnDrawGizmos();
-                    }
-        }
-
-        //public override void Trigger()
-        //{
-        //    for (int i = 0; i < Slots.Length; i++)
-        //        Slots[i].Trigger();
-        //}
-
         protected void Update()
         {
 
