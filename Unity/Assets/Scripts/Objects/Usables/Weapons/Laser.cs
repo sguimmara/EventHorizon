@@ -260,7 +260,7 @@ namespace EventHorizon.Objects
 
                             if (touchedObject != null)
                             {
-                                if (!MarkedHit.Contains(touchedObject))
+                                if (!MarkedHit.Contains(touchedObject) && !touchedObject.Indestructible)
                                     MarkedHit.Add(touchedObject);
                             }
 
@@ -344,7 +344,7 @@ namespace EventHorizon.Objects
                 segments[i].SetColors(Color.white, Color.white);
                 segments[i].SetWidth(0.2F, 0.2F);
 
-                if (i == laserHits.Count - 2)
+                if (i == laserHitsLimit-1)
                     segments[i].SetColors(Color.white, new Color(1, 1, 1, 0));
             }
         }

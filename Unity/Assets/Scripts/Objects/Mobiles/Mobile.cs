@@ -12,6 +12,8 @@ namespace EventHorizon.Objects
 {
     public abstract class Mobile : MonoBehaviour
     {
+        public bool Indestructible;
+
         public override string ToString()
         {
             return gameObject.name;
