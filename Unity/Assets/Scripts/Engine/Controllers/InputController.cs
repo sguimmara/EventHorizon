@@ -40,12 +40,12 @@ namespace EventHorizon.Core
                 val = 10;
 
             // Rotation
-            if (Input.GetKeyDown(KeyCode.RightArrow))
+            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetAxis("Mouse ScrollWheel") > 0)
             {
                 transform.Rotate(new Vector3(val, 0, 0));
             }
 
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetAxis("Mouse ScrollWheel") < 0)
             {
                 transform.Rotate(new Vector3(-val, 0, 0));
             }
