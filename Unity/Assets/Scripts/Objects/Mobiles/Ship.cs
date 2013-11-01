@@ -1,9 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
-using EventHorizon.Objects;
+﻿using EventHorizon.Core;
 using EventHorizon.Effects;
-using EventHorizon.Core;
-using EventHorizon.AI;
+using System.Collections;
+using UnityEngine;
 
 namespace EventHorizon.Objects
 {
@@ -22,37 +20,7 @@ namespace EventHorizon.Objects
         {
             Debug.Log("Destroying " + gameObject.name);
             Destroy();
-        }
-
-        IEnumerator Flash()
-        {
-            StopCoroutine("Flash");
-            Material m = renderer.material;
-
-            float f = 0;
-
-            while (f < 0.04F)
-            {
-                m.SetFloat("_Flash", Mathf.Clamp01(f / 0.01F));
-                f += Time.deltaTime;
-                yield return new WaitForEndOfFrame();
-            }
-
-            while (f < 0.08F)
-            {
-                m.SetFloat("_Flash", Mathf.Clamp01(1 - f / 0.01F));
-                f += Time.deltaTime;
-                yield return new WaitForEndOfFrame();
-            }
-        }
-
-        public virtual void OnTriggerEnter(Collider other)
-        {
-            Mobile m = other.gameObject.GetComponent<Mobile>();
-
-            if (other.tag == "Projectile" || other.tag == "Enemy" || other.tag == "Player")
-                Destroy();
-        }
+        }        
 
         public virtual void Destroy()
         {
