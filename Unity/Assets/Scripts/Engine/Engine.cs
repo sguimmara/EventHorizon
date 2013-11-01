@@ -16,7 +16,7 @@ namespace EventHorizon.Core
     public delegate void EventLevel(Level level);
     public delegate void EventMobile(Mobile sender);
 
-    public class Engine : MonoBehaviour
+    public class Engine : MonoBehaviour, ISingleton
     {
         public bool DESIGN_MODE;
         public Player playerShip;
@@ -129,7 +129,7 @@ namespace EventHorizon.Core
 
         void Awake()
         {
-            Instance = this;
+            Register();
 
             mainMenu = GetComponent<MainMenu>();
             mainMenu.OnUserRequestEnterGame += StartGame;
@@ -303,6 +303,13 @@ namespace EventHorizon.Core
                 player.transform.position += delta * Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }
+        }
+
+        public void Register()
+        {
+            if (Instance == null)
+                Instance = this;
+            else Debug.LogError(string.Format("Singleton marked class {0} has more than one instance running.",this.GetType().ToString()));
         }
     }
 }
