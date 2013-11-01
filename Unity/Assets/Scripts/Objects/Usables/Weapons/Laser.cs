@@ -17,18 +17,18 @@ namespace EventHorizon.Objects
         // The actual gravitational body;
         public Transform body;
 
-        // The bezier curve describing the deviation of light due to gravitation.
+        // The bezier curve points describing the deviation of light due to gravitation.
         public Vector3 P0, P1, P2, P3;
 
         public Vector3 pDeviation;
 
         // The entry vector (the actual laser ray entering the gravitational field), 
-        // the deviation vector ( = P3 - P0 ) used to determined the curvature of the deviation
-        public Vector3 vEntry, vDeviation;
+        // the deviated vector ( = P3 - P0 ) used to determined the curvature of the deviation
+        public Vector3 vEntry, vDeviated;
 
         // The distance between the projected point of M and vEntry  
         // and the center of mass of the gravitational body.
-        public float d;
+        public float distanceFromCenter;
 
         public Vector3 pProjDeviation;
 
@@ -89,13 +89,13 @@ namespace EventHorizon.Objects
             g.body = body;
 
             g.pProj = entry.origin + Vector3.Project(g.body.position - entry.origin, entry.direction);
-            g.d = Vector3.Distance(g.pProj, g.body.position);
+            g.distanceFromCenter = Vector3.Distance(g.pProj, g.body.position);
 
-            g.pull = 1 * g.d / Vector3.Distance(g.P0, g.body.position);
+            g.pull = 1 * g.distanceFromCenter / Vector3.Distance(g.P0, g.body.position);
             g.pDeviation = g.pProj + (1 - g.pull) * (g.body.position - g.pProj);
-            g.vDeviation = g.pDeviation - g.P0;
+            g.vDeviated = g.pDeviation - g.P0;
 
-            g.pProjDeviation = g.P0 + Vector3.Project(g.body.position - g.P0, g.vDeviation);
+            g.pProjDeviation = g.P0 + Vector3.Project(g.body.position - g.P0, g.vDeviated);
 
             g.P3 = g.P0 + (g.pProjDeviation - g.P0) * 2;
 
@@ -103,7 +103,7 @@ namespace EventHorizon.Objects
 
             g.P1 = g.P0 + Vector3.Normalize(entry.direction) * f;
 
-            g.k = g.P0 + Vector3.Project(g.P1 - g.P0, g.vDeviation);
+            g.k = g.P0 + Vector3.Project(g.P1 - g.P0, g.vDeviated);
 
             g.P2 = g.P1 - g.k + g.P3 + Vector3.Normalize(g.P0 - g.k) * f;
 
@@ -217,7 +217,7 @@ namespace EventHorizon.Objects
                         UnityEditor.Handles.Label(g.pProjDeviation, "pProjDeviation");
 
                         Gizmos.color = Color.cyan;
-                        Gizmos.DrawRay(g.P0, g.vDeviation);
+                        Gizmos.DrawRay(g.P0, g.vDeviated);
 
                         Gizmos.DrawLine(transform.position, g.P0);
                         Gizmos.DrawLine(g.P0, g.P1);
