@@ -1,13 +1,4 @@
-﻿using EventHorizon.AI;
-using EventHorizon.Objects;
-using EventHorizon.Sound;
-using EventHorizon.UserInterface;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
+﻿using EventHorizon.Objects;
 using UnityEngine;
 
 namespace EventHorizon.Core
@@ -18,13 +9,48 @@ namespace EventHorizon.Core
 
     public class Engine : MonoBehaviour, ISingleton
     {
-        public Engine Instance { get; private set; }
+        public static Engine Instance { get; private set; }
+
+        Crystal[] crystals;
+        public bool ProblemSolved { get; private set; }
+
+        private void Awake()
+        {
+            Register();
+            crystals = Object.FindObjectsOfType(typeof(Crystal)) as Crystal[];
+        }
+
+        private void Update()
+        {
+            if (!ProblemSolved)
+                CheckForProblemSolved();
+        }
 
         public void Register()
         {
             if (Instance == null)
                 Instance = this;
-            else Debug.LogError(string.Format("Singleton marked class {0} has more than one instance running.",this.GetType().ToString()));
+            else Debug.LogError(string.Format("Singleton marked class {0} has more than one instance running.", this.GetType().ToString()));
+        }
+
+        private void OnProblemSolved()
+        {
+            ProblemSolved = true;
+            Debug.Log("PROBLEM SOLVED");
+            Application.CaptureScreenshot("IconicDeception_solved.png");
+        }
+
+        private void CheckForProblemSolved()
+        {
+            foreach (Crystal crystal in crystals)
+            {
+                if (!crystal.Activated)
+                {
+                    return;
+                }
+            }
+
+            OnProblemSolved();
         }
     }
 }
