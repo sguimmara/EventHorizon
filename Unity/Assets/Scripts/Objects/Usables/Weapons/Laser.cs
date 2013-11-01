@@ -237,7 +237,10 @@ namespace EventHorizon.Objects
 
         private void OnDestroy()
         {
-            //DisableAllSegments();
+            foreach (var item in segments)
+            {
+                Destroy(item);
+            }
         }
 
         private void CheckForTouchedShips()
