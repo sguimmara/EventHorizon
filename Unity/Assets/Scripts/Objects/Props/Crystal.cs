@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EventHorizon.Core;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ namespace EventHorizon.Objects
 {
     class Crystal : Mobile, ICollidable
     {
+        public event GameEvent OnActivated;
+        public event GameEvent OnDeactivated;
         public bool Activated { get; private set; }
         private float originalShininess;
         private GameObject glow;
@@ -32,6 +35,8 @@ namespace EventHorizon.Objects
         public override void NotifyHitByLaser(LaserType type)
         {
             Activated = true;
+            if (OnActivated != null)
+                OnActivated();
         }
 
         void Update()
@@ -44,7 +49,6 @@ namespace EventHorizon.Objects
                     glow.SetActive(true);
             }
 
-
             else
             {
                 renderer.material.SetFloat("_Shininess", originalShininess);
@@ -54,6 +58,9 @@ namespace EventHorizon.Objects
             }
 
             Activated = false;
+
+            if (OnDeactivated != null)
+                OnDeactivated();
         }
     }
 }

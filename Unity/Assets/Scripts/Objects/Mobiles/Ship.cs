@@ -16,6 +16,11 @@ namespace EventHorizon.Objects
 
         }
 
+        public virtual void OnTriggerEnter(Collider other)
+        {
+
+        }
+
         public override void NotifyHitByLaser(LaserType type)
         {
             Debug.Log("Destroying " + gameObject.name);

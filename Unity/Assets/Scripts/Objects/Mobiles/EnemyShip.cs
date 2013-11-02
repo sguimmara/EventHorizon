@@ -3,7 +3,6 @@ using System.Collections;
 using EventHorizon.Objects;
 using EventHorizon.Effects;
 using EventHorizon.Core;
-using EventHorizon.AI;
 
 namespace EventHorizon.Objects
 {
@@ -11,20 +10,9 @@ namespace EventHorizon.Objects
     {
         public bool AutoTrigger = true;
 
-        public AIContainer AIBehaviours;
-
         public override string ToString()
         {
             return "EnemyShip";
-        }
-
-        protected void OnBecameVisible()
-        {
-            if (Engine.Instance != null)
-                Engine.Instance.AddShip(this);
-
-            if (AIBehaviours.motionPattern != null)
-                AIBehaviours.motionPattern.Create(this.transform);
         }
 
         protected void Update()

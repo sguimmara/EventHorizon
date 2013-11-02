@@ -1,14 +1,9 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using EventHorizon;
-using EventHorizon.Graphics;
-using EventHorizon.Objects;
-using EventHorizon.Core;
+﻿using EventHorizon.Core;
+using UnityEngine;
 
 namespace EventHorizon.Objects
 {
-    public class Player : Ship, IPlayable, IMovable
+    public class Player : Ship, IMovable
     {
         [HideInInspector]
         public Vector3 Direction { get; set; }
@@ -29,6 +24,8 @@ namespace EventHorizon.Objects
         public GameObject ShipObj { get; private set; }
         public GameObject LaserObj { get; private set; }
         public GameObject BeaconObj { get; private set; }
+        //public GameObject LaserCannon;
+        //private GameObject PreviousLaserCannon;
 
         protected void Start()
         {
@@ -36,7 +33,6 @@ namespace EventHorizon.Objects
             ShipObj = transform.Find("Player ship").gameObject;
             LaserObj = transform.Find("PlayerLaser").gameObject;
             BeaconObj = transform.Find("Beacon").gameObject;
-
 
             laser = LaserObj.GetComponent<Laser>();
 
@@ -83,13 +79,13 @@ namespace EventHorizon.Objects
 
         private void ActivateShield()
         {
-            Inertia = 0F;
+            //Inertia = 0F;
             ShieldObj.SetActive(true);
             ShipObj.SetActive(false);
             BeaconObj.SetActive(false);
             laser.Stop();
             gameObject.layer = 11; // Reflective
-            ShieldActive = true;
+            //ShieldActive = true;
         }
 
         private void TurnOffShield()
@@ -177,10 +173,15 @@ namespace EventHorizon.Objects
             laser.Trigger();
         }
 
-        public override void Trigger()
-        {
-            laser.Trigger();
-        }
+        //private void DropLaserCannon()
+        //{
+        //    if (PreviousLaserCannon != null)
+        //        Destroy(PreviousLaserCannon);
+
+        //    PreviousLaserCannon = GameObject.Instantiate(LaserCannon, transform.position, transform.rotation) as GameObject;
+        //    PreviousLaserCannon.transform.Find("Laser").GetComponent<Laser>().autoTrigger = true;
+        //}
+
     }
 }
 
