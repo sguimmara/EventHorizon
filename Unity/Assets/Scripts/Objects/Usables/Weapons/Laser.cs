@@ -49,6 +49,7 @@ namespace EventHorizon.Objects
     {
         public LaserType laserType;
         public Material laserMat;
+        public bool DontRender;
         List<Vector3> laserHits;
         float lastShot = 0;
         const float cooldown = 0.002F;
@@ -141,11 +142,14 @@ namespace EventHorizon.Objects
 
             gravitationData = new Dictionary<Transform, Gravitation>();
 
-            for (int i = 0; i < segments.Length; i++)
+            if (!DontRender)
             {
-                segments[i] = (new GameObject()).AddComponent<LineRenderer>();
-                segments[i].SetWidth(0.0F, 0.0F);
-                segments[i].material = laserMat;
+                for (int i = 0; i < segments.Length; i++)
+                {
+                    segments[i] = (new GameObject()).AddComponent<LineRenderer>();
+                    segments[i].SetWidth(0.0F, 0.0F);
+                    segments[i].material = laserMat;
+                }
             }
         }
 
@@ -243,7 +247,7 @@ namespace EventHorizon.Objects
             }
         }
 
-        private void CheckForTouchedShips()
+        private void CheckForHitObjects()
         {
             RaycastHit[] hits;
             MarkedHit.Clear();
@@ -273,39 +277,39 @@ namespace EventHorizon.Objects
                 }
             }
 
-            NotifyMarkedShips();
+            NotifyHitObjects();
         }
 
-        private void CastLaserSegment(Ray r)
+        private void CastLaserSegment(Ray ray)
         {
             RaycastHit hit;
             if (laserHits.Count <= laserHitsLimit)
             {
-                laserHits.Add(r.origin);
+                laserHits.Add(ray.origin);
 
-                if (Physics.Raycast(r, out hit, float.MaxValue, HitLayer))
+                if (Physics.Raycast(ray, out hit, float.MaxValue, HitLayer))
                 {
-                    Vector3 v = Vector3.Normalize(r.direction);
-                    float dot = Vector3.Dot(v, hit.normal);
-                    Vector3 bounce = v - (2 * hit.normal * (Vector3.Dot(v, hit.normal)));
-                    lastBounce = bounce;
-
                     firstRay = false;
 
                     if (hit.collider.gameObject.tag == "Gravitation")
                     {
                         laserHits.Add(hit.point);
-                        Ray temp = CalculateGravitationalPull(hit.collider.transform, r, hit.point);
+                        Ray temp = CalculateGravitationalPull(hit.collider.transform, ray, hit.point);
                         CastLaserSegment(temp);
                     }
 
-                    else if ((laserType == LaserType.Reflected) && hit.collider.gameObject.tag == "Reflective")
+                    else if (hit.collider.gameObject.tag == "Reflective")
                     {
-                        CastLaserSegment(new Ray(hit.point, bounce));
+                        Reflect(ray, hit);
                         return;
                     }
 
-                    else //if (hit.collider.gameObject.tag == "Normal")
+                    else if (hit.collider.gameObject.tag == "Refractive")
+                    {
+                        Refract(ray, hit);
+                    }
+
+                    else
                         laserHits.Add(hit.point);
                 }
 
@@ -314,16 +318,48 @@ namespace EventHorizon.Objects
                 {
                     if (firstRay == true)
                         lastBounce = transform.forward;
-                    else lastBounce = r.direction;
+                    else lastBounce = ray.direction;
 
                     laserHits.Add(laserHits[laserHits.Count - 1] + lastBounce * 50);
                 }
             }
 
             if (laserType != LaserType.Beacon)
-                CheckForTouchedShips();
+                CheckForHitObjects();
 
-            DrawLaser();
+            if (!DontRender)
+                DrawLaser();
+        }
+
+        private void Refract(Ray incidentRay, RaycastHit hit)
+        {
+            float IOR1 = 1F;
+            float IOR2 = 3F;
+
+            float ratio = IOR1 / IOR2;
+
+            float cos1 = Vector3.Dot(hit.normal, -incidentRay.direction);
+
+            float cos2 = Mathf.Sqrt(1 - ratio * ratio * (1 - cos1 * cos1));
+
+            float result = cos1 > 0 ? (ratio * cos1 - cos2) : (ratio * cos1 + cos2);
+
+            Vector3 vRefract = (ratio * incidentRay.direction) + (result * hit.normal);
+
+            lastBounce = vRefract;
+            //Debug.Log(string.Format("n: ({0}, {1})\nincident: ({2}, {3})\nvRefract: ({4}, {5})\nCos1: {6}\nCos2: {7}", hit.normal.x, hit.normal.y, incidentRay.direction.x, incidentRay.direction.y, vRefract.x, vRefract.y, cos1, cos2));
+            CastLaserSegment(new Ray(hit.point - hit.normal * 0.001F, vRefract));
+        }
+
+        private void Reflect(Ray incidentRay, RaycastHit hit)
+        {
+            if (laserType == LaserType.Reflected)
+            {
+                Vector3 v = Vector3.Normalize(incidentRay.direction);
+                Vector3 bounce = v - (2 * hit.normal * (Vector3.Dot(v, hit.normal)));
+                lastBounce = bounce;
+                CastLaserSegment(new Ray(hit.point, bounce));
+            }
         }
 
         private void DisableAllSegments()
@@ -347,12 +383,12 @@ namespace EventHorizon.Objects
                 segments[i].SetColors(Color.white, Color.white);
                 segments[i].SetWidth(0.2F, 0.2F);
 
-                if (i == laserHitsLimit-1)
+                if (i == laserHitsLimit - 1)
                     segments[i].SetColors(Color.white, new Color(1, 1, 1, 0));
             }
         }
 
-        private void NotifyMarkedShips()
+        private void NotifyHitObjects()
         {
             if (MarkedHit.Count > 0)
             {
