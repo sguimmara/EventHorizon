@@ -21,7 +21,7 @@ namespace EventHorizon.Objects
 
         }
 
-        public override void NotifyHitByLaser(LaserType type)
+        public override void NotifyHitByLaser(Laser source)
         {
             Debug.Log("Destroying " + gameObject.name);
             Destroy();

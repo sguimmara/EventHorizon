@@ -71,9 +71,9 @@ namespace EventHorizon.Objects
                 base.OnTriggerEnter(other);
         }
 
-        public override void NotifyHitByLaser(LaserType type)
+        public override void NotifyHitByLaser(Laser source)
         {
-            if (!ShieldActive || type == LaserType.PierceThroughShield)
+            if (!ShieldActive || source.IgnoreShield)
                 Destroy();
         }
 

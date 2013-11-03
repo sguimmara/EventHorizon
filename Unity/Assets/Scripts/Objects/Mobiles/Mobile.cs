@@ -19,7 +19,7 @@ namespace EventHorizon.Objects
             return gameObject.name;
         }
 
-        public virtual void NotifyHitByLaser(LaserType type) { }
+        public virtual void NotifyHitByLaser(Laser source) { }
 
 #if UNITY_EDITOR
         void OnDrawGizmos()

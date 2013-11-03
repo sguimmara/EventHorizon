@@ -7,8 +7,7 @@ using UnityEngine;
 
 namespace EventHorizon.Objects
 {
-    public enum LaserType { Beacon, Normal, Reflected, PierceThroughShield };
-
+public enum LaserColor {Red, Blue, Green, Black };
     struct Gravitation
     {
         // Is the ray influenced by a gravitational field ?
@@ -47,24 +46,75 @@ namespace EventHorizon.Objects
 
     public class Laser : MonoBehaviour
     {
-        public LaserType laserType;
-        public Material laserMat;
-        public bool DontRender;
+        public bool Reflected = true;
+        public bool Interactive = true;
+        public bool Renderable = true;
+        public bool AlwaysActive = false;
+        public bool IgnoreShield = false;
+        
+        public LaserColor LaserColor = LaserColor.Red;
+        private Dictionary<LaserColor, Material> laserMaterials = new Dictionary<LaserColor, Material>();
+        
+
         List<Vector3> laserHits;
         float lastShot = 0;
-        const float cooldown = 0.002F;
-        const int laserHitsLimit = 20;
+        
+        const float COOLDOWN_TIME = 0.002F;
+        public int bounces = 20;
+        
         Vector3 lastBounce;
-        bool firstRay = true;
-        public bool autoTrigger = false;
+        private bool firstRay = true;
 
-        public LayerMask HitLayer;
-        public LayerMask NonReactiveLayer;
+        private LayerMask HitLayer;
+        private LayerMask NonReactiveLayer;
 
         LineRenderer[] segments;
         List<Mobile> MarkedHit;
 
         Dictionary<Transform, Gravitation> gravitationData;
+
+        private void Awake()
+        {
+            HitLayer = 1 << LayerMask.NameToLayer("Reactive");
+            NonReactiveLayer = 1 << LayerMask.NameToLayer("NonReactive");
+
+            laserMaterials.Add(Objects.LaserColor.Black, Utils.Load<Material>("laser_black"));
+            laserMaterials.Add(Objects.LaserColor.Green, Utils.Load<Material>("laser_green"));
+            laserMaterials.Add(Objects.LaserColor.Blue, Utils.Load<Material>("laser_blue"));
+            laserMaterials.Add(Objects.LaserColor.Red, Utils.Load<Material>("laser_red"));
+
+            if (Reflected)
+            {
+                laserHits = new List<Vector3>(bounces + 1);
+                segments = new LineRenderer[bounces + 1];
+                MarkedHit = new List<Mobile>();
+            }
+            else
+            {
+                laserHits = new List<Vector3>(1);
+                segments = new LineRenderer[1];
+            }
+
+            gravitationData = new Dictionary<Transform, Gravitation>();
+
+            if (Renderable)
+            {
+                for (int i = 0; i < segments.Length; i++)
+                {
+                    segments[i] = (new GameObject()).AddComponent<LineRenderer>();
+                    segments[i].SetWidth(0.0F, 0.0F);
+                    if (laserMaterials.ContainsKey(LaserColor))
+                        segments[i].material = laserMaterials[LaserColor];
+                    else Debug.LogWarning(string.Format("The Laser material {0} was not found", LaserColor));
+                }
+            }
+        }
+
+        private void Update()
+        {
+            if (AlwaysActive)
+                Trigger();
+        }
 
         private Vector3 BezierInterp(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
         {
@@ -125,58 +175,11 @@ namespace EventHorizon.Objects
             return new Ray(g.P3, g.P3 - g.P2);
         }
 
-        private void Awake()
-        {
-            if (laserType == LaserType.Beacon)
-            {
-                laserHits = new List<Vector3>(1);
-                segments = new LineRenderer[1];
-            }
 
-            else
-            {
-                laserHits = new List<Vector3>(laserHitsLimit + 1);
-                segments = new LineRenderer[laserHitsLimit + 1];
-                MarkedHit = new List<Mobile>();
-            }
-
-            gravitationData = new Dictionary<Transform, Gravitation>();
-
-            if (!DontRender)
-            {
-                for (int i = 0; i < segments.Length; i++)
-                {
-                    segments[i] = (new GameObject()).AddComponent<LineRenderer>();
-                    segments[i].SetWidth(0.0F, 0.0F);
-                    segments[i].material = laserMat;
-                }
-            }
-        }
-
-        private void Update()
-        {
-            if (autoTrigger)
-                Trigger();
-        }
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
-            Color c = Color.white;
-            switch (laserType)
-            {
-                case LaserType.Normal: c = Color.blue;
-                    break;
-                case LaserType.Reflected: c = Color.red;
-                    break;
-                case LaserType.PierceThroughShield: c = Color.cyan;
-                    break;
-                default:
-                    break;
-            }
-            Gizmos.color = c;
-            //Gizmos.DrawRay(transform.position, transform.forward * 20);
-
             if (gravitationData != null && gravitationData.Count > 0)
             {
                 Gravitation g;
@@ -283,7 +286,7 @@ namespace EventHorizon.Objects
         private void CastLaserSegment(Ray ray)
         {
             RaycastHit hit;
-            if (laserHits.Count <= laserHitsLimit)
+            if (laserHits.Count <= bounces)
             {
                 laserHits.Add(ray.origin);
 
@@ -324,10 +327,10 @@ namespace EventHorizon.Objects
                 }
             }
 
-            if (laserType != LaserType.Beacon)
+            if (Interactive)
                 CheckForHitObjects();
 
-            if (!DontRender)
+            if (Renderable)
                 DrawLaser();
         }
 
@@ -353,7 +356,7 @@ namespace EventHorizon.Objects
 
         private void Reflect(Ray incidentRay, RaycastHit hit)
         {
-            if (laserType == LaserType.Reflected)
+            if (Reflected)
             {
                 Vector3 v = Vector3.Normalize(incidentRay.direction);
                 Vector3 bounce = v - (2 * hit.normal * (Vector3.Dot(v, hit.normal)));
@@ -383,7 +386,7 @@ namespace EventHorizon.Objects
                 segments[i].SetColors(Color.white, Color.white);
                 segments[i].SetWidth(0.2F, 0.2F);
 
-                if (i == laserHitsLimit - 1)
+                if (i == bounces)
                     segments[i].SetColors(Color.white, new Color(1, 1, 1, 0));
             }
         }
@@ -395,7 +398,7 @@ namespace EventHorizon.Objects
                 foreach (Mobile collidable in MarkedHit)
                 {
                     if (collidable != null)
-                        collidable.NotifyHitByLaser(laserType);
+                        collidable.NotifyHitByLaser(this);
                 }
             }
         }
@@ -408,7 +411,7 @@ namespace EventHorizon.Objects
         //Entry point
         public void Trigger()
         {
-            if (Time.time - lastShot >= cooldown)
+            if (Time.time - lastShot >= COOLDOWN_TIME)
             {
                 lastShot = Time.time;
                 laserHits.Clear();

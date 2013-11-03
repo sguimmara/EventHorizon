@@ -32,7 +32,7 @@ namespace EventHorizon.Objects
 
         }
 
-        public override void NotifyHitByLaser(LaserType type)
+        public override void NotifyHitByLaser(Laser source)
         {
             Activated = true;
             if (OnActivated != null)
