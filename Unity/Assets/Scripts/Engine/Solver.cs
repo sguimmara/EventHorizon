@@ -14,7 +14,6 @@ namespace EventHorizon.Core
         public bool KeepRunning;
 
         Laser laser;
-        bool finished;
         bool solved;
         int activatedCrystals;
         int numberOfCrystals;
@@ -62,14 +61,7 @@ namespace EventHorizon.Core
             {
                 volumes.Add(item.collider);
             }
-
-            //foreach (Crystal crystal in FindObjectsOfType(typeof(Crystal)) as Crystal[])
-            //{
-            //    numberOfCrystals++;
-            //    crystal.OnActivated += delegate { if (activatedCrystals < numberOfCrystals) activatedCrystals++; };
-            //    crystal.OnDeactivated += delegate { if (activatedCrystals > 0) activatedCrystals--; };
-            //}
-
+            
             laser = GetComponent<Laser>();
             StartCoroutine(Solve());
         }
@@ -96,7 +88,6 @@ namespace EventHorizon.Core
                     solved = true;
                     StopAllCoroutines();
                     SetRenderers(true);
-                    finished = true;
                     Debug.Log(Solutions.Count);
                 }
             }

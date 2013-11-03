@@ -5,17 +5,9 @@ namespace EventHorizon.Core
 {
     public class InputController : MonoBehaviour
     {
-        Vector3 worldPos;
-        public float depth;
-        Vector3 originalRotation;
-
-        Vector3 originalMousePosition;
-
         // Use this for initialization
         void Start()
         {
-            originalMousePosition = Input.mousePosition;
-            originalRotation = transform.eulerAngles;
             Screen.showCursor = false;
         }
 
