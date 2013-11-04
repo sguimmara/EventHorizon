@@ -312,6 +312,12 @@ public enum LaserColor {Red, Blue, Green, Black };
                         Refract(ray, hit);
                     }
 
+                    else if (hit.collider.tag == "ReflectiveRefractive")
+                    {
+                        Reflect(ray, hit);
+                        Refract(ray, hit);
+                    }
+
                     else
                         laserHits.Add(hit.point);
                 }
